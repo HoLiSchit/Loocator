@@ -64,8 +64,7 @@ if (isset($_GET['show'])) {
             h2.clean { color: #8b5cf6; border-color: #ddd6fe; }
             h2.usable { color: #10b981; border-color: #d1fae5; }
             .list-item { background: #f9fafb; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #e5e7eb; }
-            .osm-link { display: inline-block; background: #2563eb; color: white; text-decoration: none; padding: 6px 12px; border-radius: 6px; font-size: 0.85em; font-weight: bold; margin-top: 8px; margin-right: 5px; }
-            .osm-link.way { background: #6b7280; }
+            .osm-link { display: inline-block; background: #2563eb; color: white; text-decoration: none; padding: 6px 12px; border-radius: 6px; font-size: 0.85em; font-weight: bold; margin-top: 8px; }
             .osm-link:hover { opacity: 0.9; }
             .badge { display: inline-block; padding: 3px 8px; border-radius: 999px; font-size: 0.8em; font-weight: bold; margin-bottom: 5px; }
             .badge-clean { background: #ede9fe; color: #6d28d9; }
@@ -85,13 +84,11 @@ if (isset($_GET['show'])) {
             foreach ($topClean as $i => $row) {
                 $avg = number_format($row['avg_clean'], 1, ',', '.');
                 $osmNode = "https://www.openstreetmap.org/node/" . $row['osm_id'];
-                $osmWay = "https://www.openstreetmap.org/way/" . $row['osm_id'];
                 
                 echo "<div class='list-item'>
                         <span class='badge badge-clean'>Platz ".($i+1)."</span><br>
                         <b>$avg Sterne</b> (aus {$row['cleanliness_count']} Stimmen)<br>
-                        <a href='$osmNode' target='_blank' class='osm-link'>Als Punkt 📍</a>
-                        <a href='$osmWay' target='_blank' class='osm-link way'>Als Gebäude 🏢</a>
+                        <a href='$osmNode' target='_blank' class='osm-link'>Auf Karte ansehen 🗺️</a>
                       </div>";
             }
         }
@@ -102,13 +99,11 @@ if (isset($_GET['show'])) {
             foreach ($topUsable as $i => $row) {
                 $percent = round($row['success_rate'] * 100);
                 $osmNode = "https://www.openstreetmap.org/node/" . $row['osm_id'];
-                $osmWay = "https://www.openstreetmap.org/way/" . $row['osm_id'];
                 
                 echo "<div class='list-item'>
                         <span class='badge badge-usable'>Platz ".($i+1)."</span><br>
                         <b>$percent% Erfolg</b> ({$row['usable_yes']}x Ja, {$row['usable_no']}x Nein)<br>
-                        <a href='$osmNode' target='_blank' class='osm-link'>Als Punkt 📍</a>
-                        <a href='$osmWay' target='_blank' class='osm-link way'>Als Gebäude 🏢</a>
+                        <a href='$osmNode' target='_blank' class='osm-link'>Auf Karte ansehen 🗺️</a>
                       </div>";
             }
         }
