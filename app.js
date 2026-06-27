@@ -396,16 +396,37 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchTimeout = setTimeout(fetchToilets, 500);
     });
 
+    // --- NEU: Tutorial Logik eingebaut in removeSplashScreen ---
     function removeSplashScreen() {
         if (!initialLoadComplete) {
             initialLoadComplete = true;
             const splash = document.getElementById('splash-screen');
             if (splash) {
                 splash.classList.add('opacity-0');
-                setTimeout(() => splash.remove(), 500);
+                setTimeout(() => {
+                    splash.remove();
+                    // Wenn Tutorial noch nie gesehen, zeige es an
+                    if (!localStorage.getItem('loocator_tutorial_seen')) {
+                        document.getElementById('tutorial-modal').classList.remove('hidden');
+                    }
+                }, 500);
                 toggleMenu(false);
             }
         }
+    }
+
+    // --- NEU: Tutorial Button Logik ---
+    const btnCloseTutorial = document.getElementById('btn-close-tutorial');
+    if (btnCloseTutorial) {
+        btnCloseTutorial.addEventListener('click', () => {
+            localStorage.setItem('loocator_tutorial_seen', 'true');
+            const modal = document.getElementById('tutorial-modal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('opacity-0');
+            }, 300);
+        });
     }
 
     async function fetchToilets() {
@@ -417,7 +438,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const dbRes = await fetch('backend.php?all=1');
             globalRatingsDb = await dbRes.json();
             
-            // --- NEU: Statistiken berechnen und ins Menü einfügen ---
             let ratedWcs = 0;
             let totalVotes = 0;
             for (const key in globalRatingsDb) {
@@ -432,7 +452,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 statsEl.innerText = t('statsText', {toilets: ratedWcs, votes: totalVotes});
                 statsEl.classList.remove('hidden');
             }
-            // ---------------------------------------------------------
             
         } catch (e) { }
 

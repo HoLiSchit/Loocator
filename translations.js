@@ -61,7 +61,15 @@ const dict = {
         levelOG: "{lvl}. OG",
         levelEG: "Erdgeschoss (0)",
         searchFailed: "Suche fehlgeschlagen.",
-        voteThanks: "Vielen Dank für dein Feedback! 💛"
+        voteThanks: "Vielen Dank für dein Feedback! 💛",
+        tutWelcome: "Willkommen bei Loocator! 👋",
+        tutIntro: "Hier ist eine kurze Erklärung der Marker und Symbole auf der Karte:",
+        tutEuro: "Eurokey / Rollstuhlgerechtes WC",
+        tutTop: "Top bewertet (Community-Favorit)",
+        tut247: "Durchgehend (24/7) geöffnet",
+        tutChanging: "Wickeltisch vorhanden",
+        tutDefect: "Achtung: Oft als defekt gemeldet",
+        tutStart: "Alles klar, los geht's!"
     },
     'en': {
         appDesc: "Find WCs, Eurokeys & Changing Tables",
@@ -125,7 +133,15 @@ const dict = {
         levelOG: "Floor {lvl}",
         levelEG: "Ground Floor (0)",
         searchFailed: "Search failed.",
-        voteThanks: "Thank you for your feedback! 💛"
+        voteThanks: "Thank you for your feedback! 💛",
+        tutWelcome: "Welcome to Loocator! 👋",
+        tutIntro: "Here is a quick guide to the markers and symbols on the map:",
+        tutEuro: "Eurokey / Wheelchair accessible WC",
+        tutTop: "Top rated (Community favorite)",
+        tut247: "Open 24/7",
+        tutChanging: "Changing table available",
+        tutDefect: "Warning: Often reported as defective",
+        tutStart: "Got it, let's go!"
     }
 };
 

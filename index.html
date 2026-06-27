@@ -109,7 +109,6 @@
         </a>
 
         <div class="mt-4 text-center flex flex-col gap-2">
-            <!-- Statistik Container -->
             <div id="app-stats" class="text-xs text-gray-500 dark:text-gray-400 font-medium bg-gray-50 dark:bg-gray-700 py-2 rounded-lg border border-gray-100 dark:border-gray-600 hidden"></div>
             
             <a href="mailto:info@loocator.org" class="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
@@ -173,6 +172,47 @@
         <div class="flex gap-3 pb-4">
             <button id="btn-navigate" data-i18n="btnNav" class="flex-[3] bg-blue-600 text-white font-bold py-4 rounded-2xl text-lg active:bg-blue-800 transition-colors shadow-lg"></button>
             <button id="btn-share" data-i18n="btnShare" class="flex-1 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 font-bold py-4 rounded-2xl text-lg active:bg-gray-300 transition-colors shadow-lg">📤</button>
+        </div>
+    </div>
+
+    <!-- NEU: Tutorial Modal -->
+    <div id="tutorial-modal" class="hidden fixed inset-0 bg-gray-900/80 z-[9000] flex items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-300">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 max-w-sm w-full shadow-2xl">
+            <h2 class="text-2xl font-black text-blue-600 dark:text-blue-400 mb-2" data-i18n="tutWelcome"></h2>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-5" data-i18n="tutIntro"></p>
+            
+            <div class="flex flex-col gap-3 mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-yellow-300 dark:bg-yellow-600 border-2 border-yellow-500 flex items-center justify-center shadow-sm">🔑</div>
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-200" data-i18n="tutEuro"></span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-white dark:bg-gray-600 border border-gray-200 dark:border-gray-500 flex items-center justify-center shadow-sm relative">
+                        🚽<div class="absolute -top-1 -left-1 w-3.5 h-3.5 bg-yellow-400 rounded-full border-2 border-white dark:border-gray-800"></div>
+                    </div>
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-200" data-i18n="tutTop"></span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-white dark:bg-gray-600 border border-gray-200 dark:border-gray-500 flex items-center justify-center shadow-sm relative">
+                        🚽<div class="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-gray-800"></div>
+                    </div>
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-200" data-i18n="tut247"></span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-white dark:bg-gray-600 border border-gray-200 dark:border-gray-500 flex items-center justify-center shadow-sm relative">
+                        🚽<div class="absolute -bottom-1 -right-1 w-3 h-3 bg-purple-500 rounded-full border-2 border-white dark:border-gray-800"></div>
+                    </div>
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-200" data-i18n="tutChanging"></span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-white dark:bg-gray-600 border border-gray-200 dark:border-gray-500 flex items-center justify-center shadow-sm relative">
+                        🚽<div class="absolute -bottom-1 -left-1 w-3 h-3 bg-red-600 rounded-full border-2 border-white dark:border-gray-800"></div>
+                    </div>
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-200" data-i18n="tutDefect"></span>
+                </div>
+            </div>
+
+            <button id="btn-close-tutorial" class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold py-3.5 rounded-xl transition-colors shadow-lg" data-i18n="tutStart"></button>
         </div>
     </div>
 
