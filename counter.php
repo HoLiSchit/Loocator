@@ -100,7 +100,7 @@ if (isset($_GET['show'])) {
                 $avg = number_format($row['avg_clean'], 1, ',', '.');
                 $place = $i + 1;
                 // Extrahiere Node/Way ID. (In OSM IDs speichern wir meist zB 'node/1234' oder 'way/1234')
-                $osmUrl = "https://www.openstreetmap.org/" . $row['osm_id'];
+                $osmUrl = "https://www.openstreetmap.org/search?query=" . $row['osm_id'];
                 
                 echo "<div class='list-item'>
                         <span class='badge badge-clean'>Platz $place</span><br>
@@ -119,7 +119,7 @@ if (isset($_GET['show'])) {
             foreach ($topUsable as $i => $row) {
                 $percent = round($row['success_rate'] * 100);
                 $place = $i + 1;
-                $osmUrl = "https://www.openstreetmap.org/" . $row['osm_id'];
+                $osmUrl = "https://www.openstreetmap.org/search?query=" . $row['osm_id'];
                 
                 echo "<div class='list-item'>
                         <span class='badge badge-usable'>Platz $place</span><br>
