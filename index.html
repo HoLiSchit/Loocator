@@ -4,22 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Loocator - WC & Eurokey Finder</title>
-    
     <meta name="description" content="Finde schnell öffentliche Toiletten, rollstuhlgerechte Eurokey-WCs und Wickeltische in deiner Nähe. Kostenlos und ohne Registrierung.">
+    
     <meta property="og:title" content="Loocator - Öffentliche WCs & Eurokey">
     <meta property="og:description" content="Finde schnell öffentliche Toiletten, rollstuhlgerechte Eurokey-WCs und Wickeltische in deiner Nähe. Kostenlos und ohne Registrierung.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://loocator.org/">
+    <meta property="og:url" content="https://loocator.org">
+
+    <!-- Favicon mit dem "L" aus dem Splashscreen (Schwarz) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' x='28' font-size='85' font-family='serif' font-weight='bold' fill='%23000000'>L</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='white'/><text y='80' x='28' font-size='85' font-family='serif' font-weight='bold' fill='%23000000'>L</text></svg>">
     
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚽</text></svg>">
     <link rel="manifest" href="manifest.json">
-    
+
     <!-- Tailwind via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { darkMode: 'class' }</script>
 
     <!-- Leaflet via CDN -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
@@ -42,7 +45,7 @@
 
     <div id="offline-banner" data-i18n="offline" class="hidden absolute top-0 w-full bg-red-600 text-white text-center p-2 text-sm font-bold ui-layer shadow-md transition-opacity"></div>
 
-    <button id="btn-open-menu" class="hidden absolute top-4 left-4 bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 p-3 rounded-full shadow-xl ui-layer text-xl font-bold active:scale-95 transition-transform">🔍</button>
+    <button id="btn-open-menu" class="hidden absolute top-4 left-4 bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 p-3 rounded-full shadow-xl ui-layer text-xl font-bold active:scale-95 transition-transform">🍔</button>
 
     <div id="main-menu" class="absolute top-4 left-4 right-4 bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-xl ui-layer flex flex-col gap-3 transition-opacity">
         <div class="flex justify-between items-start">
@@ -51,11 +54,11 @@
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5 font-medium" data-i18n="appDesc"></p>
             </div>
             <div class="flex items-center gap-1">
-                <button id="btn-theme-toggle" class="text-xl p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 active:scale-95 transition-transform" title="Light/Dark Mode">🌙</button>
+                <button id="btn-theme-toggle" class="text-xl p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 active:scale-95 transition-transform" title="Light/Dark Mode">🌓</button>
                 <button id="btn-close-menu" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 font-bold text-xl p-2 active:scale-95">✕</button>
             </div>
         </div>
-        
+
         <div class="relative flex flex-col mt-1">
             <form id="search-form" class="flex gap-2">
                 <input type="text" id="search-input" data-i18n-placeholder="searchPlaceholder" class="flex-1 border-2 border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-blue-600 transition-colors" autocomplete="off">
@@ -90,11 +93,10 @@
                 <span class="text-sm font-medium text-red-600 dark:text-red-400" data-i18n="filterFav"></span>
             </label>
         </div>
-        
+
         <button id="btn-install" data-i18n="btnInstall" class="hidden mt-1 bg-green-500 text-white px-4 py-3 rounded-xl text-sm font-bold active:bg-green-700 transition-colors shadow"></button>
-        
         <div id="ios-install-hint" class="hidden mt-2 bg-blue-50 dark:bg-gray-700 p-3 rounded-xl text-sm border border-blue-200 dark:border-gray-600 text-blue-800 dark:text-blue-200">
-            <span class="font-bold"><span data-i18n="iosHintTitle"></span></span>
+            <span class="font-bold" data-i18n="iosHintTitle"></span><br>
             <span data-i18n="iosHintBody"></span>
         </div>
 
@@ -105,21 +107,21 @@
         </div>
     </div>
 
+    <!-- Hier ist das rotierende Toiletten-Emoji für den Spinner -->
     <div id="loading-spinner" class="hidden absolute top-4 right-4 bg-white dark:bg-gray-800 p-2 rounded-full shadow-lg ui-layer">
-        <svg class="animate-spin h-6 w-6 text-blue-600 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-        </svg>
+        <div class="animate-spin text-2xl inline-block">
+            🚽
+        </div>
     </div>
 
-    <!-- Map Layer Toggle Button (Standard vs Satellit) -->
+    <!-- Map Layer Toggle Button Standard vs Satellit -->
     <button id="btn-layer-toggle" class="absolute bottom-24 right-4 bg-white text-gray-600 dark:bg-gray-800 dark:text-gray-300 p-3 rounded-full shadow-xl ui-layer transition-all active:scale-95 text-lg border border-gray-200 dark:border-gray-600">🗺️</button>
 
     <button id="btn-location" class="absolute bottom-6 right-4 bg-white text-blue-600 dark:bg-gray-800 dark:text-blue-400 p-4 rounded-full shadow-xl ui-layer transition-all active:scale-95 text-xl border border-gray-200 dark:border-gray-600">📍</button>
 
     <div id="map"></div>
 
-    <div id="bottom-sheet" class="bottom-sheet fixed bottom-0 left-0 w-full bg-white dark:bg-gray-800 rounded-t-3xl shadow-[0_-5px_25px_rgba(0,0,0,0.3)] p-6 transform translate-y-full max-h-[55vh] overflow-y-auto flex flex-col">
+    <div id="bottom-sheet" class="bottom-sheet fixed bottom-0 left-0 w-full bg-white dark:bg-gray-800 rounded-t-3xl shadow-[0_-5px_25px_rgba(0,0,0,0.3)] p-6 transform translate-y-full max-h-[85vh] overflow-y-auto flex flex-col">
         <div class="w-12 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto mb-4" id="btn-close-sheet"></div>
         
         <div class="flex justify-between items-start mb-1">
@@ -128,18 +130,16 @@
         </div>
         
         <div id="routing-warning" class="hidden bg-red-100 dark:bg-red-900 border border-red-300 dark:border-red-700 text-red-700 dark:text-red-300 text-xs font-bold p-2 rounded-xl mb-2 mt-1" data-i18n="routeWarning"></div>
-
         <p id="sheet-distance" class="text-sm font-bold text-blue-600 dark:text-blue-400 mb-2"></p>
         <h3 id="sheet-subtitle" class="text-md font-semibold text-gray-700 dark:text-gray-300 mb-1 hidden"></h3>
-        
         <p id="sheet-address" class="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2 hidden"></p>
-
         <p id="sheet-note" class="text-sm italic text-gray-600 dark:text-gray-300 mb-3 bg-blue-50 dark:bg-gray-700 p-2 rounded-lg border-l-4 border-blue-400 hidden"></p>
-
+        
         <p id="sheet-info" class="text-sm text-gray-500 dark:text-gray-400 mb-5 leading-relaxed"></p>
 
         <div class="bg-gray-50 dark:bg-gray-700 rounded-2xl p-5 mb-5 border border-gray-100 dark:border-gray-600 shadow-inner">
             <h3 class="font-bold mb-3" data-i18n="howWasIt"></h3>
+            
             <div class="mb-5">
                 <span class="text-sm block mb-2 font-medium" data-i18n="couldYouUse"></span>
                 <div class="flex gap-3">
@@ -148,14 +148,15 @@
                 </div>
                 <div id="stat-usable" class="text-xs mt-2 text-gray-500 dark:text-gray-400 font-medium"></div>
             </div>
+
             <div>
                 <span class="text-sm block mb-2 font-medium" data-i18n="cleanliness"></span>
                 <div class="flex gap-2 text-3xl" id="star-rating">
-                    <button class="btn-star active:scale-90 transition-transform" data-val="1">⭐</button>
-                    <button class="btn-star active:scale-90 transition-transform" data-val="2">⭐</button>
-                    <button class="btn-star active:scale-90 transition-transform" data-val="3">⭐</button>
-                    <button class="btn-star active:scale-90 transition-transform" data-val="4">⭐</button>
-                    <button class="btn-star active:scale-90 transition-transform" data-val="5">⭐</button>
+                    <button class="btn-star active:scale-90 transition-transform" data-val="1">☆</button>
+                    <button class="btn-star active:scale-90 transition-transform" data-val="2">☆</button>
+                    <button class="btn-star active:scale-90 transition-transform" data-val="3">☆</button>
+                    <button class="btn-star active:scale-90 transition-transform" data-val="4">☆</button>
+                    <button class="btn-star active:scale-90 transition-transform" data-val="5">☆</button>
                 </div>
                 <div id="stat-clean" class="text-xs mt-2 text-gray-500 dark:text-gray-400 font-medium"></div>
             </div>
@@ -163,7 +164,7 @@
 
         <div class="flex gap-3 pb-4">
             <button id="btn-navigate" data-i18n="btnNav" class="flex-[3] bg-blue-600 text-white font-bold py-4 rounded-2xl text-lg active:bg-blue-800 transition-colors shadow-lg"></button>
-            <button id="btn-share" data-i18n="btnShare" class="flex-[1] bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 font-bold py-4 rounded-2xl text-lg active:bg-gray-300 transition-colors shadow-lg"></button>
+            <button id="btn-share" data-i18n="btnShare" class="flex-1 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 font-bold py-4 rounded-2xl text-lg active:bg-gray-300 transition-colors shadow-lg">📤</button>
         </div>
     </div>
 
