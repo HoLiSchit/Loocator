@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- Initialisierung & Lokalisierung ---
     const htmlTag = document.getElementById('html-tag');
     htmlTag.lang = userLang;
 
@@ -100,7 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- Map Setup mit 2 Layern (Standard & Satellit) ---
     const map = L.map('map', { zoomControl: false }).setView([49.0069, 8.4037], 14);
 
     const layerOSM = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -128,7 +126,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- Cluster Setup mit Indikatoren ---
     const markerClusterGroup = L.markerClusterGroup({
         disableClusteringAtZoom: 16,
         maxClusterRadius: 50,
@@ -419,6 +416,24 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const dbRes = await fetch('backend.php?all=1');
             globalRatingsDb = await dbRes.json();
+            
+            // --- NEU: Statistiken berechnen und ins Menü einfügen ---
+            let ratedWcs = 0;
+            let totalVotes = 0;
+            for (const key in globalRatingsDb) {
+                const wc = globalRatingsDb[key];
+                ratedWcs++;
+                totalVotes += parseInt(wc.usable_yes || 0);
+                totalVotes += parseInt(wc.usable_no || 0);
+                totalVotes += parseInt(wc.cleanliness_count || 0);
+            }
+            const statsEl = document.getElementById('app-stats');
+            if (ratedWcs > 0 && statsEl) {
+                statsEl.innerText = t('statsText', {toilets: ratedWcs, votes: totalVotes});
+                statsEl.classList.remove('hidden');
+            }
+            // ---------------------------------------------------------
+            
         } catch (e) { }
 
         const bounds = map.getBounds();
@@ -504,7 +519,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 ? 'text-2xl bg-yellow-300 dark:bg-yellow-600 rounded-full border-2 border-yellow-500 p-1 shadow-md relative' 
                 : 'text-2xl relative bg-white dark:bg-gray-600 rounded-full border border-gray-200 dark:border-gray-500 p-1 shadow-md';
             
-            // HIER IST DER SCHLÜSSEL WIEDER DA! 🔑
             let iconSymbol = isEurokeyOrWheelchair ? '🔑' : '🚽';
             
             let dotHtml = is247 ? `<div class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full shadow-sm animate-pulse"></div>` : '';

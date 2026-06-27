@@ -11,7 +11,6 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://loocator.org">
 
-    <!-- Favicon mit dem "L" aus dem Splashscreen (Schwarz) -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' x='28' font-size='85' font-family='serif' font-weight='bold' fill='%23000000'>L</text></svg>">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='white'/><text y='80' x='28' font-size='85' font-family='serif' font-weight='bold' fill='%23000000'>L</text></svg>">
     
@@ -33,7 +32,6 @@
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 overflow-hidden font-sans text-gray-800 dark:text-gray-100">
 
-    <!-- Splash Screen Loader -->
     <div id="splash-screen" class="fixed inset-0 bg-blue-600 z-[9999] flex flex-col items-center justify-center transition-opacity duration-500">
         <div class="text-7xl mb-4 animate-bounce">🚽</div>
         <h1 class="text-white text-3xl font-black mb-2">Loocator</h1>
@@ -46,10 +44,9 @@
     <div id="offline-banner" data-i18n="offline" class="hidden absolute top-0 w-full bg-red-600 text-white text-center p-2 text-sm font-bold ui-layer shadow-md transition-opacity"></div>
 
     <button id="btn-open-menu" class="hidden absolute top-4 left-4 bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 p-3 rounded-full shadow-xl ui-layer active:scale-95 transition-transform flex items-center justify-center">
-    <!-- Professionelles 3-Striche Burger-Menü-Icon -->
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-    </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
     </button>
 
     <div id="main-menu" class="absolute top-4 left-4 right-4 bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-xl ui-layer flex flex-col gap-3 transition-opacity">
@@ -106,23 +103,26 @@
         </div>
 
         <button id="btn-report" data-i18n="btnReport" class="mt-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-xl text-sm font-bold active:bg-gray-200 transition-colors border border-gray-200 dark:border-gray-600"></button>
-        <a href="https://ko-fi.com/loocator" target="_blank" rel="noopener noreferrer" class="mt-2 bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300 px-4 py-3 rounded-xl text-sm font-bold text-center active:scale-95 transition-transform flex items-center justify-center gap-2 border border-orange-200 dark:border-orange-800 shadow-sm">
+        
+        <a href="https://ko-fi.com/DEIN_KOFI_NAME_HIER" target="_blank" rel="noopener noreferrer" class="mt-2 bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300 px-4 py-3 rounded-xl text-sm font-bold text-center active:scale-95 transition-transform flex items-center justify-center gap-2 border border-orange-200 dark:border-orange-800 shadow-sm">
             <span data-i18n="btnSupport"></span>
         </a>
 
-        <div class="mt-2 text-center">
-            <a href="mailto:info@loocator.org" class="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors" data-i18n="impressum"></a>
+        <div class="mt-4 text-center flex flex-col gap-2">
+            <!-- Statistik Container -->
+            <div id="app-stats" class="text-xs text-gray-500 dark:text-gray-400 font-medium bg-gray-50 dark:bg-gray-700 py-2 rounded-lg border border-gray-100 dark:border-gray-600 hidden"></div>
+            
+            <a href="mailto:info@loocator.org" class="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                <span data-i18n="impressum"></span><br>
+                <span class="mt-1 inline-block">Made with ❤️ in Rheinstetten</span>
+            </a>
         </div>
     </div>
 
-    <!-- Hier ist das rotierende Toiletten-Emoji für den Spinner -->
     <div id="loading-spinner" class="hidden absolute top-4 right-4 bg-white dark:bg-gray-800 p-2 rounded-full shadow-lg ui-layer">
-        <div class="animate-spin text-2xl inline-block">
-            🚽
-        </div>
+        <div class="animate-spin text-2xl inline-block">🚽</div>
     </div>
 
-    <!-- Map Layer Toggle Button Standard vs Satellit -->
     <button id="btn-layer-toggle" class="absolute bottom-24 right-4 bg-white text-gray-600 dark:bg-gray-800 dark:text-gray-300 p-3 rounded-full shadow-xl ui-layer transition-all active:scale-95 text-lg border border-gray-200 dark:border-gray-600">🗺️</button>
 
     <button id="btn-location" class="absolute bottom-6 right-4 bg-white text-blue-600 dark:bg-gray-800 dark:text-blue-400 p-4 rounded-full shadow-xl ui-layer transition-all active:scale-95 text-xl border border-gray-200 dark:border-gray-600">📍</button>
@@ -176,10 +176,8 @@
         </div>
     </div>
 
-    <!-- Toast Container -->
     <div id="toast-container" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 flex flex-col gap-2 z-[60] pointer-events-none w-11/12 max-w-sm"></div>
 
-    <!-- Scripts -->
     <script src="translations.js"></script>
     <script src="app.js"></script>
 </body>
