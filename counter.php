@@ -16,6 +16,13 @@ if (isset($_GET['hit'])) {
 if (isset($_GET['show'])) {
     $count = file_exists($file) ? (int)file_get_contents($file) : 0;
     
+    // Tages-Differenz berechnen (Startdatum: 28.06.2026)
+    $startDate = new DateTime('2026-06-28');
+    $now = new DateTime();
+    $days = $now->diff($startDate)->days;
+    // Damit am Starttag nicht "in 0 Tagen" steht, nehmen wir mindestens 1
+    $daysNum = max(1, $days); 
+    
     $topClean = [];
     $topUsable = [];
     
@@ -56,8 +63,8 @@ if (isset($_GET['show'])) {
             body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f3f4f6; color: #1f2937; padding: 20px; line-height: 1.5; }
             .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
             h1 { text-align: center; color: #2563eb; font-size: 2.5em; margin-bottom: 5px; }
-            .visits { text-align: center; font-size: 1.2em; color: #6b7280; margin-bottom: 40px; }
-            .visits b { color: #1f2937; font-size: 1.5em; }
+            .visits { text-align: center; font-size: 1.1em; color: #6b7280; margin-bottom: 40px; }
+            .visits b { color: #1f2937; font-size: 1.4em; }
             .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
             @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
             h2 { font-size: 1.5em; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px; margin-bottom: 20px; }
@@ -74,7 +81,7 @@ if (isset($_GET['show'])) {
     <body>
         <div class='container'>
             <h1>🚽 Loocator Stats</h1>
-            <div class='visits'>Die App wurde bisher <b>$count</b> mal aufgerufen.</div>";
+            <div class='visits'>Die App wurde seit dem 28.06.2026 in <b>$daysNum</b> Tagen <b>$count</b> Mal aufgerufen.</div>";
 
     if (isset($error)) echo "<p style='color: red;'>$error</p>";
     else {
