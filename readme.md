@@ -1,16 +1,10 @@
 # Loocator
 
-[![Live App](https://img.shields.io/badge/Live_App-loocator.org-blue?style=for-the-badge)](https://loocator.org)
-
-[![Ko-fi Support](https://img.shields.io/badge/Support_me_on-Ko--fi-FF5E5B?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/loocator)
-
-[![Email](https://img.shields.io/badge/Email-info@loocator.org-blue?style=for-the-badge&logo=minutemailer&logoColor=white)](mailto:info@loocator.org)
-
-[![GitHub](https://img.shields.io/badge/GitHub-HoLiSchit-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/HoLiSchit)
+[![Live App](https://img.shields.io/badge/Live_App-loocator.org-blue?style=for-the-badge)](https://loocator.org) [![Ko-fi Support](https://img.shields.io/badge/Support_me_on-Ko--fi-FF5E5B?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/loocator) [![Email](https://img.shields.io/badge/Email-info@loocator.org-blue?style=for-the-badge&logo=minutemailer&logoColor=white)](mailto:info@loocator.org) [![GitHub](https://img.shields.io/badge/GitHub-HoLiSchit-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/HoLiSchit)
 
 ---
 
-## 🇩🇪 Deutsch
+## 🇩🇪 Deutsc
 
 ### Die Mission
 Loocator ist eine gemeinnützige, Community-getriebene Web-App, die ein alltägliches, aber oft frustrierendes Problem löst: Das schnelle Finden einer zugänglichen Toilette. Egal, ob du dringend ein öffentliches WC, eine rollstuhlgerechte Anlage mit Eurokey-Zugang oder einen Wickeltisch für dein Kind suchst – Loocator zeigt dir den Weg.
