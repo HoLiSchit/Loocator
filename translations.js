@@ -75,7 +75,7 @@ const dict = {
         accBoth: "Zugang: Damen & Herren",
         accFemale: "Zugang: Nur Damen",
         accMale: "Zugang: Nur Herren",
-        filterFree: "🆓 Nur kostenfreie WCs",
+        filterFree: "✅ Nur kostenfreie WCs",
         splashLoading: "Lade WCs in deiner Nähe..."
     },
     'en': {
@@ -154,7 +154,7 @@ const dict = {
         accBoth: "Access: Women & Men",
         accFemale: "Access: Women only",
         accMale: "Access: Men only",
-        filterFree: "🆓 Free of charge only",
+        filterFree: "✅ Free of charge only",
         splashLoading: "Loading WCs nearby..."
     }
 };
