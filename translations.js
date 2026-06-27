@@ -70,7 +70,11 @@ const dict = {
         tutChanging: "Wickeltisch vorhanden",
         tutDefect: "Achtung: Oft als defekt gemeldet",
         tutFav: "Als Favorit markieren (Herz antippen)",
-        tutStart: "Alles klar, los geht's!"
+        tutStart: "Alles klar, los geht's!",
+        accUnisex: "Zugang: Unisex / Alle Geschlechter",
+        accBoth: "Zugang: Damen & Herren",
+        accFemale: "Zugang: Nur Damen",
+        accMale: "Zugang: Nur Herren"
     },
     'en': {
         appDesc: "Find WCs, Eurokeys & Changing Tables",
@@ -143,7 +147,11 @@ const dict = {
         tutChanging: "Changing table available",
         tutDefect: "Warning: Often reported as defective",
         tutFav: "Mark as favorite (tap the heart)",
-        tutStart: "Got it, let's go!"
+        tutStart: "Got it, let's go!",
+        accUnisex: "Access: Unisex / All genders",
+        accBoth: "Access: Women & Men",
+        accFemale: "Access: Women only",
+        accMale: "Access: Men only"
     }
 };
 

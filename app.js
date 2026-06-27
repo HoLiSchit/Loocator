@@ -396,7 +396,6 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchTimeout = setTimeout(fetchToilets, 500);
     });
 
-    // --- NEU: Tutorial Logik eingebaut in removeSplashScreen ---
     function removeSplashScreen() {
         if (!initialLoadComplete) {
             initialLoadComplete = true;
@@ -405,7 +404,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 splash.classList.add('opacity-0');
                 setTimeout(() => {
                     splash.remove();
-                    // Wenn Tutorial noch nie gesehen, zeige es an
                     if (!localStorage.getItem('loocator_tutorial_seen')) {
                         document.getElementById('tutorial-modal').classList.remove('hidden');
                     }
@@ -415,7 +413,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- NEU: Tutorial Button Logik ---
     const btnCloseTutorial = document.getElementById('btn-close-tutorial');
     if (btnCloseTutorial) {
         btnCloseTutorial.addEventListener('click', () => {
@@ -734,11 +731,13 @@ document.addEventListener('DOMContentLoaded', () => {
             noteEl.classList.add('hidden');
         }
 
+        // --- HIER WAR DER FEHLER: Harte deutsche Texte wurden durch t() Aufrufe ersetzt! ---
         let genderInfo = '';
-        if (tags.unisex === 'yes') genderInfo = 'Zugang: Unisex / Alle Geschlechter';
-        else if (tags.male === 'yes' && tags.female === 'yes') genderInfo = 'Zugang: Damen & Herren';
-        else if (tags.female === 'yes') genderInfo = 'Zugang: Nur Damen';
-        else if (tags.male === 'yes') genderInfo = 'Zugang: Nur Herren';
+        if (tags.unisex === 'yes') genderInfo = t('accUnisex');
+        else if (tags.male === 'yes' && tags.female === 'yes') genderInfo = t('accBoth');
+        else if (tags.female === 'yes') genderInfo = t('accFemale');
+        else if (tags.male === 'yes') genderInfo = t('accMale');
+        // -------------------------------------------------------------------------------------
 
         let info = [];
         if(isDefect) info.push(t('iDefect'));
