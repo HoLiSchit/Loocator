@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    fetch('counter.php?hit=1').catch(() => {});
 
     const htmlTag = document.getElementById('html-tag');
     htmlTag.lang = userLang;
@@ -102,7 +103,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const map = L.map('map', { zoomControl: false }).setView([49.0069, 8.4037], 14);
 
     const layerOSM = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap'
+        attribution: '© OpenStreetMap',
+        className: 'osm-tiles'
     });
     const layerSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Tiles © Esri'
