@@ -74,7 +74,8 @@ const dict = {
         accUnisex: "Zugang: Unisex / Alle Geschlechter",
         accBoth: "Zugang: Damen & Herren",
         accFemale: "Zugang: Nur Damen",
-        accMale: "Zugang: Nur Herren"
+        accMale: "Zugang: Nur Herren",
+        splashLoading: "Lade WCs in deiner Nähe..."
     },
     'en': {
         appDesc: "Find WCs, Eurokeys & Changing Tables",
@@ -151,7 +152,8 @@ const dict = {
         accUnisex: "Access: Unisex / All genders",
         accBoth: "Access: Women & Men",
         accFemale: "Access: Women only",
-        accMale: "Access: Men only"
+        accMale: "Access: Men only",
+        splashLoading: "Loading WCs nearby..."
     }
 };
 
