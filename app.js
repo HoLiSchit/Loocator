@@ -121,16 +121,19 @@ document.addEventListener('DOMContentLoaded', () => {
     let isSatMode = false;
     document.getElementById('btn-layer-toggle').addEventListener('click', (e) => {
         isSatMode = !isSatMode;
+        const mapDiv = document.getElementById('map');
         if (isSatMode) {
             map.removeLayer(layerOSM);
             layerSat.addTo(map);
             e.target.innerText = '🌍';
             e.target.classList.add('bg-blue-100');
+            mapDiv.classList.add('is-sat-mode');
         } else {
             map.removeLayer(layerSat);
             layerOSM.addTo(map);
             e.target.innerText = '🗺️';
             e.target.classList.remove('bg-blue-100');
+            mapDiv.classList.remove('is-sat-mode');
         }
     });
 
