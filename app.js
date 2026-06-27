@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('counter.php?hit=1').catch(() => {});
+
+    // --- NEU: Besucherzähler sauber aufrufen ---
+    fetch('counter.php?hit=1').catch(e => console.log('Counter-Error:', e));
+    // ------------------------------------------
 
     const htmlTag = document.getElementById('html-tag');
     htmlTag.lang = userLang;
@@ -102,10 +105,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const map = L.map('map', { zoomControl: false }).setView([49.0069, 8.4037], 14);
 
+    // --- NEU: className 'osm-tiles' hier zwingend hinzugefügt ---
     const layerOSM = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap',
         className: 'osm-tiles'
     });
+    // -----------------------------------------------------------
+
     const layerSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Tiles © Esri'
     });
@@ -358,6 +364,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    const filterSelectors = ['filter-public', 'filter-eurokey', 'filter-changing', 'filter-open', 'filter-success', 'filter-favorites', 'filter-free'];
+    filterSelectors.forEach(id => {
+        if(document.getElementById(id)) {
+            document.getElementById(id).addEventListener('change', renderMarkers);
+        }
+    });
+
     document.getElementById('btn-report').addEventListener('click', async () => {
         if(!confirm(t('alertReportConfirm'))) return;
         
@@ -372,11 +385,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch(e) {
             customAlert(t('alertError'));
         }
-    });
-
-    const filterSelectors = ['filter-public', 'filter-eurokey', 'filter-changing', 'filter-open', 'filter-success', 'filter-favorites'];
-    filterSelectors.forEach(id => {
-        document.getElementById(id).addEventListener('change', renderMarkers);
     });
 
     function isLikelyClosedNow(openingHoursStr) {
@@ -491,6 +499,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const reqOpen = document.getElementById('filter-open').checked;
         const reqSucc = document.getElementById('filter-success').checked;
         const reqFav = document.getElementById('filter-favorites').checked;
+        const freeCheckbox = document.getElementById('filter-free');
+        const reqFree = freeCheckbox ? freeCheckbox.checked : false;
 
         let savedFavs = JSON.parse(localStorage.getItem('loocator_favs') || '[]');
 
@@ -516,6 +526,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (reqChange && !hasChanging) return;
 
             if (reqOpen && isLikelyClosedNow(tags.opening_hours)) return;
+
+            if (reqFree) {
+                const fee = tags.fee || tags['toilets:fee'] || tags.charge;
+                if (fee && !['no', '0', 'false', 'none'].includes(fee.toLowerCase())) return;
+            }
 
             let isDefect = false;
             let isTopRated = false;
@@ -733,13 +748,11 @@ document.addEventListener('DOMContentLoaded', () => {
             noteEl.classList.add('hidden');
         }
 
-        // --- HIER WAR DER FEHLER: Harte deutsche Texte wurden durch t() Aufrufe ersetzt! ---
         let genderInfo = '';
         if (tags.unisex === 'yes') genderInfo = t('accUnisex');
         else if (tags.male === 'yes' && tags.female === 'yes') genderInfo = t('accBoth');
         else if (tags.female === 'yes') genderInfo = t('accFemale');
         else if (tags.male === 'yes') genderInfo = t('accMale');
-        // -------------------------------------------------------------------------------------
 
         let info = [];
         if(isDefect) info.push(t('iDefect'));
