@@ -371,6 +371,9 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('label-rep-2').style.display = 'flex';
         document.getElementById('radio-rep-1').checked = true;
         
+        // Hinweis für bestehende WCs hier wieder ausblenden
+        document.getElementById('modal-report-hint').style.display = 'none';
+        
         toggleMenu(false);
         crosshair.classList.remove('hidden');
         targetBottomBar.classList.remove('hidden');
@@ -384,6 +387,11 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById('label-rep-1').style.display = 'none';
             document.getElementById('label-rep-2').style.display = 'none';
             document.getElementById('radio-rep-3').checked = true;
+
+            // NEU: Zusatztext (Hint) anzeigen und mit der aktuellen OSM-ID füllen
+            const hintEl = document.getElementById('modal-report-hint');
+            hintEl.innerText = t('reportExistingHint') + ' ' + currentToiletData.id;
+            hintEl.style.display = 'block';
             
             closeSheet();
             reportModal.classList.remove('hidden');
