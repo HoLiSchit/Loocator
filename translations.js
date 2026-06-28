@@ -7,7 +7,7 @@ const dict = {
         filterEurokey: "🔑 Eurokey / Rollstuhl WC",
         filterChanging: "🟣 Wickeltisch vorhanden",
         filterOpen: "🟢 Jetzt geöffnet (inkl. Unbekannt)",
-        filterSuccess: "🟡 Hohe Erfolgsrate (>65%)",
+        filterSuccess: "🟡 Hohe Erfolgsrate",
         filterFav: "❤️ Nur Favoriten anzeigen",
         btnInstall: "Loocator als App installieren",
         btnReport: "Karten-Fehler melden",
