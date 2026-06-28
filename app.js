@@ -749,20 +749,29 @@ document.addEventListener("DOMContentLoaded", () => {
                 }).catch(() => console.log('Routing fallback active'));
         }
 
-        let baseType = t('tPublic');
-        if (tags.highway === 'services') baseType = t('tRestStop');
-        else if (tags.highway === 'rest_area') baseType = t('tRestArea');
-        else if (tags.amenity === 'fuel') baseType = t('tFuel');
+        let baseType = '';
+        let isStandardPublic = false;
 
+        // 1. Prüfen, was für eine Art von Ort es ist
+        if (tags.highway === 'services') {
+            baseType = t('tRestStop');
+        } else if (tags.highway === 'rest_area') {
+            baseType = t('tRestArea');
+        } else if (tags.amenity === 'fuel') {
+            baseType = t('tFuel');
+        } else {
+            baseType = t('tPublic');
+            isStandardPublic = true; // Wir merken uns: Es ist ein ganz normales WC!
+        }
+
+        // 2. Zusätze für Eurokey / Rollstuhl sauber aus den Translations holen
         if (isEurokeyOrWheelchair) {
             if (isExplicitEurokey) {
-                // Wenn es das Standard-WC ist, nenne es einfach direkt "Eurokey-WC"
-                if (baseType === t('tPublic')) baseType = "Eurokey-WC";
-                // Ansonsten hänge es in Klammern an (z.B. "Tankstelle (Eurokey)")
-                else baseType += ' (' + t('tAddEuro') + ')';
+                // Wenn es ein normales WC ist -> "Eurokey-WC", sonst z.B. "Tankstelle (Eurokey)"
+                baseType = isStandardPublic ? t('tPublicEurokey') : baseType + ' (' + t('tAddEuro') + ')';
             } else if (isWheelchair) {
-                if (baseType === t('tPublic')) baseType = "Rollstuhl-WC";
-                else baseType += ' (' + t('tAddWheel') + ')';
+                // Wenn es ein normales WC ist -> "Rollstuhl-WC", sonst z.B. "Rastplatz (Rollstuhlgerecht)"
+                baseType = isStandardPublic ? t('tPublicWheel') : baseType + ' (' + t('tAddWheel') + ')';
             }
         }
 
