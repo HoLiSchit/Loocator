@@ -109,7 +109,7 @@ const dict = {
         distTimeMin: " min. walk",
         btnReport: "Report map error",
         btnSupport: "🥤 Support the project",
-        impressum: "100% free, but I’d appreciate your support! Contact: info@loocator.org",
+        impressum: "100% free, but your support is greatly appreciated! Contact: info@loocator.org",
         statsText: "{toilets} WCs rated • {votes} community votes",
         howWasIt: "Your feedback helps others",
         couldYouUse: "Did everything work out?",
