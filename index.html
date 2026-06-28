@@ -4,18 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Loocator - WC & Eurokey Finder</title>
+    
     <meta name="description" content="Finde schnell öffentliche Toiletten, rollstuhlgerechte Eurokey-WCs und Wickeltische in deiner Nähe. Kostenlos und ohne Registrierung.">
     
     <meta property="og:title" content="Loocator - Öffentliche WCs & Eurokey">
     <meta property="og:description" content="Finde schnell öffentliche Toiletten, rollstuhlgerechte Eurokey-WCs und Wickeltische in deiner Nähe. Kostenlos und ohne Registrierung.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://loocator.org">
-
+    
+    <!-- SEO Canonical -->
     <link rel="canonical" href="https://loocator.org/" />
 
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' x='28' font-size='85' font-family='serif' font-weight='bold' fill='%23000000'>L</text></svg>">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='white'/><text y='80' x='28' font-size='85' font-family='serif' font-weight='bold' fill='%23000000'>L</text></svg>">
-    
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%2280%22 x=%2228%22 font-size=%2285%22 font-family=%22serif%22 font-weight=%22bold%22 fill=%22%23000000%22>L</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22white%22/><text y=%2280%22 x=%2228%22 font-size=%2285%22 font-family=%22serif%22 font-weight=%22bold%22 fill=%22%23000000%22>L</text></svg>">
     <link rel="manifest" href="manifest.json">
 
     <!-- Tailwind via CDN -->
@@ -25,6 +26,7 @@
     <!-- Leaflet via CDN -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
@@ -35,7 +37,7 @@
 <body class="bg-gray-100 dark:bg-gray-900 overflow-hidden font-sans text-gray-800 dark:text-gray-100">
 
     <div id="splash-screen" class="fixed inset-0 bg-blue-600 z-[9999] flex flex-col items-center justify-center transition-opacity duration-500">
-        <div class="text-7xl mb-4 animate-bounce">🚽</div>
+        <div class="text-7xl mb-4 animate-bounce">🧻</div>
         <h1 class="text-white text-3xl font-black mb-2">Loocator</h1>
         <p class="text-blue-200 text-sm font-medium flex items-center gap-2">
             <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
@@ -58,7 +60,7 @@
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5 font-medium" data-i18n="appDesc"></p>
             </div>
             <div class="flex items-center gap-1">
-                <button id="btn-theme-toggle" class="text-xl p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 active:scale-95 transition-transform" title="Light/Dark Mode">🌓</button>
+                <button id="btn-theme-toggle" class="text-xl p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 active:scale-95 transition-transform" title="Light/Dark Mode"></button>
                 <button id="btn-close-menu" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 font-bold text-xl p-2 active:scale-95">✕</button>
             </div>
         </div>
@@ -103,20 +105,20 @@
         </div>
 
         <button id="btn-install" data-i18n="btnInstall" class="hidden mt-1 bg-green-500 text-white px-4 py-3 rounded-xl text-sm font-bold active:bg-green-700 transition-colors shadow"></button>
+        
         <div id="ios-install-hint" class="hidden mt-2 bg-blue-50 dark:bg-gray-700 p-3 rounded-xl text-sm border border-blue-200 dark:border-gray-600 text-blue-800 dark:text-blue-200">
             <span class="font-bold" data-i18n="iosHintTitle"></span><br>
             <span data-i18n="iosHintBody"></span>
         </div>
 
         <button id="btn-report" data-i18n="btnReport" class="mt-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-xl text-sm font-bold active:bg-gray-200 transition-colors border border-gray-200 dark:border-gray-600"></button>
-        
-        <a href="https://ko-fi.com/DEIN_KOFI_NAME_HIER" target="_blank" rel="noopener noreferrer" class="mt-2 bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300 px-4 py-3 rounded-xl text-sm font-bold text-center active:scale-95 transition-transform flex items-center justify-center gap-2 border border-orange-200 dark:border-orange-800 shadow-sm">
-            <span data-i18n="btnSupport"></span>
+
+        <a href="https://ko-fi.com/DEINKOFINAMEHIER" target="_blank" rel="noopener noreferrer" class="mt-2 bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300 px-4 py-3 rounded-xl text-sm font-bold text-center active:scale-95 transition-transform flex items-center justify-center gap-2 border border-orange-200 dark:border-orange-800 shadow-sm">
+            ☕ <span data-i18n="btnSupport"></span>
         </a>
 
         <div class="mt-4 text-center flex flex-col gap-2">
             <div id="app-stats" class="text-xs text-gray-500 dark:text-gray-400 font-medium bg-gray-50 dark:bg-gray-700 py-2 rounded-lg border border-gray-100 dark:border-gray-600 hidden"></div>
-            
             <a href="mailto:info@loocator.org" class="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
                 <span data-i18n="impressum"></span><br>
                 <span class="mt-1 inline-block">Made with ❤️ in Rheinstetten</span>
@@ -125,7 +127,7 @@
     </div>
 
     <div id="loading-spinner" class="hidden absolute top-4 right-4 bg-white dark:bg-gray-800 p-2 rounded-full shadow-lg ui-layer">
-        <div class="animate-spin text-2xl inline-block">🚽</div>
+        <div class="animate-spin text-2xl inline-block">⏳</div>
     </div>
 
     <button id="btn-layer-toggle" class="absolute bottom-24 right-4 bg-white text-gray-600 dark:bg-gray-800 dark:text-gray-300 p-3 rounded-full shadow-xl ui-layer transition-all active:scale-95 text-lg border border-gray-200 dark:border-gray-600">🗺️</button>
@@ -143,9 +145,11 @@
         </div>
         
         <div id="routing-warning" class="hidden bg-red-100 dark:bg-red-900 border border-red-300 dark:border-red-700 text-red-700 dark:text-red-300 text-xs font-bold p-2 rounded-xl mb-2 mt-1" data-i18n="routeWarning"></div>
+
         <p id="sheet-distance" class="text-sm font-bold text-blue-600 dark:text-blue-400 mb-2"></p>
         <h3 id="sheet-subtitle" class="text-md font-semibold text-gray-700 dark:text-gray-300 mb-1 hidden"></h3>
         <p id="sheet-address" class="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2 hidden"></p>
+        
         <p id="sheet-note" class="text-sm italic text-gray-600 dark:text-gray-300 mb-3 bg-blue-50 dark:bg-gray-700 p-2 rounded-lg border-l-4 border-blue-400 hidden"></p>
         
         <p id="sheet-info" class="text-sm text-gray-500 dark:text-gray-400 mb-5 leading-relaxed"></p>
@@ -165,32 +169,41 @@
             <div>
                 <span class="text-sm block mb-2 font-medium" data-i18n="cleanliness"></span>
                 <div class="flex gap-2 text-3xl" id="star-rating">
-                    <button class="btn-star active:scale-90 transition-transform" data-val="1">☆</button>
-                    <button class="btn-star active:scale-90 transition-transform" data-val="2">☆</button>
-                    <button class="btn-star active:scale-90 transition-transform" data-val="3">☆</button>
-                    <button class="btn-star active:scale-90 transition-transform" data-val="4">☆</button>
-                    <button class="btn-star active:scale-90 transition-transform" data-val="5">☆</button>
+                    <button class="btn-star active:scale-90 transition-transform" data-val="1">⭐</button>
+                    <button class="btn-star active:scale-90 transition-transform" data-val="2">⭐</button>
+                    <button class="btn-star active:scale-90 transition-transform" data-val="3">⭐</button>
+                    <button class="btn-star active:scale-90 transition-transform" data-val="4">⭐</button>
+                    <button class="btn-star active:scale-90 transition-transform" data-val="5">⭐</button>
                 </div>
                 <div id="stat-clean" class="text-xs mt-2 text-gray-500 dark:text-gray-400 font-medium"></div>
             </div>
         </div>
 
-        <div class="flex gap-3 pb-4">
-            <button id="btn-navigate" data-i18n="btnNav" class="flex-[3] bg-blue-600 text-white font-bold py-4 rounded-2xl text-lg active:bg-blue-800 transition-colors shadow-lg"></button>
-            <button id="btn-share" data-i18n="btnShare" class="flex-1 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 font-bold py-4 rounded-2xl text-lg active:bg-gray-300 transition-colors shadow-lg">📤</button>
-        </div>
+        <!-- NEUES KOMPAKTES BUTTON LAYOUT -->
+        <div class="flex gap-2 pb-4 pt-2">
+            <!-- Navigieren (3/6) -->
+            <button id="btn-navigate" class="flex-[3] bg-blue-600 text-white font-bold py-3.5 rounded-2xl text-base active:bg-blue-800 transition-colors shadow-lg flex items-center justify-center gap-2">
+                <img src="img/route.svg" alt="" class="w-5 h-5 filter brightness-0 invert">
+                <span data-i18n="btnNav"></span>
+            </button>
+            
+            <!-- Teilen (2/6) -->
+            <button id="btn-share" class="flex-[2] bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-100 font-bold py-3.5 rounded-2xl text-base active:bg-gray-200 dark:active:bg-gray-600 transition-colors shadow-sm flex items-center justify-center gap-2 border border-gray-200 dark:border-gray-600">
+                <img src="img/share.svg" alt="" class="w-5 h-5 dark:invert">
+                <span data-i18n="btnShare"></span>
+            </button>
 
-        <!-- Fehler melden im Detail-Popup -->
-        <div class="mt-2 pt-4 border-t border-gray-100 dark:border-gray-700 flex flex-col items-center">
-            <p class="text-xs text-gray-500 dark:text-gray-400 mb-2 text-center leading-tight" data-i18n="reportExistingHint"></p>
-            <button id="btn-report-existing" class="text-sm font-bold text-red-600 dark:text-red-400 py-2.5 px-4 rounded-xl bg-red-50 dark:bg-red-900/20 active:bg-red-100 dark:active:bg-red-900/40 transition-colors w-full border border-red-100 dark:border-red-900/50" data-i18n="btnReportExisting"></button>
+            <!-- Melden (1/6 - Nur Icon) -->
+            <button id="btn-report-existing" class="flex-[1] bg-red-50 dark:bg-red-900/20 py-3.5 rounded-2xl active:bg-red-100 dark:active:bg-red-900/40 transition-colors shadow-sm flex items-center justify-center border border-red-100 dark:border-red-900/50" title="Fehler melden">
+                <img src="img/report.svg" alt="Melden" class="w-[22px] h-[22px]" style="filter: invert(30%) sepia(80%) saturate(3000%) hue-rotate(345deg) brightness(95%) contrast(100%);">
+            </button>
         </div>
 
     </div>
 
     <!-- Fadenkreuz in der Bildschirmmitte (Standardmäßig unsichtbar) -->
     <div id="crosshair" class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none z-[400] text-5xl drop-shadow-md pb-8">
-        🎯
+        📍
     </div>
 
     <!-- NEU: Die Ziel-Modus Leiste unten -->
@@ -202,11 +215,14 @@
         </div>
     </div>
 
-    <!-- Das Melde-Formular Modal (mit IDs) -->
+    <!-- Das Melde-Formular Modal (mit dynamischem Text) -->
     <div id="report-modal" class="hidden fixed inset-0 bg-gray-900/80 z-[9000] flex items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-300">
         <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 max-w-sm w-full shadow-2xl">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-black text-blue-600 dark:text-blue-400" data-i18n="reportModalTitle"></h2>
+            <div class="flex justify-between items-start mb-4">
+                <div class="flex flex-col">
+                    <h2 class="text-xl font-black text-blue-600 dark:text-blue-400" data-i18n="reportModalTitle"></h2>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-tight pr-2" data-i18n="reportExistingHint" id="modal-report-hint" style="display: none;"></p>
+                </div>
                 <button id="btn-close-report" class="text-gray-400 hover:text-gray-600 text-xl font-bold p-1">✕</button>
             </div>
             
@@ -275,7 +291,7 @@
         </div>
     </div>
 
-    <div id="toast-container" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 flex flex-col gap-2 z-[60] pointer-events-none w-11/12 max-w-sm"></div>
+    <div id="toast-container" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 flex flex-col gap-2 z-60 pointer-events-none w-11/12 max-w-sm"></div>
 
     <script src="translations.js"></script>
     <script src="app.js"></script>
