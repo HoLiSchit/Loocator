@@ -145,8 +145,8 @@
 
     <div id="map"></div>
 
-    <div id="bottom-sheet" class="bottom-sheet fixed bottom-0 left-0 w-full bg-white dark:bg-gray-800 rounded-t-3xl shadow-[0_-5px_25px_rgba(0,0,0,0.3)] p-6 transform translate-y-full max-h-[85vh] overflow-y-auto flex flex-col">
-        <div class="w-12 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto mb-4" id="btn-close-sheet"></div>
+    div id="bottom-sheet" class="bottom-sheet fixed bottom-0 left-0 w-full bg-white dark:bg-gray-800 rounded-t-3xl shadow-[0_-5px_25px_rgba(0,0,0,0.3)] p-6 transform translate-y-full max-h-[85vh] flex flex-col transition-transform duration-300 touch-pan-y">
+        <div class="w-12 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto mb-4 cursor-pointer" id="btn-close-sheet"></div>
         
         <div class="flex justify-between items-start mb-1">
             <h2 id="sheet-title" class="text-2xl font-bold"></h2>
@@ -163,7 +163,7 @@
         
         <p id="sheet-info" class="text-sm text-gray-500 dark:text-gray-400 mb-5 leading-relaxed"></p>
 
-        <div class="bg-gray-50 dark:bg-gray-700 rounded-2xl p-5 mb-5 border border-gray-100 dark:border-gray-600 shadow-inner">
+        <div id="feedback-section" class="bg-gray-50 dark:bg-gray-700 rounded-2xl p-5 mb-5 border border-gray-100 dark:border-gray-600 shadow-inner transition-opacity duration-300">
             <h3 class="font-bold mb-3" data-i18n="howWasIt"></h3>
             
             <div class="mb-5">

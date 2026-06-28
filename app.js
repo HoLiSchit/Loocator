@@ -655,11 +655,78 @@ document.addEventListener("DOMContentLoaded", () => {
             searchMarker = null;
         }
     });
-    btnCloseSheet.addEventListener('click', closeSheet);
+    let sheetState = 0; // 0=Zu, 1=Stufe1, 2=Stufe2
+    const bottomSheetEl = document.getElementById('bottom-sheet');
+    const feedbackSection = document.getElementById('feedback-section');
+    
+    function updateSheetState() {
+        if (sheetState === 0) {
+            bottomSheetEl.style.transform = 'translateY(100%)';
+            bottomSheetEl.style.overflowY = 'hidden';
+            if (routingLine) { map.removeLayer(routingLine); routingLine = null; }
+        } else if (sheetState === 1) {
+            bottomSheetEl.style.transform = 'translateY(55%)'; // Stufe 1: Nur oberer Teil sichtbar
+            bottomSheetEl.style.overflowY = 'hidden';
+            if(feedbackSection) feedbackSection.style.opacity = '0.2';
+        } else if (sheetState === 2) {
+            bottomSheetEl.style.transform = 'translateY(0%)'; // Stufe 2: Ganz offen
+            bottomSheetEl.style.overflowY = 'auto';
+            if(feedbackSection) feedbackSection.style.opacity = '1';
+        }
+    }
+
+    // Swipe Logik
+    let startY = 0;
+    let currentY = 0;
+    
+    bottomSheetEl.addEventListener('touchstart', (e) => {
+        if (sheetState === 2 && bottomSheetEl.scrollTop > 0) return; // Erlaube scrollen, wenn voll offen
+        startY = e.touches[0].clientY;
+    }, {passive: true});
+
+    bottomSheetEl.addEventListener('touchmove', (e) => {
+        if (sheetState === 2 && bottomSheetEl.scrollTop > 0) return;
+        currentY = e.touches[0].clientY;
+    }, {passive: true});
+
+    bottomSheetEl.addEventListener('touchend', (e) => {
+        if (sheetState === 2 && bottomSheetEl.scrollTop > 0) return;
+        if (!startY || !currentY) {
+            // Nur geklickt, nicht gewischt
+            if (sheetState === 1 && e.target.closest('#btn-close-sheet')) {
+                sheetState = 2; // Auf den Griff tippen öffnet in Stufe 1 zu Stufe 2
+                updateSheetState();
+            } else if (sheetState === 2 && e.target.closest('#btn-close-sheet')) {
+                sheetState = 0; // Auf Griff tippen schließt komplett aus Stufe 2
+                updateSheetState();
+            }
+            return;
+        }
+
+        let diff = currentY - startY;
+        if (Math.abs(diff) > 40) {
+            if (diff > 0) {
+                // Nach unten wischen
+                sheetState = (sheetState === 2) ? 1 : 0;
+            } else {
+                // Nach oben wischen
+                if (sheetState === 1) sheetState = 2;
+            }
+            updateSheetState();
+        }
+        startY = 0;
+        currentY = 0;
+    });
+
+    btnCloseSheet.addEventListener('click', () => {
+        if(sheetState === 2) sheetState = 0;
+        else if(sheetState === 1) sheetState = 2;
+        updateSheetState();
+    });
 
     function closeSheet() {
-        document.getElementById('bottom-sheet').classList.add('translate-y-full');
-        if (routingLine) { map.removeLayer(routingLine); routingLine = null; }
+        sheetState = 0;
+        updateSheetState();
     }
 
     async function openSheet(toilet, isEurokeyOrWheelchair, isExplicitEurokey, isWheelchair, is247, hasChanging, isDefect, isTopRated, lat, lon) {
@@ -858,7 +925,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         document.getElementById('stat-usable').innerText = t('statLoading');
         document.getElementById('stat-clean').innerText = t('statLoading');
-        document.getElementById('bottom-sheet').classList.remove('translate-y-full');
+        // Öffne das Sheet nun in Stufe 1 anstelle von Stufe 2
+        sheetState = 1;
+        updateSheetState();
 
         await loadRatings(toilet.id);
         checkVotedStatus(toilet.id);
