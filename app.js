@@ -557,34 +557,49 @@ document.addEventListener("DOMContentLoaded", () => {
         markerClusterGroup.clearLayers();
         activeMarkers = [];
         
+        // 1. Welche Filter sind aktiv?
         const reqPub = document.getElementById('filter-public').checked;
         const reqEuro = document.getElementById('filter-eurokey').checked;
+        
         const reqChange = document.getElementById('filter-changing').checked;
         const reqOpen = document.getElementById('filter-open').checked;
         const reqSucc = document.getElementById('filter-success').checked;
         const reqFav = document.getElementById('filter-favorites').checked;
+        
         const freeCheckbox = document.getElementById('filter-free');
         const reqFree = freeCheckbox ? freeCheckbox.checked : false;
+        
+        // Unser neuer Anti-Schlecht-Filter
+        const noBadCheckbox = document.getElementById('filter-nobad');
+        const reqNoBad = noBadCheckbox ? noBadCheckbox.checked : false;
 
         let savedFavs = JSON.parse(localStorage.getItem('loocator_favs') || '[]');
 
-        allToilets.forEach(toilet => {
-            if (reqFav && !savedFavs.includes(toilet.id)) return;
+        allToilets.forEach(toilet => { 
+            if (reqFav && !savedFavs.includes(toilet.id)) return; 
+            
+            const tags = toilet.tags; 
+            const lat = toilet.lat || (toilet.center && toilet.center.lat); 
+            const lon = toilet.lon || (toilet.center && toilet.center.lon); 
+            if (!lat || !lon) return; 
+            
+            // --- NEUE FILTER-LOGIK (KATEGORIEN) --- 
+            const access = tags.access || tags['toilets:access'] || 'yes'; 
+            const isPublic = (access !== 'private' && access !== 'customers'); 
+            const isExplicitEurokey = (tags['central_key'] === 'eurokey' || tags['eurokey'] === 'yes' || tags.access === 'central_key' || tags['toilets:eurokey'] === 'yes' || tags['toilets:central_key'] === 'eurokey'); 
+            const isWheelchair = (tags.wheelchair === 'yes' || tags.wheelchair === 'designated' || tags['toilets:wheelchair'] === 'yes' || tags['toilets:wheelchair'] === 'designated'); 
+            const isEurokeyOrWheelchair = isExplicitEurokey || isWheelchair; 
+            
+            if (!reqPub && !reqEuro) return; 
+            
+            let matchesFilter = false; 
+            if (reqPub && isPublic) matchesFilter = true; 
+            if (reqEuro && isEurokeyOrWheelchair) matchesFilter = true; 
+            
+            if (!matchesFilter) return; 
+            // --- ENDE NEUE FILTER-LOGIK ---
 
-            const tags = toilet.tags;
-            const lat = toilet.lat || (toilet.center && toilet.center.lat);
-            const lon = toilet.lon || (toilet.center && toilet.center.lon);
-            if (!lat || !lon) return;
-
-            const access = tags.access || tags['toilets:access'] || 'yes';
-            if (reqPub && (access === 'private' || access === 'customers')) return;
-
-            const isExplicitEurokey = (tags['central_key'] === 'eurokey' || tags['eurokey'] === 'yes' || tags.access === 'central_key' || tags['toilets:eurokey'] === 'yes' || tags['toilets:central_key'] === 'eurokey');
-            const isWheelchair = (tags.wheelchair === 'yes' || tags.wheelchair === 'designated' || tags['toilets:wheelchair'] === 'yes' || tags['toilets:wheelchair'] === 'designated');
-            const isEurokeyOrWheelchair = isExplicitEurokey || isWheelchair;
-
-            if (reqEuro && !isEurokeyOrWheelchair) return;
-
+            // --- UND-FILTER ---
             const hasChanging = (tags['changing_table'] === 'yes' || tags.diaper === 'yes');
             if (reqChange && !hasChanging) return;
             if (reqOpen && isLikelyClosedNow(tags['opening_hours'])) return;
@@ -593,21 +608,32 @@ document.addEventListener("DOMContentLoaded", () => {
                 const fee = tags.fee || tags['toilets:fee'] || tags.charge;
                 if (fee && !['no', '0', 'false', 'none'].includes(fee.toLowerCase())) return;
             }
-
+            
             let isDefect = false;
             let isTopRated = false;
+            let isBad = false; // NEU
+            
             const rating = globalRatingsDb[toilet.id];
             if (rating) {
-                const total = (rating.usable_yes || 0) + (rating.usable_no || 0);
-                if (total >= 1) {
-                    const successRate = rating.usable_yes / total;
-                    if (successRate <= 0.3) isDefect = true;
-                    if (reqSucc && successRate < 0.65) return;
-                    if (total >= 2 && successRate >= 0.85) isTopRated = true;
+                const total = (parseInt(rating.usable_yes)||0) + (parseInt(rating.usable_no)||0);
+                if (total > 0) {
+                    const successRate = (parseInt(rating.usable_yes)||0) / total;
+                    if (successRate < 0.4) isDefect = true; 
+                    if (total >= 2 && successRate >= 0.85) isTopRated = true; 
+                    if (total >= 2 && successRate < 0.5) isBad = true; // NEU
+                }
+                
+                const cleanCount = parseInt(rating.cleanliness_count)||0;
+                const cleanSum = parseInt(rating.cleanliness_sum)||0;
+                if (cleanCount >= 2) {
+                    const avgClean = cleanSum / cleanCount;
+                    if (avgClean <= 2.0) isBad = true; // NEU
                 }
             }
             
-            const is247 = (tags['opening_hours'] === '24/7');
+            if (reqSucc && !isTopRated) return;
+            if (reqNoBad && isBad) return; // NEU
+            const is247 = (tags.opening_hours === '24/7');
 
             let baseClass = isEurokeyOrWheelchair 
                 ? 'text-2xl bg-yellow-300 dark:bg-yellow-600 rounded-full border-2 border-yellow-500 p-1 shadow-md relative' 
