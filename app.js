@@ -374,19 +374,69 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('btn-report').addEventListener('click', async () => {
-        if(!confirm(t('alertReportConfirm'))) return;
-        
+    // --- NEUES MELDEN UI LOGIK ---
+    const crosshair = document.getElementById('crosshair');
+    const targetBottomBar = document.getElementById('target-bottom-bar');
+    const reportModal = document.getElementById('report-modal');
+
+    // 1. Modus starten (Fadenkreuz zeigen)
+    document.getElementById('btn-report').addEventListener('click', () => {
+        toggleMenu(false);
+        crosshair.classList.remove('hidden');
+        targetBottomBar.classList.remove('hidden');
+    });
+
+    // 2. Modus abbrechen
+    document.getElementById('btn-cancel-target').addEventListener('click', () => {
+        crosshair.classList.add('hidden');
+        targetBottomBar.classList.add('hidden');
+    });
+
+    // 3. Ort bestätigt -> Formular zeigen
+    document.getElementById('btn-confirm-target').addEventListener('click', () => {
+        targetBottomBar.classList.add('hidden');
+        reportModal.classList.remove('hidden');
+    });
+
+    // 4. Formular schließen (X-Button)
+    document.getElementById('btn-close-report').addEventListener('click', () => {
+        reportModal.classList.add('hidden');
+        crosshair.classList.add('hidden');
+    });
+
+    // 5. Daten an OSM senden
+    document.getElementById('btn-submit-report').addEventListener('click', async () => {
         const center = map.getCenter();
-        const text = "Missing Toilet / Eurokey-WC here. Reported via Loocator App.";
-        const url = `https://api.openstreetmap.org/api/0.6/notes?lat=${center.lat}&lon=${center.lng}&text=${encodeURIComponent(text)}`;
+        const typeRadio = document.querySelector('input[name="report-type"]:checked').value;
+        const noteText = document.getElementById('report-note').value.trim();
         
+        // Text formatieren für die OSM-Mapper (immer Englisch, damit es international verstanden wird)
+        let finalOsmText = `[Loocator App Report] Issue: ${typeRadio}`;
+        if (noteText.length > 0) {
+            finalOsmText += ` | User note: ${noteText}`;
+        }
+        
+        const url = `https://api.openstreetmap.org/api/0.6/notes?lat=${center.lat}&lon=${center.lng}&text=${encodeURIComponent(finalOsmText)}`;
+        
+        // Button kurz deaktivieren während des Ladens
+        const submitBtn = document.getElementById('btn-submit-report');
+        const oldText = submitBtn.innerText;
+        submitBtn.innerText = '...';
+        submitBtn.disabled = true;
+
         try {
             await fetch(url, { method: 'POST' });
             showToast(t('alertReportSuccess'), 'success');
-            toggleMenu(false);
+            
+            // Alles aufräumen
+            reportModal.classList.add('hidden');
+            crosshair.classList.add('hidden');
+            document.getElementById('report-note').value = ''; // Textfeld leeren
         } catch(e) {
             customAlert(t('alertError'));
+        } finally {
+            submitBtn.innerText = oldText;
+            submitBtn.disabled = false;
         }
     });
 

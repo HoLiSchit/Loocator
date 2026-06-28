@@ -76,7 +76,16 @@ const dict = {
         accFemale: "Zugang: Nur Damen",
         accMale: "Zugang: Nur Herren",
         filterFree: "✅ Nur kostenfreie WCs",
-        splashLoading: "Lade WCs in deiner Nähe..."
+        splashLoading: "Lade WCs in deiner Nähe...",
+        reportModeInfo: "Verschiebe die Karte, um das Fadenkreuz genau zu platzieren.",
+        reportConfirmLoc: "📍 Ort bestätigen",
+        reportCancel: "Abbrechen",
+        reportModalTitle: "Karten-Problem melden",
+        reportType1: "Hier fehlt ein normales WC",
+        reportType2: "Hier fehlt ein Eurokey-WC",
+        reportType3: "WC ist falsch / existiert nicht",
+        reportNotePlaceholder: "Zusätzliche Infos (optional, z.B. 'Ist hinter dem Kiosk')...",
+        reportSubmit: "An OSM senden"
     },
     'en': {
         appDesc: "Find WCs, Eurokeys & Changing Tables",
@@ -155,7 +164,16 @@ const dict = {
         accFemale: "Access: Women only",
         accMale: "Access: Men only",
         filterFree: "✅ Free of charge only",
-        splashLoading: "Loading WCs nearby..."
+        splashLoading: "Loading WCs nearby...",
+        reportModeInfo: "Move the map to position the crosshair exactly.",
+        reportConfirmLoc: "📍 Confirm location",
+        reportCancel: "Cancel",
+        reportModalTitle: "Report Map Issue",
+        reportType1: "Missing public toilet here",
+        reportType2: "Missing Eurokey-WC here",
+        reportType3: "WC is incorrect / does not exist",
+        reportNotePlaceholder: "Additional info (optional, e.g. 'Behind the kiosk')...",
+        reportSubmit: "Send to OSM"
     }
 };
 
