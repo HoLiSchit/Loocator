@@ -37,7 +37,7 @@ const dict = {
         distM: "ca. {dist} Meter Luftlinie",
         tPublic: "Öffentliches WC",
         tPublicEurokey: "Eurokey-WC",
-        tPublicWheel: "Rollstuhl-geeignetes WC",
+        tPublicWheel: "Rollstuhlgeeignetes WC",
         tRestStop: "Raststätte",
         tRestArea: "Rastplatz",
         tFuel: "Tankstelle",
