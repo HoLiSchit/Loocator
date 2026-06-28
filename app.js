@@ -95,8 +95,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const map = L.map('map', { zoomControl: false }).setView([49.0069, 8.4037], 14);
-    const layerOSM = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors | Loocator by <a href="https://mineco.de/" target="_blank" rel="noopener">Adam Weiß</a> | Icons by <a href="https://www.svgrepo.com/collection/gentlecons-interface-icons/" target="_blank" rel="noopener">Konstantin Filatov</a>',
+    const layerOSM = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">HOT</a> | Loocator by <a href="https://mineco.de" target="_blank" rel="noopener">Adam Weiß</a> | Icons by <a href="https://www.svgrepo.com/collection/gentlecons-interface-icons/" target="_blank" rel="noopener">Konstantin Filatov</a>',
         className: 'osm-tiles'
     });
     const layerSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
