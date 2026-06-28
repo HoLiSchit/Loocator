@@ -842,8 +842,23 @@ document.addEventListener('DOMContentLoaded', () => {
         if(is247) info.push(t('i247'));
         else if (tags.opening_hours) info.push(t('iHours') + tags.opening_hours);
         
-        if(tags.fee || tags['toilets:fee']) info.push(t('iCost') + (tags.fee || tags['toilets:fee']));
-        if(!isWheelchair && (tags.wheelchair || tags['toilets:wheelchair'])) info.push(t('iWheel') + (tags.wheelchair || tags['toilets:wheelchair']));
+        if(tags.fee || tags['toilets:fee']) {
+            let feeVal = tags.fee || tags['toilets:fee'];
+            if (feeVal.toLowerCase() === 'yes') feeVal = t('btnYes');
+            else if (feeVal.toLowerCase() === 'no') feeVal = t('feeFree');
+            
+            info.push(t('iCost') + feeVal);
+        }
+        
+        if(!isWheelchair && (tags.wheelchair || tags['toilets:wheelchair'])) {
+            let wheelVal = tags.wheelchair || tags['toilets:wheelchair'];
+            if (wheelVal.toLowerCase() === 'yes') wheelVal = t('btnYes');
+            else if (wheelVal.toLowerCase() === 'no') wheelVal = t('btnNo');
+            else if (wheelVal.toLowerCase() === 'limited') wheelVal = t('accLimited');
+            
+            info.push(t('iWheel') + wheelVal);
+        }
+        
         if(hasChanging) info.push(t('iChanging'));
 
         document.getElementById('sheet-info').innerText = info.length ? info.join(' | ') : t('iNone');
