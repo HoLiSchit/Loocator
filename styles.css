@@ -37,8 +37,12 @@ html, body {
     font-weight: bold; 
 }
 
-html.dark .osm-tiles { 
+html.dark .leaflet-tile { 
     filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%); 
+}
+
+html.dark #map.is-sat-mode .leaflet-tile {
+    filter: none;
 }
 
 /* Animation für die neuen Toast-Notifications */

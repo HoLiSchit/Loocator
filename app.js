@@ -392,13 +392,13 @@ document.addEventListener('DOMContentLoaded', () => {
         targetBottomBar.classList.add('hidden');
     });
 
-    // 3. Ort bestätigt -> Formular zeigen
+    // 3. Ort bestaetigt -> Formular zeigen
     document.getElementById('btn-confirm-target').addEventListener('click', () => {
         targetBottomBar.classList.add('hidden');
         reportModal.classList.remove('hidden');
     });
 
-    // 4. Formular schließen (X-Button)
+    // 4. Formular schliessen (X-Button)
     document.getElementById('btn-close-report').addEventListener('click', () => {
         reportModal.classList.add('hidden');
         crosshair.classList.add('hidden');
@@ -410,7 +410,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const typeRadio = document.querySelector('input[name="report-type"]:checked').value;
         const noteText = document.getElementById('report-note').value.trim();
         
-        // Text formatieren für die OSM-Mapper (immer Englisch, damit es international verstanden wird)
+        // Text formatieren fuer die OSM-Mapper
         let finalOsmText = `[Loocator App Report] Issue: ${typeRadio}`;
         if (noteText.length > 0) {
             finalOsmText += ` | User note: ${noteText}`;
@@ -418,7 +418,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const url = `https://api.openstreetmap.org/api/0.6/notes?lat=${center.lat}&lon=${center.lng}&text=${encodeURIComponent(finalOsmText)}`;
         
-        // Button kurz deaktivieren während des Ladens
+        // Button kurz deaktivieren
         const submitBtn = document.getElementById('btn-submit-report');
         const oldText = submitBtn.innerText;
         submitBtn.innerText = '...';
@@ -428,10 +428,9 @@ document.addEventListener('DOMContentLoaded', () => {
             await fetch(url, { method: 'POST' });
             showToast(t('alertReportSuccess'), 'success');
             
-            // Alles aufräumen
             reportModal.classList.add('hidden');
             crosshair.classList.add('hidden');
-            document.getElementById('report-note').value = ''; // Textfeld leeren
+            document.getElementById('report-note').value = '';
         } catch(e) {
             customAlert(t('alertError'));
         } finally {
@@ -439,6 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.disabled = false;
         }
     });
+    // ----------------------------------------------------
 
     function isLikelyClosedNow(openingHoursStr) {
         if (!openingHoursStr || openingHoursStr === '24/7') return false;

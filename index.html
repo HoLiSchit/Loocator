@@ -179,6 +179,49 @@
         </div>
     </div>
 
+    <!-- Fadenkreuz in der Bildschirmmitte (Standardmäßig unsichtbar) -->
+    <div id="crosshair" class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none z-[400] text-5xl drop-shadow-md pb-8">
+        🎯
+    </div>
+
+    <!-- NEU: Die Ziel-Modus Leiste unten -->
+    <div id="target-bottom-bar" class="hidden fixed bottom-0 left-0 w-full bg-white dark:bg-gray-800 p-5 shadow-[0_-10px_40px_rgba(0,0,0,0.3)] z-[500] flex flex-col items-center rounded-t-3xl">
+        <p class="text-sm font-bold text-gray-700 dark:text-gray-200 mb-4 text-center" data-i18n="reportModeInfo"></p>
+        <div class="flex gap-3 w-full max-w-sm">
+            <button id="btn-cancel-target" class="flex-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-bold py-3.5 rounded-xl active:scale-95 transition-transform" data-i18n="reportCancel"></button>
+            <button id="btn-confirm-target" class="flex-[2] bg-blue-600 text-white font-bold py-3.5 rounded-xl active:scale-95 transition-transform shadow-lg" data-i18n="reportConfirmLoc"></button>
+        </div>
+    </div>
+
+    <!-- Das Melde-Formular Modal -->
+    <div id="report-modal" class="hidden fixed inset-0 bg-gray-900/80 z-[9000] flex items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-300">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 max-w-sm w-full shadow-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-black text-blue-600 dark:text-blue-400" data-i18n="reportModalTitle"></h2>
+                <button id="btn-close-report" class="text-gray-400 hover:text-gray-600 text-xl font-bold p-1">✕</button>
+            </div>
+            
+            <div class="flex flex-col gap-3 mb-4">
+                <label class="flex items-center gap-3 bg-gray-50 dark:bg-gray-700 p-3 rounded-xl border border-gray-200 dark:border-gray-600 cursor-pointer">
+                    <input type="radio" name="report-type" value="Missing public toilet" class="w-5 h-5 accent-blue-600" checked>
+                    <span class="text-sm font-medium" data-i18n="reportType1"></span>
+                </label>
+                <label class="flex items-center gap-3 bg-gray-50 dark:bg-gray-700 p-3 rounded-xl border border-gray-200 dark:border-gray-600 cursor-pointer">
+                    <input type="radio" name="report-type" value="Missing Eurokey-WC" class="w-5 h-5 accent-blue-600">
+                    <span class="text-sm font-medium" data-i18n="reportType2"></span>
+                </label>
+                <label class="flex items-center gap-3 bg-gray-50 dark:bg-gray-700 p-3 rounded-xl border border-gray-200 dark:border-gray-600 cursor-pointer">
+                    <input type="radio" name="report-type" value="Incorrect / Doesn't exist" class="w-5 h-5 accent-blue-600">
+                    <span class="text-sm font-medium" data-i18n="reportType3"></span>
+                </label>
+            </div>
+
+            <textarea id="report-note" class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-3 text-sm mb-5 focus:outline-none focus:border-blue-500" rows="3" data-i18n-placeholder="reportNotePlaceholder"></textarea>
+
+            <button id="btn-submit-report" class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold py-3.5 rounded-xl transition-colors shadow-lg" data-i18n="reportSubmit"></button>
+        </div>
+    </div>
+
     <div id="tutorial-modal" class="hidden fixed inset-0 bg-gray-900/80 z-[9000] flex items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-300">
         <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 max-w-sm w-full shadow-2xl">
             <h2 class="text-2xl font-black text-blue-600 dark:text-blue-400 mb-2" data-i18n="tutWelcome"></h2>
