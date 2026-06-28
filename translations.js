@@ -84,7 +84,9 @@ const dict = {
         reportType2: "Hier fehlt ein Eurokey-WC",
         reportType3: "WC ist falsch / existiert nicht",
         reportNotePlaceholder: "Zusätzliche Infos (optional, z.B. 'Ist hinter dem Kiosk')...",
-        reportSubmit: "Zur Überprüfung senden"
+        reportSubmit: "Zur Überprüfung senden",
+        reportExistingHint: "Stimmt etwas mit diesem Eintrag nicht? (Bitte nur echte Karten-Fehler melden!)",
+        btnReportExisting: "Karten-Fehler melden"
     },
     'en': {
         appDesc: "Find WCs, Eurokeys & Changing Tables",
@@ -171,7 +173,9 @@ const dict = {
         reportType2: "Missing Eurokey-WC here",
         reportType3: "WC is incorrect / does not exist",
         reportNotePlaceholder: "Additional info (optional, e.g. 'Behind the kiosk')...",
-        reportSubmit: "Send for review"
+        reportSubmit: "Send for review",
+        reportExistingHint: "Is something wrong with this entry? (Please only report actual map errors!)",
+        btnReportExisting: "Report map error"
     }
 };
 

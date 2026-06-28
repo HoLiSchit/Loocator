@@ -177,6 +177,13 @@
             <button id="btn-navigate" data-i18n="btnNav" class="flex-[3] bg-blue-600 text-white font-bold py-4 rounded-2xl text-lg active:bg-blue-800 transition-colors shadow-lg"></button>
             <button id="btn-share" data-i18n="btnShare" class="flex-1 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 font-bold py-4 rounded-2xl text-lg active:bg-gray-300 transition-colors shadow-lg">📤</button>
         </div>
+
+        <!-- Fehler melden im Detail-Popup -->
+        <div class="mt-2 pt-4 border-t border-gray-100 dark:border-gray-700 flex flex-col items-center">
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-2 text-center leading-tight" data-i18n="reportExistingHint"></p>
+            <button id="btn-report-existing" class="text-sm font-bold text-red-600 dark:text-red-400 py-2.5 px-4 rounded-xl bg-red-50 dark:bg-red-900/20 active:bg-red-100 dark:active:bg-red-900/40 transition-colors w-full border border-red-100 dark:border-red-900/50" data-i18n="btnReportExisting"></button>
+        </div>
+
     </div>
 
     <!-- Fadenkreuz in der Bildschirmmitte (Standardmäßig unsichtbar) -->
@@ -193,7 +200,7 @@
         </div>
     </div>
 
-    <!-- Das Melde-Formular Modal -->
+    <!-- Das Melde-Formular Modal (mit IDs) -->
     <div id="report-modal" class="hidden fixed inset-0 bg-gray-900/80 z-[9000] flex items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-300">
         <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 max-w-sm w-full shadow-2xl">
             <div class="flex justify-between items-center mb-4">
@@ -202,16 +209,16 @@
             </div>
             
             <div class="flex flex-col gap-3 mb-4">
-                <label class="flex items-center gap-3 bg-gray-50 dark:bg-gray-700 p-3 rounded-xl border border-gray-200 dark:border-gray-600 cursor-pointer">
-                    <input type="radio" name="report-type" value="Missing public toilet" class="w-5 h-5 accent-blue-600" checked>
+                <label id="label-rep-1" class="flex items-center gap-3 bg-gray-50 dark:bg-gray-700 p-3 rounded-xl border border-gray-200 dark:border-gray-600 cursor-pointer">
+                    <input type="radio" name="report-type" id="radio-rep-1" value="Missing public toilet" class="w-5 h-5 accent-blue-600" checked>
                     <span class="text-sm font-medium" data-i18n="reportType1"></span>
                 </label>
-                <label class="flex items-center gap-3 bg-gray-50 dark:bg-gray-700 p-3 rounded-xl border border-gray-200 dark:border-gray-600 cursor-pointer">
-                    <input type="radio" name="report-type" value="Missing Eurokey-WC" class="w-5 h-5 accent-blue-600">
+                <label id="label-rep-2" class="flex items-center gap-3 bg-gray-50 dark:bg-gray-700 p-3 rounded-xl border border-gray-200 dark:border-gray-600 cursor-pointer">
+                    <input type="radio" name="report-type" id="radio-rep-2" value="Missing Eurokey-WC" class="w-5 h-5 accent-blue-600">
                     <span class="text-sm font-medium" data-i18n="reportType2"></span>
                 </label>
-                <label class="flex items-center gap-3 bg-gray-50 dark:bg-gray-700 p-3 rounded-xl border border-gray-200 dark:border-gray-600 cursor-pointer">
-                    <input type="radio" name="report-type" value="Incorrect / Doesn't exist" class="w-5 h-5 accent-blue-600">
+                <label id="label-rep-3" class="flex items-center gap-3 bg-gray-50 dark:bg-gray-700 p-3 rounded-xl border border-gray-200 dark:border-gray-600 cursor-pointer">
+                    <input type="radio" name="report-type" id="radio-rep-3" value="Incorrect / Doesn't exist" class="w-5 h-5 accent-blue-600">
                     <span class="text-sm font-medium" data-i18n="reportType3"></span>
                 </label>
             </div>

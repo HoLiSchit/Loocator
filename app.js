@@ -378,12 +378,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const crosshair = document.getElementById('crosshair');
     const targetBottomBar = document.getElementById('target-bottom-bar');
     const reportModal = document.getElementById('report-modal');
+    
+    let reportMode = 'new'; // 'new' = via Menü, 'existing' = via Bottom-Sheet
 
-    // 1. Modus starten (Fadenkreuz zeigen)
+    // 1A. Modus starten (via Menü -> Fadenkreuz zeigen)
     document.getElementById('btn-report').addEventListener('click', () => {
+        reportMode = 'new';
+        document.getElementById('label-rep-1').style.display = 'flex';
+        document.getElementById('label-rep-2').style.display = 'flex';
+        document.getElementById('radio-rep-1').checked = true;
+        
         toggleMenu(false);
         crosshair.classList.remove('hidden');
         targetBottomBar.classList.remove('hidden');
+    });
+
+    // 1B. Modus starten (via Bottom-Sheet -> Direkt zum Modal)
+    document.getElementById('btn-report-existing').addEventListener('click', () => {
+        reportMode = 'existing';
+        // Für bestehende WCs macht "Hier fehlt ein WC" keinen Sinn, also ausblenden
+        document.getElementById('label-rep-1').style.display = 'none';
+        document.getElementById('label-rep-2').style.display = 'none';
+        document.getElementById('radio-rep-3').checked = true;
+        
+        closeSheet();
+        reportModal.classList.remove('hidden');
     });
 
     // 2. Modus abbrechen
@@ -403,6 +422,51 @@ document.addEventListener('DOMContentLoaded', () => {
         reportModal.classList.add('hidden');
         crosshair.classList.add('hidden');
     });
+
+    // 5. Daten an OSM senden
+    document.getElementById('btn-submit-report').addEventListener('click', async () => {
+        let lat, lon, finalOsmText;
+        const typeRadio = document.querySelector('input[name="report-type"]:checked').value;
+        const noteText = document.getElementById('report-note').value.trim();
+        
+        if (reportMode === 'new') {
+            const center = map.getCenter();
+            lat = center.lat;
+            lon = center.lng;
+            finalOsmText = `[Loocator App Report] Issue: ${typeRadio}`;
+        } else {
+            // Bestehendes WC melden
+            lat = currentToiletData.lat || (currentToiletData.center && currentToiletData.center.lat);
+            lon = currentToiletData.lon || (currentToiletData.center && currentToiletData.center.lon);
+            finalOsmText = `[Loocator App Report] Issue with existing WC (OSM-ID: ${currentToiletData.id}): ${typeRadio}`;
+        }
+        
+        if (noteText.length > 0) {
+            finalOsmText += ` | User note: ${noteText}`;
+        }
+        
+        const url = `https://api.openstreetmap.org/api/0.6/notes?lat=${lat}&lon=${lon}&text=${encodeURIComponent(finalOsmText)}`;
+        
+        const submitBtn = document.getElementById('btn-submit-report');
+        const oldText = submitBtn.innerText;
+        submitBtn.innerText = '...';
+        submitBtn.disabled = true;
+
+        try {
+            await fetch(url, { method: 'POST' });
+            showToast(t('alertReportSuccess'), 'success');
+            
+            reportModal.classList.add('hidden');
+            crosshair.classList.add('hidden');
+            document.getElementById('report-note').value = '';
+        } catch(e) {
+            customAlert(t('alertError'));
+        } finally {
+            submitBtn.innerText = oldText;
+            submitBtn.disabled = false;
+        }
+    });
+    // ----------------------------------------------------
 
     // 5. Daten an OSM senden
     document.getElementById('btn-submit-report').addEventListener('click', async () => {
