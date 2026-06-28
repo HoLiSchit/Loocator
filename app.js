@@ -1,9 +1,9 @@
-document.addEventListener('DOMContentLoaded', () => {
-
+document.addEventListener("DOMContentLoaded", () => {
+    
     // --- NEU: Besucherzähler sauber aufrufen ---
-    fetch('counter.php?hit=1').catch(e => console.log('Counter-Error:', e));
+    fetch('counter.php?hit=1').catch(e => console.log('Counter-Error', e));
     // ------------------------------------------
-
+    
     const htmlTag = document.getElementById('html-tag');
     htmlTag.lang = userLang;
 
@@ -18,14 +18,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function showToast(message, type = 'info') {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
-        
         let bgColor = 'bg-blue-600';
         if (type === 'error') bgColor = 'bg-red-600';
         if (type === 'success') bgColor = 'bg-green-600';
 
         toast.className = `toast-enter flex items-center justify-center p-3 rounded-lg shadow-lg text-white text-sm font-bold ${bgColor}`;
         toast.innerText = message;
-        
         container.appendChild(toast);
 
         setTimeout(() => {
@@ -34,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
             toast.addEventListener('animationend', () => toast.remove());
         }, 3000);
     }
-
     const customAlert = (msg) => showToast(msg, 'error');
 
     const offlineBanner = document.getElementById('offline-banner');
@@ -48,9 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
     const isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
-    if (isIos && !isInStandaloneMode) {
-        document.getElementById('ios-install-hint').classList.remove('hidden');
-    }
+    if (isIos && !isInStandaloneMode) document.getElementById('ios-install-hint').classList.remove('hidden');
 
     const themeToggleBtn = document.getElementById('btn-theme-toggle');
     if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -81,9 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js');
-    }
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -96,24 +89,19 @@ document.addEventListener('DOMContentLoaded', () => {
         if (deferredPrompt) {
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
-                document.getElementById('btn-install').classList.add('hidden');
-            }
+            if (outcome === 'accepted') document.getElementById('btn-install').classList.add('hidden');
             deferredPrompt = null;
         }
     });
 
     const map = L.map('map', { zoomControl: false }).setView([49.0069, 8.4037], 14);
-
     const layerOSM = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors | Loocator by <a href="https://mineco.de/" target="_blank" rel="noopener">Adam Weiß </a> | Icons by <a href="https://www.svgrepo.com/collection/gentlecons-interface-icons/" target="_blank" rel="noopener">Konstantin Filatov</a>',
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors | Loocator by <a href="https://mineco.de/" target="_blank" rel="noopener">Adam Weiß</a> | Icons by <a href="https://www.svgrepo.com/collection/gentlecons-interface-icons/" target="_blank" rel="noopener">Konstantin Filatov</a>',
         className: 'osm-tiles'
     });
-
     const layerSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Tiles © Esri'
+        attribution: 'Tiles &copy; Esri'
     });
-
     layerOSM.addTo(map);
 
     let isSatMode = false;
@@ -123,14 +111,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isSatMode) {
             map.removeLayer(layerOSM);
             layerSat.addTo(map);
-            e.target.innerText = '🌍';
-            e.target.classList.add('bg-blue-100');
             mapDiv.classList.add('is-sat-mode');
         } else {
             map.removeLayer(layerSat);
             layerOSM.addTo(map);
-            e.target.innerText = '🗺️';
-            e.target.classList.remove('bg-blue-100');
             mapDiv.classList.remove('is-sat-mode');
         }
     });
@@ -141,12 +125,11 @@ document.addEventListener('DOMContentLoaded', () => {
         iconCreateFunction: function(cluster) {
             const childCount = cluster.getChildCount();
             const children = cluster.getAllChildMarkers();
-            
             let hasTopRated = false;
             let hasOpen247 = false;
             let hasChanging = false;
             let hasDefect = false;
-
+            
             children.forEach(marker => {
                 if (marker.options.isTopRated) hasTopRated = true;
                 if (marker.options.is247) hasOpen247 = true;
@@ -155,7 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             let indicatorsHtml = '';
-            
             if (hasTopRated) indicatorsHtml += `<div class="w-2.5 h-2.5 bg-yellow-400 rounded-full border border-white"></div>`;
             if (hasOpen247) indicatorsHtml += `<div class="w-2.5 h-2.5 bg-green-500 rounded-full border border-white"></div>`;
             if (hasChanging) indicatorsHtml += `<div class="w-2.5 h-2.5 bg-purple-500 rounded-full border border-white"></div>`;
@@ -175,7 +157,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     });
-
     map.addLayer(markerClusterGroup);
 
     let userLocation = null;
@@ -220,14 +201,10 @@ document.addEventListener('DOMContentLoaded', () => {
     map.on('locationfound', function(e) {
         userLocation = e.latlng;
         if (!locationMarker) {
-            map.eachLayer((layer) => {
-                if(layer.options && layer.options.color === '#3b82f6') {
-                    map.removeLayer(layer);
-                }
+            map.eachLayer(layer => {
+                if(layer.options && layer.options.color === '#3b82f6') map.removeLayer(layer);
             });
-            locationMarker = L.circleMarker(e.latlng, {
-                color: '#3b82f6', fillOpacity: 1, radius: 8
-            }).addTo(map);
+            locationMarker = L.circleMarker(e.latlng, { color: '#3b82f6', fillOpacity: 1, radius: 8 }).addTo(map);
         } else {
             locationMarker.setLatLng(e.latlng);
         }
@@ -239,7 +216,6 @@ document.addEventListener('DOMContentLoaded', () => {
     btnLocation.addEventListener('click', () => {
         if (navigator.geolocation) {
             document.getElementById('loading-spinner').classList.remove('hidden');
-            
             const successCallback = (position) => {
                 document.getElementById('loading-spinner').classList.add('hidden');
                 userLocation = L.latLng(position.coords.latitude, position.coords.longitude);
@@ -248,14 +224,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 map.setView(userLocation, 16);
                 map.locate({ watch: true, enableHighAccuracy: true, timeout: 30000, maximumAge: 10000 });
             };
-
             const errorCallback = (error) => {
                 if (error.code === 3) {
                     navigator.geolocation.getCurrentPosition(
                         successCallback,
                         (errFallback) => {
                             document.getElementById('loading-spinner').classList.add('hidden');
-                            customAlert(t('geoFallbackError', {code: errFallback.code, msg: errFallback.message}));
+                            customAlert(t('geoFallbackError', { code: errFallback.code, msg: errFallback.message }));
                             autoFollow = false;
                             updateLocationButtonUI();
                         },
@@ -264,11 +239,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
                 document.getElementById('loading-spinner').classList.add('hidden');
-                customAlert(t('geoError', {code: error.code, msg: error.message}));
+                customAlert(t('geoError', { code: error.code, msg: error.message }));
                 autoFollow = false;
                 updateLocationButtonUI();
             };
-
             navigator.geolocation.getCurrentPosition(successCallback, errorCallback, { enableHighAccuracy: true, timeout: 20000, maximumAge: 10000 });
         } else {
             customAlert(t('geoNotSupported'));
@@ -301,12 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (searchMarker) map.removeLayer(searchMarker);
         searchMarker = L.marker([lat, lon], {
-            icon: L.divIcon({
-                className: 'bg-transparent text-4xl drop-shadow-lg',
-                html: '📍',
-                iconSize: [40, 40],
-                iconAnchor: [20, 20]
-            })
+            icon: L.divIcon({ className: 'bg-transparent text-4xl drop-shadow-lg', html: '📍', iconSize: [40, 40], iconAnchor: [20, 20] })
         }).addTo(map);
     }
 
@@ -314,16 +283,11 @@ document.addEventListener('DOMContentLoaded', () => {
     searchInput.addEventListener('input', (e) => {
         clearTimeout(searchTimeout);
         const query = e.target.value;
-        if (query.length < 3) {
-            searchSuggestions.classList.add('hidden');
-            return;
-        }
-
+        if (query.length < 3) { searchSuggestions.classList.add('hidden'); return; }
         searchTimeout = setTimeout(async () => {
             try {
                 const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&countrycodes=de,at,ch,us,uk`);
                 const data = await res.json();
-                
                 searchSuggestions.innerHTML = '';
                 if (data.length > 0) {
                     data.forEach(place => {
@@ -338,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     searchSuggestions.classList.add('hidden');
                 }
-            } catch (e) { }
+            } catch (e) {}
         }, 500);
     });
 
@@ -346,18 +310,13 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const query = searchInput.value;
         if (!query) return;
-
         document.getElementById('loading-spinner').classList.remove('hidden');
         searchSuggestions.classList.add('hidden');
-
         try {
             const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
             const data = await res.json();
-            if (data && data.length > 0) {
-                jumpToSearchResult(data[0].lat, data[0].lon, searchInput.value);
-            } else {
-                customAlert(t('alertNotFound'));
-            }
+            if (data && data.length > 0) jumpToSearchResult(data[0].lat, data[0].lon, searchInput.value);
+            else customAlert(t('alertNotFound'));
         } catch (e) {
             customAlert(t('searchFailed'));
         } finally {
@@ -367,8 +326,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const filterSelectors = ['filter-public', 'filter-eurokey', 'filter-changing', 'filter-open', 'filter-success', 'filter-favorites', 'filter-free'];
     filterSelectors.forEach(id => {
-        if(document.getElementById(id)) {
-            document.getElementById(id).addEventListener('change', renderMarkers);
+        const el = document.getElementById(id);
+        if(el) {
+            const savedState = localStorage.getItem('loocator_filter_' + id);
+            if (savedState !== null) {
+                el.checked = (savedState === 'true');
+            }
+            
+            el.addEventListener('change', () => {
+                localStorage.setItem('loocator_filter_' + id, el.checked);
+                renderMarkers();
+            });
         }
     });
 
@@ -376,10 +344,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const crosshair = document.getElementById('crosshair');
     const targetBottomBar = document.getElementById('target-bottom-bar');
     const reportModal = document.getElementById('report-modal');
-    
-    let reportMode = 'new'; // 'new' = via Menü, 'existing' = via Bottom-Sheet
+    let reportMode = 'new'; // 'new' via Menü, 'existing' via Bottom-Sheet
 
-    // 1A. Modus starten (via Menü -> Fadenkreuz zeigen)
+    // 1A. Modus starten via Menü -> Fadenkreuz zeigen
     document.getElementById('btn-report').addEventListener('click', () => {
         reportMode = 'new';
         document.getElementById('label-rep-1').style.display = 'flex';
@@ -391,7 +358,7 @@ document.addEventListener('DOMContentLoaded', () => {
         targetBottomBar.classList.remove('hidden');
     });
 
-    // 1B. Modus starten (via Bottom-Sheet -> Direkt zum Modal)
+    // 1B. Modus starten via Bottom-Sheet -> Direkt zum Modal
     if(document.getElementById('btn-report-existing')) {
         document.getElementById('btn-report-existing').addEventListener('click', () => {
             reportMode = 'existing';
@@ -428,7 +395,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let lat, lon, finalOsmText;
         const typeRadio = document.querySelector('input[name="report-type"]:checked').value;
         const noteText = document.getElementById('report-note').value.trim();
-        
+
         if (reportMode === 'new') {
             const center = map.getCenter();
             lat = center.lat;
@@ -439,11 +406,9 @@ document.addEventListener('DOMContentLoaded', () => {
             lon = currentToiletData.lon || (currentToiletData.center && currentToiletData.center.lon);
             finalOsmText = `[Loocator App Report] Issue with existing WC (OSM-ID: ${currentToiletData.id}): ${typeRadio}`;
         }
-        
-        if (noteText.length > 0) {
-            finalOsmText += ` | User note: ${noteText}`;
-        }
-        
+
+        if (noteText.length > 0) finalOsmText += ` | User note: ${noteText}`;
+
         const url = `https://api.openstreetmap.org/api/0.6/notes?lat=${lat}&lon=${lon}&text=${encodeURIComponent(finalOsmText)}`;
         
         const submitBtn = document.getElementById('btn-submit-report');
@@ -452,9 +417,8 @@ document.addEventListener('DOMContentLoaded', () => {
         submitBtn.disabled = true;
 
         try {
-            await fetch(url, { method: 'POST' }); 
+            await fetch(url, { method: 'POST' });
             showToast(t('alertReportSuccess'), 'success');
-            
             reportModal.classList.add('hidden');
             crosshair.classList.add('hidden');
             document.getElementById('report-note').value = '';
@@ -492,12 +456,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const splash = document.getElementById('splash-screen');
             if (splash) {
                 splash.classList.add('opacity-0');
-                setTimeout(() => {
-                    splash.remove();
-                    if (!localStorage.getItem('loocator_tutorial_seen')) {
-                        document.getElementById('tutorial-modal').classList.remove('hidden');
-                    }
-                }, 500);
+                setTimeout(() => splash.remove(), 500);
+            }
+            if (!localStorage.getItem('loocator_tutorial_seen')) {
+                document.getElementById('tutorial-modal').classList.remove('hidden');
                 toggleMenu(false);
             }
         }
@@ -530,16 +492,13 @@ document.addEventListener('DOMContentLoaded', () => {
             for (const key in globalRatingsDb) {
                 const wc = globalRatingsDb[key];
                 ratedWcs++;
-                totalVotes += parseInt(wc.usable_yes || 0);
-                totalVotes += parseInt(wc.usable_no || 0);
-                totalVotes += parseInt(wc.cleanliness_count || 0);
+                totalVotes += (parseInt(wc.usable_yes)||0) + (parseInt(wc.usable_no)||0) + (parseInt(wc.cleanliness_count)||0);
             }
             const statsEl = document.getElementById('app-stats');
             if (ratedWcs > 0 && statsEl) {
-                statsEl.innerText = t('statsText', {toilets: ratedWcs, votes: totalVotes});
+                statsEl.innerText = t('statsText', { toilets: ratedWcs, votes: totalVotes });
                 statsEl.classList.remove('hidden');
             }
-            
         } catch (e) { }
 
         const bounds = map.getBounds();
@@ -554,7 +513,6 @@ document.addEventListener('DOMContentLoaded', () => {
             );
             out center;
         `;
-
         try {
             const res = await fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`);
             const data = await res.json();
@@ -572,7 +530,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderMarkers() {
         markerClusterGroup.clearLayers();
         activeMarkers = [];
-
+        
         const reqPub = document.getElementById('filter-public').checked;
         const reqEuro = document.getElementById('filter-eurokey').checked;
         const reqChange = document.getElementById('filter-changing').checked;
@@ -587,25 +545,23 @@ document.addEventListener('DOMContentLoaded', () => {
         allToilets.forEach(toilet => {
             if (reqFav && !savedFavs.includes(toilet.id)) return;
 
-            const tags = toilet.tags || {};
+            const tags = toilet.tags;
             const lat = toilet.lat || (toilet.center && toilet.center.lat);
             const lon = toilet.lon || (toilet.center && toilet.center.lon);
-
             if (!lat || !lon) return;
 
             const access = tags.access || tags['toilets:access'] || 'yes';
             if (reqPub && (access === 'private' || access === 'customers')) return;
 
-            const isExplicitEurokey = tags['central_key'] === 'eurokey' || tags['eurokey'] === 'yes' || tags.access === 'central_key' || tags['toilets:eurokey'] === 'yes' || tags['toilets:central_key'] === 'eurokey';
-            const isWheelchair = tags.wheelchair === 'yes' || tags.wheelchair === 'designated' || tags['toilets:wheelchair'] === 'yes' || tags['toilets:wheelchair'] === 'designated';
+            const isExplicitEurokey = (tags['central_key'] === 'eurokey' || tags['eurokey'] === 'yes' || tags.access === 'central_key' || tags['toilets:eurokey'] === 'yes' || tags['toilets:central_key'] === 'eurokey');
+            const isWheelchair = (tags.wheelchair === 'yes' || tags.wheelchair === 'designated' || tags['toilets:wheelchair'] === 'yes' || tags['toilets:wheelchair'] === 'designated');
             const isEurokeyOrWheelchair = isExplicitEurokey || isWheelchair;
 
             if (reqEuro && !isEurokeyOrWheelchair) return;
 
-            const hasChanging = tags['changing_table'] === 'yes' || tags.diaper === 'yes';
+            const hasChanging = (tags['changing_table'] === 'yes' || tags.diaper === 'yes');
             if (reqChange && !hasChanging) return;
-
-            if (reqOpen && isLikelyClosedNow(tags.opening_hours)) return;
+            if (reqOpen && isLikelyClosedNow(tags['opening_hours'])) return;
 
             if (reqFree) {
                 const fee = tags.fee || tags['toilets:fee'] || tags.charge;
@@ -615,25 +571,23 @@ document.addEventListener('DOMContentLoaded', () => {
             let isDefect = false;
             let isTopRated = false;
             const rating = globalRatingsDb[toilet.id];
-            
             if (rating) {
-                const total = rating.usable_yes + rating.usable_no;
-                if (total > 1) {
+                const total = (rating.usable_yes || 0) + (rating.usable_no || 0);
+                if (total >= 1) {
                     const successRate = rating.usable_yes / total;
-                    if (successRate < 0.3) isDefect = true;
+                    if (successRate <= 0.3) isDefect = true;
                     if (reqSucc && successRate < 0.65) return;
-                    if (total > 2 && successRate > 0.85) isTopRated = true;
+                    if (total >= 2 && successRate >= 0.85) isTopRated = true;
                 }
             }
-
-            const is247 = tags.opening_hours === '24/7';
+            
+            const is247 = (tags['opening_hours'] === '24/7');
 
             let baseClass = isEurokeyOrWheelchair 
                 ? 'text-2xl bg-yellow-300 dark:bg-yellow-600 rounded-full border-2 border-yellow-500 p-1 shadow-md relative' 
                 : 'text-2xl relative bg-white dark:bg-gray-600 rounded-full border border-gray-200 dark:border-gray-500 p-1 shadow-md';
             
             let iconSymbol = isEurokeyOrWheelchair ? '🔑' : '🚽';
-            
             let dotHtml = is247 ? `<div class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full shadow-sm animate-pulse"></div>` : '';
             let defectHtml = isDefect ? `<div class="absolute -bottom-1 -left-1 w-4 h-4 bg-red-600 rounded-full shadow border-2 border-white dark:border-gray-800"></div>` : '';
             let changingHtml = hasChanging ? `<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-purple-500 rounded-full shadow border-2 border-white dark:border-gray-800"></div>` : '';
@@ -652,18 +606,16 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const marker = L.marker([lat, lon], { 
-                icon: customIcon,
+                icon: customIcon, 
                 isTopRated: isTopRated,
                 is247: is247,
                 hasChanging: hasChanging,
                 isDefect: isDefect
             });
-
             marker.on('click', () => {
                 openSheet(toilet, isEurokeyOrWheelchair, isExplicitEurokey, isWheelchair, is247, hasChanging, isDefect, isTopRated, lat, lon);
                 toggleMenu(false);
             });
-
             markerClusterGroup.addLayer(marker);
             activeMarkers.push(marker);
         });
@@ -677,42 +629,29 @@ document.addEventListener('DOMContentLoaded', () => {
             searchMarker = null;
         }
     });
-
     btnCloseSheet.addEventListener('click', closeSheet);
 
     function closeSheet() {
         document.getElementById('bottom-sheet').classList.add('translate-y-full');
-        if (routingLine) {
-            map.removeLayer(routingLine);
-            routingLine = null;
-        }
+        if (routingLine) { map.removeLayer(routingLine); routingLine = null; }
     }
 
     async function openSheet(toilet, isEurokeyOrWheelchair, isExplicitEurokey, isWheelchair, is247, hasChanging, isDefect, isTopRated, lat, lon) {
         currentToiletData = toilet;
-        const tags = toilet.tags || {};
-        
-        document.getElementById('routing-warning').classList.add('hidden');
+        const tags = toilet.tags;
 
+        document.getElementById('routing-warning').classList.add('hidden');
         if (routingLine) map.removeLayer(routingLine);
 
         if (userLocation) {
-            routingLine = L.polyline([userLocation, [lat, lon]], {
-                color: '#9ca3af', weight: 4, dashArray: '8, 8', lineCap: 'round'
-            }).addTo(map);
-
+            routingLine = L.polyline([userLocation, [lat, lon]], { color: '#9ca3af', weight: 4, dashArray: '8, 8', lineCap: 'round' }).addTo(map);
             fetch(`https://router.project-osrm.org/route/v1/foot/${userLocation.lng},${userLocation.lat};${lon},${lat}?geometries=geojson`)
                 .then(res => res.json())
                 .then(data => {
                     if(data.routes && data.routes.length > 0) {
                         map.removeLayer(routingLine);
-                        routingLine = L.geoJSON(data.routes[0].geometry, {
-                            style: { color: '#3b82f6', weight: 5, opacity: 0.8 }
-                        }).addTo(map);
-                        
-                        if (isEurokeyOrWheelchair) {
-                            document.getElementById('routing-warning').classList.remove('hidden');
-                        }
+                        routingLine = L.geoJSON(data.routes[0].geometry, { style: { color: '#3b82f6', weight: 5, opacity: 0.8 } }).addTo(map);
+                        if (isEurokeyOrWheelchair) document.getElementById('routing-warning').classList.remove('hidden');
                     }
                 }).catch(() => console.log('Routing fallback active'));
         }
@@ -723,19 +662,30 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (tags.amenity === 'fuel') baseType = t('tFuel');
 
         if (isEurokeyOrWheelchair) {
-            if (isExplicitEurokey) baseType += t('tAddEuro');
-            else if (isWheelchair) baseType += t('tAddWheel');
+            if (isExplicitEurokey) baseType += " - " + t('tAddEuro');
+            else if (isWheelchair) baseType += " - " + t('tAddWheel');
         }
-
         document.getElementById('sheet-title').innerText = baseType;
+        
         updateFavButtonUI();
 
+        // --- DISTANZ MIT GEHZEIT ---
         const distEl = document.getElementById('sheet-distance');
         if (userLocation) {
             const targetLatLng = L.latLng(lat, lon);
             const dist = Math.round(map.distance(userLocation, targetLatLng));
-            if (dist > 1000) distEl.innerText = t('distKm', {dist: (dist/1000).toFixed(1)});
-            else distEl.innerText = t('distM', {dist: dist});
+            
+            let walkingMinutes = Math.round(dist / 1.2 / 60);
+            if(walkingMinutes < 1) walkingMinutes = 1;
+            
+            let distString = '';
+            if (dist > 1000) {
+                distString = t('distKm', { dist: (dist/1000).toFixed(1) });
+            } else {
+                distString = t('distM', { dist: dist });
+            }
+            
+            distEl.innerText = distString + " (" + walkingMinutes + t('distTimeMin') + ")";
         } else {
             distEl.innerText = '';
         }
@@ -766,7 +716,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             const cacheKey = `${lat.toFixed(5)},${lon.toFixed(5)}`;
             if (addressCache[cacheKey] !== undefined) {
-                if (addressCache[cacheKey] !== '') {
+                if (addressCache[cacheKey] !== null) {
                     addressEl.innerText = addressCache[cacheKey];
                     addressEl.classList.remove('hidden');
                 } else {
@@ -782,7 +732,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             let a = data.address;
                             let road = a.road || a.pedestrian || a.footway || a.path || a.suburb;
                             let house = a.housenumber || '';
-                            let city = a.city || a.town || a.village || a.county || '';
+                            let city = a.city || a.town || a.village || a.county;
                             let post = a.postcode || '';
                             let str = [];
                             if (road) str.push(road + (house ? ' ' + house : ''));
@@ -796,11 +746,11 @@ document.addEventListener('DOMContentLoaded', () => {
                                 addressCache[cacheKey] = fullAddress;
                                 addressEl.innerText = fullAddress;
                             } else {
-                                addressCache[cacheKey] = '';
+                                addressCache[cacheKey] = null;
                                 addressEl.classList.add('hidden');
                             }
                         } else {
-                            addressCache[cacheKey] = '';
+                            addressCache[cacheKey] = null;
                             addressEl.classList.add('hidden');
                         }
                     }).catch(() => {
@@ -815,14 +765,14 @@ document.addEventListener('DOMContentLoaded', () => {
             let lvl = parseInt(tags.level);
             let lvlTxt = t('levelInfo');
             if (lvl === 0) lvlTxt = t('levelEG');
-            else if (lvl < 0) lvlTxt = t('levelUG', {lvl: Math.abs(lvl)});
-            else if (lvl > 0) lvlTxt = t('levelOG', {lvl: lvl});
+            else if (lvl < 0) lvlTxt = t('levelUG', { lvl: Math.abs(lvl) });
+            else if (lvl > 0) lvlTxt = t('levelOG', { lvl: lvl });
             extraNotes.push(lvlTxt);
         }
         if (tags.description) extraNotes.push(tags.description);
         
         if (extraNotes.length > 0) {
-            noteEl.innerText = extraNotes.join(' | ');
+            noteEl.innerText = extraNotes.join('\n');
             noteEl.classList.remove('hidden');
         } else {
             noteEl.classList.add('hidden');
@@ -840,13 +790,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if(genderInfo) info.push(genderInfo);
         
         if(is247) info.push(t('i247'));
-        else if (tags.opening_hours) info.push(t('iHours') + tags.opening_hours);
+        else if (tags['opening_hours']) info.push(t('iHours') + tags['opening_hours']);
         
         if(tags.fee || tags['toilets:fee']) {
             let feeVal = tags.fee || tags['toilets:fee'];
             if (feeVal.toLowerCase() === 'yes') feeVal = t('btnYes');
             else if (feeVal.toLowerCase() === 'no') feeVal = t('feeFree');
-            
             info.push(t('iCost') + feeVal);
         }
         
@@ -855,13 +804,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (wheelVal.toLowerCase() === 'yes') wheelVal = t('btnYes');
             else if (wheelVal.toLowerCase() === 'no') wheelVal = t('btnNo');
             else if (wheelVal.toLowerCase() === 'limited') wheelVal = t('accLimited');
-            
             info.push(t('iWheel') + wheelVal);
         }
         
         if(hasChanging) info.push(t('iChanging'));
 
-        document.getElementById('sheet-info').innerText = info.length ? info.join(' | ') : t('iNone');
+        document.getElementById('sheet-info').innerText = info.length ? info.join('\n') : t('iNone');
 
         document.getElementById('btn-navigate').onclick = () => {
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -875,11 +823,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('btn-share').onclick = () => {
             const shareUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`;
             if (navigator.share) {
-                navigator.share({
-                    title: 'Loocator',
-                    text: t('shareText') + ' ' + baseType,
-                    url: shareUrl
-                }).catch(() => {});
+                navigator.share({ title: 'Loocator', text: t('shareText') + ' ' + baseType, url: shareUrl }).catch(()=>{});
             } else {
                 navigator.clipboard.writeText(shareUrl);
                 showToast(t('alertCopied'), 'success');
@@ -888,7 +832,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById('stat-usable').innerText = t('statLoading');
         document.getElementById('stat-clean').innerText = t('statLoading');
-
         document.getElementById('bottom-sheet').classList.remove('translate-y-full');
 
         await loadRatings(toilet.id);
@@ -923,28 +866,27 @@ document.addEventListener('DOMContentLoaded', () => {
             const res = await fetch(`backend.php?id=${osmId}`);
             if (!res.ok) throw new Error();
             const data = await res.json();
-            
-            const yesVotes = parseInt(data.usable_yes || 0);
-            const noVotes = parseInt(data.usable_no || 0);
-            const totalVotes = yesVotes + noVotes;
 
+            const yesVotes = parseInt(data.usable_yes) || 0;
+            const noVotes = parseInt(data.usable_no) || 0;
+            const totalVotes = yesVotes + noVotes;
+            
             if (totalVotes === 0) {
                 document.getElementById('stat-usable').innerText = t('statNoData');
             } else {
                 const percent = Math.round((yesVotes / totalVotes) * 100);
-                document.getElementById('stat-usable').innerText = t('successRate', {percent: percent, total: totalVotes});
+                document.getElementById('stat-usable').innerText = t('successRate', { percent: percent, total: totalVotes });
             }
 
-            const cleanCount = parseInt(data.cleanliness_count || 0);
-            const cleanSum = parseInt(data.cleanliness_sum || 0);
+            const cleanCount = parseInt(data.cleanliness_count) || 0;
+            const cleanSum = parseInt(data.cleanliness_sum) || 0;
 
             if (cleanCount === 0) {
                 document.getElementById('stat-clean').innerText = t('statNoRating');
             } else {
                 const avg = (cleanSum / cleanCount).toFixed(1);
-                document.getElementById('stat-clean').innerText = t('cleanRate', {avg: avg, count: cleanCount});
+                document.getElementById('stat-clean').innerText = t('cleanRate', { avg: avg, count: cleanCount });
             }
-
         } catch(e) {
             document.getElementById('stat-usable').innerText = t('statLoadError');
             document.getElementById('stat-clean').innerText = t('statLoadError');
@@ -981,10 +923,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('btn-usable-yes').addEventListener('click', () => sendVote({usable: 'yes'}));
     document.getElementById('btn-usable-no').addEventListener('click', () => sendVote({usable: 'no'}));
-    
     document.querySelectorAll('.btn-star').forEach(starBtn => {
         starBtn.addEventListener('click', (e) => {
-            const val = parseInt(e.target.getAttribute('data-val'));
+            const val = parseInt(e.target.closest('button').getAttribute('data-val'));
             sendVote({cleanliness: val});
         });
     });
