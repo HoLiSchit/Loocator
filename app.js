@@ -390,7 +390,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // NEU: Zusatztext (Hint) anzeigen und mit der aktuellen OSM-ID füllen
             const hintEl = document.getElementById('modal-report-hint');
-            hintEl.innerText = t('reportExistingHint') + ' ' + currentToiletData.id;
+            hintEl.innerText = t('reportExistingHint');
             hintEl.style.display = 'block';
             
             closeSheet();
