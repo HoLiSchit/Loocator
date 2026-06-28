@@ -252,12 +252,30 @@ document.addEventListener("DOMContentLoaded", () => {
     function toggleMenu(show) {
         if(show) {
             mainMenu.classList.remove('hidden');
-            btnOpenMenu.classList.add('hidden');
+            // Menü leicht nach oben schieben und unsichtbar machen, dann animiert einfliegen lassen
+            mainMenu.classList.add('opacity-0', '-translate-y-4');
+            // Ein winziger Moment Verzögerung, damit der Browser das Zeichnen mitbekommt
+            setTimeout(() => {
+                mainMenu.classList.remove('opacity-0', '-translate-y-4');
+            }, 10);
+            
+            // Den runden Öffnen-Button weich ausblenden
+            btnOpenMenu.classList.add('opacity-0', 'scale-90');
+            setTimeout(() => btnOpenMenu.classList.add('hidden'), 200);
         } else {
-            mainMenu.classList.add('hidden');
-            btnOpenMenu.classList.remove('hidden');
+            // Menü weich ausblenden und leicht nach oben schieben
+            mainMenu.classList.add('opacity-0', '-translate-y-4');
             searchSuggestions.classList.add('hidden');
             searchInput.blur();
+            
+            setTimeout(() => {
+                mainMenu.classList.add('hidden');
+                mainMenu.classList.remove('opacity-0', '-translate-y-4');
+                
+                // Den runden Öffnen-Button wieder einblenden
+                btnOpenMenu.classList.remove('hidden');
+                setTimeout(() => btnOpenMenu.classList.remove('opacity-0', 'scale-90'), 10);
+            }, 200);
         }
     }
 
