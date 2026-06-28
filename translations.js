@@ -22,7 +22,6 @@ const dict = {
         btnNav: "Navigation",
         btnShare: "Teilen",
         alertNotFound: "Ort nicht gefunden.",
-        alertReportConfirm: "Möchtest du in der Mitte der Karte eine fehlende Toilette melden? (Anonym an OSM)",
         alertReportSuccess: "Danke! Die Info wurde gesendet.",
         alertError: "Fehler aufgetreten. Bitte überprüfe dein Internet.",
         alertCopied: "Link kopiert!",
@@ -85,7 +84,7 @@ const dict = {
         reportType2: "Hier fehlt ein Eurokey-WC",
         reportType3: "WC ist falsch / existiert nicht",
         reportNotePlaceholder: "Zusätzliche Infos (optional, z.B. 'Ist hinter dem Kiosk')...",
-        reportSubmit: "An OSM senden"
+        reportSubmit: "Zur Überprüfung senden"
     },
     'en': {
         appDesc: "Find WCs, Eurokeys & Changing Tables",
@@ -110,7 +109,6 @@ const dict = {
         btnNav: "Navigate",
         btnShare: "Share",
         alertNotFound: "Location not found.",
-        alertReportConfirm: "Do you want to report a missing toilet at the map center? (Anonymously to OSM)",
         alertReportSuccess: "Thanks! The report was sent.",
         alertError: "An error occurred. Please check your internet.",
         alertCopied: "Link copied!",
@@ -173,7 +171,7 @@ const dict = {
         reportType2: "Missing Eurokey-WC here",
         reportType3: "WC is incorrect / does not exist",
         reportNotePlaceholder: "Additional info (optional, e.g. 'Behind the kiosk')...",
-        reportSubmit: "Send to OSM"
+        reportSubmit: "Send for review"
     }
 };
 
