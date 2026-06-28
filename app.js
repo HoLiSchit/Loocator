@@ -755,9 +755,17 @@ document.addEventListener("DOMContentLoaded", () => {
         else if (tags.amenity === 'fuel') baseType = t('tFuel');
 
         if (isEurokeyOrWheelchair) {
-            if (isExplicitEurokey) baseType += " - " + t('tAddEuro');
-            else if (isWheelchair) baseType += " - " + t('tAddWheel');
+            if (isExplicitEurokey) {
+                // Wenn es das Standard-WC ist, nenne es einfach direkt "Eurokey-WC"
+                if (baseType === t('tPublic')) baseType = "Eurokey-WC";
+                // Ansonsten hänge es in Klammern an (z.B. "Tankstelle (Eurokey)")
+                else baseType += ' (' + t('tAddEuro') + ')';
+            } else if (isWheelchair) {
+                if (baseType === t('tPublic')) baseType = "Rollstuhl-WC";
+                else baseType += ' (' + t('tAddWheel') + ')';
+            }
         }
+
         document.getElementById('sheet-title').innerText = baseType;
         
         updateFavButtonUI();
