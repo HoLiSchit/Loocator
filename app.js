@@ -105,12 +105,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const map = L.map('map', { zoomControl: false }).setView([49.0069, 8.4037], 14);
 
-    // --- NEU: className 'osm-tiles' hier zwingend hinzugefügt ---
     const layerOSM = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap',
         className: 'osm-tiles'
     });
-    // -----------------------------------------------------------
 
     const layerSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Tiles © Esri'
@@ -394,16 +392,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 1B. Modus starten (via Bottom-Sheet -> Direkt zum Modal)
-    document.getElementById('btn-report-existing').addEventListener('click', () => {
-        reportMode = 'existing';
-        // Für bestehende WCs macht "Hier fehlt ein WC" keinen Sinn, also ausblenden
-        document.getElementById('label-rep-1').style.display = 'none';
-        document.getElementById('label-rep-2').style.display = 'none';
-        document.getElementById('radio-rep-3').checked = true;
-        
-        closeSheet();
-        reportModal.classList.remove('hidden');
-    });
+    if(document.getElementById('btn-report-existing')) {
+        document.getElementById('btn-report-existing').addEventListener('click', () => {
+            reportMode = 'existing';
+            // Für bestehende WCs macht "Hier fehlt ein WC" keinen Sinn, also ausblenden
+            document.getElementById('label-rep-1').style.display = 'none';
+            document.getElementById('label-rep-2').style.display = 'none';
+            document.getElementById('radio-rep-3').checked = true;
+            
+            closeSheet();
+            reportModal.classList.remove('hidden');
+        });
+    }
 
     // 2. Modus abbrechen
     document.getElementById('btn-cancel-target').addEventListener('click', () => {
@@ -435,7 +435,6 @@ document.addEventListener('DOMContentLoaded', () => {
             lon = center.lng;
             finalOsmText = `[Loocator App Report] Issue: ${typeRadio}`;
         } else {
-            // Bestehendes WC melden
             lat = currentToiletData.lat || (currentToiletData.center && currentToiletData.center.lat);
             lon = currentToiletData.lon || (currentToiletData.center && currentToiletData.center.lon);
             finalOsmText = `[Loocator App Report] Issue with existing WC (OSM-ID: ${currentToiletData.id}): ${typeRadio}`;
@@ -453,43 +452,7 @@ document.addEventListener('DOMContentLoaded', () => {
         submitBtn.disabled = true;
 
         try {
-            await fetch(url, { method: 'POST' });
-            showToast(t('alertReportSuccess'), 'success');
-            
-            reportModal.classList.add('hidden');
-            crosshair.classList.add('hidden');
-            document.getElementById('report-note').value = '';
-        } catch(e) {
-            customAlert(t('alertError'));
-        } finally {
-            submitBtn.innerText = oldText;
-            submitBtn.disabled = false;
-        }
-    });
-    // ----------------------------------------------------
-
-    // 5. Daten an OSM senden
-    document.getElementById('btn-submit-report').addEventListener('click', async () => {
-        const center = map.getCenter();
-        const typeRadio = document.querySelector('input[name="report-type"]:checked').value;
-        const noteText = document.getElementById('report-note').value.trim();
-        
-        // Text formatieren fuer die OSM-Mapper
-        let finalOsmText = `[Loocator App Report] Issue: ${typeRadio}`;
-        if (noteText.length > 0) {
-            finalOsmText += ` | User note: ${noteText}`;
-        }
-        
-        const url = `https://api.openstreetmap.org/api/0.6/notes?lat=${center.lat}&lon=${center.lng}&text=${encodeURIComponent(finalOsmText)}`;
-        
-        // Button kurz deaktivieren
-        const submitBtn = document.getElementById('btn-submit-report');
-        const oldText = submitBtn.innerText;
-        submitBtn.innerText = '...';
-        submitBtn.disabled = true;
-
-        try {
-            await fetch(url, { method: 'POST' });
+            await fetch(url, { method: 'POST' }); 
             showToast(t('alertReportSuccess'), 'success');
             
             reportModal.classList.add('hidden');
