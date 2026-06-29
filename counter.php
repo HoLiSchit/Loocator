@@ -2,7 +2,7 @@
 header('Access-Control-Allow-Origin: *');
 
 // Der Pfad zur Zähler-Datei und Datenbank
-$file = 'count.txt';
+$file = 'visits.txt';
 $dbFile = 'loocator.sqlite';
 
 // 1. Wenn die App einfach nur den Zähler +1 setzen will (beim Laden)
