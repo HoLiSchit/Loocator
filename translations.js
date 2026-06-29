@@ -20,7 +20,7 @@ const dict = {
         btnYes: "Ja",
         btnNo: "Nein",
         cleanliness: "Wie sauber war es?",
-        btnNav: "Navigations-App öffnen",
+        btnNav: "Navigieren",
         btnShare: "Teilen",
         alertNotFound: "Ort nicht gefunden.",
         alertReportSuccess: "Danke! Die Info wurde gesendet.",
@@ -118,6 +118,7 @@ const dict = {
         rank7: "Loocator-Legende",
         rank8: "Lord of the Loo",
         rank9: "Toiletten-Titan",
+        yourRank: "Dein Rang:",
         //Melden
         btnReportExisting: "Fehler melden"
     },
@@ -240,6 +241,7 @@ const dict = {
         rank7: "Loocator Legend",
         rank8: "Lord of the Loo",
         rank9: "Toilet Titan",
+        yourRank: "Your Rank:",
         btnReportExisting: "Report map error"
     }
 };
