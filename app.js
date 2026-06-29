@@ -13,7 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
         el.placeholder = t(el.getAttribute('data-i18n-placeholder'));
     });
-    document.querySelector('[data-i18n="impressum"]').href = "mailto:info@loocator.org";
 
     function showToast(message, type = 'info') {
         const container = document.getElementById('toast-container');
@@ -282,6 +281,71 @@ document.addEventListener("DOMContentLoaded", () => {
 
     btnOpenMenu.addEventListener('click', () => toggleMenu(true));
     btnCloseMenu.addEventListener('click', () => toggleMenu(false));
+        const btnContact = document.getElementById('btn-contact');
+    const contactModal = document.getElementById('contact-modal');
+    const btnCloseContact = document.getElementById('btn-close-contact');
+    const btnCloseContactSecondary = document.getElementById('btn-close-contact-secondary');
+    const contactForm = document.getElementById('contact-form');
+    const btnSubmitContact = document.getElementById('btn-submit-contact');
+
+    function openContactModal() {
+        toggleMenu(false);
+        contactModal.classList.remove('hidden');
+    }
+
+    function closeContactModal() {
+        contactModal.classList.add('hidden');
+    }
+
+    btnContact?.addEventListener('click', openContactModal);
+    btnCloseContact?.addEventListener('click', closeContactModal);
+    btnCloseContactSecondary?.addEventListener('click', closeContactModal);
+
+    contactModal?.addEventListener('click', (e) => {
+        if (e.target === contactModal) {
+            closeContactModal();
+        }
+    });
+
+    contactForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(contactForm);
+        const oldText = btnSubmitContact.innerText;
+
+        btnSubmitContact.disabled = true;
+        btnSubmitContact.innerText = '...';
+
+        try {
+            const response = await fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                showToast(t('contactSuccess'), 'success');
+                contactForm.reset();
+                closeContactModal();
+            } else {
+                customAlert(t('contactError'));
+            }
+        } catch (error) {
+            customAlert(t('contactError'));
+        } finally {
+            btnSubmitContact.disabled = false;
+            btnSubmitContact.innerText = oldText;
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            if (contactModal && !contactModal.classList.contains('hidden')) {
+                closeContactModal();
+            }
+        }
+    });
 
     function jumpToSearchResult(lat, lon, name) {
         map.setView([lat, lon], 18);

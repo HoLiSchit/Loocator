@@ -93,6 +93,7 @@ const dict = {
         reportExistingHint: "Stimmt etwas mit diesem Eintrag nicht? (Bitte nur echte Karten-Fehler melden!)",
         feeFree: "Kostenlos",
         accLimited: "Eingeschränkt",
+        btnContact: "Kontaktiere mich",
         btnReportExisting: "Karten-Fehler melden"
     },
     'en': {
@@ -189,6 +190,7 @@ const dict = {
         reportExistingHint: "Is something wrong with this entry? (Please only report actual map errors!)",
         feeFree: "Free",
         accLimited: "Limited",
+        btnContact: "Contact me",
         btnReportExisting: "Report map error"
     }
 };
