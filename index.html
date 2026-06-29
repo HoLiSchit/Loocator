@@ -54,7 +54,7 @@
         </svg>
     </button>
 
-    <div id="main-menu" class="absolute top-4 left-4 right-4 bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-xl ui-layer z-[1000] flex flex-col gap-3 transition-all duration-200">
+    <div id="main-menu" class="absolute top-4 left-4 right-4 max-h-[85vh] overflow-y-auto bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-xl ui-layer z-[1000] flex flex-col gap-2 transition-all duration-200">
         <div class="flex justify-between items-start">
             <div>
                 <h1 class="text-2xl font-black text-blue-600 dark:text-blue-400 tracking-tight">Loocator</h1>
@@ -76,65 +76,69 @@
             <ul id="search-suggestions" class="hidden absolute top-full left-0 w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 shadow-2xl rounded-b-xl mt-1 max-h-48 overflow-y-auto z-50 text-sm"></ul>
         </div>
 
-        <div class="border-t border-gray-100 dark:border-gray-700 pt-3 flex flex-col gap-3">
+        <!-- Kompakterer Filter-Bereich -->
+        <div class="border-t border-gray-100 dark:border-gray-700 pt-2 flex flex-col gap-2.5">
             <label class="flex items-center gap-3 cursor-pointer">
-                <input type="checkbox" id="filter-public" class="w-6 h-6 accent-blue-600 rounded" checked>
+                <input type="checkbox" id="filter-public" class="w-5 h-5 accent-blue-600 rounded" checked>
                 <span class="text-sm font-medium" data-i18n="filterPublic"></span>
             </label>
             <label class="flex items-center gap-3 cursor-pointer">
-                <input type="checkbox" id="filter-eurokey" class="w-6 h-6 accent-blue-600 rounded" checked>
+                <input type="checkbox" id="filter-eurokey" class="w-5 h-5 accent-blue-600 rounded" checked>
                 <span class="text-sm font-medium" data-i18n="filterEurokey"></span>
             </label>
             <label class="flex items-center gap-3 cursor-pointer">
-                <input type="checkbox" id="filter-free" class="w-6 h-6 accent-teal-500 rounded">
+                <input type="checkbox" id="filter-free" class="w-5 h-5 accent-teal-500 rounded">
                 <span class="text-sm font-medium" data-i18n="filterFree"></span>
             </label>
             <label class="flex items-center gap-3 cursor-pointer">
-                <input type="checkbox" id="filter-changing" class="w-6 h-6 accent-purple-500 rounded">
+                <input type="checkbox" id="filter-changing" class="w-5 h-5 accent-purple-500 rounded">
                 <span class="text-sm font-medium" data-i18n="filterChanging"></span>
             </label>
             <label class="flex items-center gap-3 cursor-pointer">
-                <input type="checkbox" id="filter-open" class="w-6 h-6 accent-green-600 rounded">
+                <input type="checkbox" id="filter-open" class="w-5 h-5 accent-green-600 rounded">
                 <span class="text-sm font-medium" data-i18n="filterOpen"></span>
             </label>
             <label class="flex items-center gap-3 cursor-pointer">
-                <input type="checkbox" id="filter-success" class="w-6 h-6 accent-yellow-500 rounded">
+                <input type="checkbox" id="filter-success" class="w-5 h-5 accent-yellow-500 rounded">
                 <span class="text-sm font-medium" data-i18n="filterSuccess"></span>
             </label>
             <label class="flex items-center gap-3 cursor-pointer">
-                <input type="checkbox" id="filter-nobad" class="w-6 h-6 accent-orange-500 rounded">
+                <input type="checkbox" id="filter-nobad" class="w-5 h-5 accent-orange-500 rounded">
                 <span class="text-sm font-medium" data-i18n="filterNoBad"></span>
             </label>
-            <label class="flex items-center gap-3 cursor-pointer border-t border-gray-100 dark:border-gray-700 pt-2 mt-1">
-                <input type="checkbox" id="filter-favorites" class="w-6 h-6 accent-red-500 rounded">
+            <label class="flex items-center gap-3 cursor-pointer border-t border-gray-100 dark:border-gray-700 pt-2">
+                <input type="checkbox" id="filter-favorites" class="w-5 h-5 accent-red-500 rounded">
                 <span class="text-sm font-medium text-red-600 dark:text-red-400" data-i18n="filterFav"></span>
             </label>
         </div>
 
-        <button id="btn-install" data-i18n="btnInstall" class="hidden mt-1 bg-green-500 text-white px-4 py-3 rounded-xl text-sm font-bold active:bg-green-700 transition-colors shadow"></button>
+        <button id="btn-install" data-i18n="btnInstall" class="hidden mt-1 bg-green-500 text-white px-4 py-2.5 rounded-xl text-sm font-bold active:bg-green-700 transition-colors shadow"></button>
         
-        <div id="ios-install-hint" class="hidden mt-2 bg-blue-50 dark:bg-gray-700 p-3 rounded-xl text-sm border border-blue-200 dark:border-gray-600 text-blue-800 dark:text-blue-200">
+        <div id="ios-install-hint" class="hidden mt-1 bg-blue-50 dark:bg-gray-700 p-2.5 rounded-xl text-xs border border-blue-200 dark:border-gray-600 text-blue-800 dark:text-blue-200">
             <span class="font-bold" data-i18n="iosHintTitle"></span><br>
             <span data-i18n="iosHintBody"></span>
         </div>
 
-        <button id="btn-report" data-i18n="btnReport" class="mt-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-xl text-sm font-bold active:bg-gray-200 transition-colors border border-gray-200 dark:border-gray-600"></button>
+        <!-- NEU: Melden und Kontakt nebeneinander -->
+        <div class="flex gap-2 mt-1">
+            <button id="btn-report" data-i18n="btnReport" class="flex-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 px-2 py-2.5 rounded-xl text-sm font-bold active:bg-gray-200 transition-colors border border-gray-200 dark:border-gray-600"></button>
+            <button id="btn-contact" data-i18n="btnContact" class="flex-1 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-2.5 rounded-xl text-sm font-bold text-center active:scale-95 transition-transform border border-blue-200 dark:border-blue-800 shadow-sm"></button>
+        </div>
 
-        <button id="btn-contact" data-i18n="btnContact" class="mt-2 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-4 py-3 rounded-xl text-sm font-bold text-center active:scale-95 transition-transform border border-blue-200 dark:border-blue-800 shadow-sm"></button>
-
-        <div class="mt-4 flex flex-col gap-2">
-            <p data-i18n="SupportMe" class="text-xs text-center text-gray-500 dark:text-gray-400 px-2 leading-relaxed"></p>
-
-            <a href="https://ko-fi.com/loocator" target="_blank" rel="noopener noreferrer" class="bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300 px-4 py-3 rounded-xl text-sm font-bold text-center active:scale-95 transition-transform flex items-center justify-center gap-2 border border-orange-200 dark:border-orange-800 shadow-sm">
+        <!-- Kompakterer Support Bereich -->
+        <div class="mt-1 flex flex-col gap-1.5">
+            <p data-i18n="SupportMe" class="text-[11px] text-center text-gray-500 dark:text-gray-400 px-1 leading-snug"></p>
+            <a href="https://ko-fi.com/loocator" target="_blank" rel="noopener noreferrer" class="bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300 px-4 py-2.5 rounded-xl text-sm font-bold text-center active:scale-95 transition-transform flex items-center justify-center gap-2 border border-orange-200 dark:border-orange-800 shadow-sm">
                 <span data-i18n="btnSupport"></span>
             </a>
         </div>
 
-        <div class="mt-4 text-center flex flex-col gap-2">
-            <div id="app-stats" class="text-xs text-gray-500 dark:text-gray-400 font-medium bg-gray-50 dark:bg-gray-700 py-2 rounded-lg border border-gray-100 dark:border-gray-600 hidden"></div>
-            <a class="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+        <!-- Kompakterer Footer -->
+        <div class="mt-1 text-center flex flex-col gap-1.5">
+            <div id="app-stats" class="text-[11px] text-gray-500 dark:text-gray-400 font-medium bg-gray-50 dark:bg-gray-700 py-1.5 rounded-lg border border-gray-100 dark:border-gray-600 hidden"></div>
+            <a class="text-[10px] text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors leading-tight">
                 <span data-i18n="impressum"></span><br>
-                <span class="mt-1 inline-block">Made with ❤️ in Rheinstetten</span>
+                <span class="mt-0.5 inline-block">Made with ❤️ in Rheinstetten</span>
             </a>
         </div>
     </div>
