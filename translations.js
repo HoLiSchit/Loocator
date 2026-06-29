@@ -208,7 +208,7 @@ const dict = {
         contactSubmit: "Send message",
         contactClose: "Close",
         contactSuccess: "Thanks! Your message was sent successfully.",
-        contactError: "Your message could not be sent right now. Please try again later."
+        contactError: "Your message could not be sent right now. Please try again later.",
         btnReportExisting: "Report map error"
     }
 };
