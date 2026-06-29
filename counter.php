@@ -18,8 +18,8 @@ if (isset($_GET['hit'])) {
 if (isset($_GET['show'])) {
     $count = file_exists($file) ? (int)file_get_contents($file) : 0;
 
-    // Tages-Differenz berechnen (Startdatum: 28.06.2026)
-    $startDate = new DateTime('2026-06-28');
+    // Tages-Differenz berechnen (Startdatum: 27.06.2026)
+    $startDate = new DateTime('2026-06-27');
     $now = new DateTime();
     $days = $now->diff($startDate)->days;
     $daysNum = max(1, $days);
