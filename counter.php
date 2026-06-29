@@ -1,9 +1,11 @@
 <?php
-// counter.php - Besucherzähler & Loocator Statistiken
-$file = 'visits.txt';
-$dbFile = __DIR__ . '/loocator.sqlite';
+header('Access-Control-Allow-Origin: *');
 
-// 1. Wenn die App geladen wird (hit=1) -> Zähler +1
+// Der Pfad zur Zähler-Datei und Datenbank
+$file = 'count.txt';
+$dbFile = 'loocator.sqlite';
+
+// 1. Wenn die App einfach nur den Zähler +1 setzen will (beim Laden)
 if (isset($_GET['hit'])) {
     $count = file_exists($file) ? (int)file_get_contents($file) : 0;
     $count++;
@@ -15,107 +17,143 @@ if (isset($_GET['hit'])) {
 // 2. Wenn DU dir die Zahlen ansehen willst (show=1)
 if (isset($_GET['show'])) {
     $count = file_exists($file) ? (int)file_get_contents($file) : 0;
-    
+
     // Tages-Differenz berechnen (Startdatum: 28.06.2026)
     $startDate = new DateTime('2026-06-28');
     $now = new DateTime();
     $days = $now->diff($startDate)->days;
-    // Damit am Starttag nicht "in 0 Tagen" steht, nehmen wir mindestens 1
-    $daysNum = max(1, $days); 
-    
+    $daysNum = max(1, $days);
+
     $topClean = [];
     $topUsable = [];
-    
+    $error = "";
+
     if (file_exists($dbFile)) {
         try {
             $db = new PDO('sqlite:' . $dbFile);
             $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            
-            $queryClean = "SELECT osm_id, cleanliness_sum, cleanliness_count, 
-                           CAST(cleanliness_sum AS FLOAT) / cleanliness_count as avg_clean 
-                           FROM ratings 
-                           WHERE cleanliness_count >= 2 
+
+            // NEU: Rechnet die einzelnen Votes zusammen für die Top-Sauberkeit
+            $queryClean = "SELECT osm_id, 
+                                  SUM(cleanliness_vote) as cleanliness_sum, 
+                                  SUM(CASE WHEN cleanliness_vote IS NOT NULL THEN 1 ELSE 0 END) as cleanliness_count, 
+                                  CAST(SUM(cleanliness_vote) AS FLOAT) / SUM(CASE WHEN cleanliness_vote IS NOT NULL THEN 1 ELSE 0 END) as avg_clean 
+                           FROM votes 
+                           GROUP BY osm_id
+                           HAVING cleanliness_count >= 2 
                            ORDER BY avg_clean DESC, cleanliness_count DESC 
                            LIMIT 5";
             $topClean = $db->query($queryClean)->fetchAll(PDO::FETCH_ASSOC);
 
-            $queryUsable = "SELECT osm_id, usable_yes, usable_no, 
-                            CAST(usable_yes AS FLOAT) / (usable_yes + usable_no) as success_rate,
-                            (usable_yes + usable_no) as total_votes
-                            FROM ratings 
-                            WHERE (usable_yes + usable_no) >= 3 
+            // NEU: Rechnet die einzelnen Votes zusammen für die Top-Zuverlässigkeit
+            $queryUsable = "SELECT osm_id, 
+                                   SUM(CASE WHEN usable_vote = 'yes' THEN 1 ELSE 0 END) as usable_yes, 
+                                   SUM(CASE WHEN usable_vote = 'no' THEN 1 ELSE 0 END) as usable_no, 
+                                   CAST(SUM(CASE WHEN usable_vote = 'yes' THEN 1 ELSE 0 END) AS FLOAT) / 
+                                   (SUM(CASE WHEN usable_vote = 'yes' THEN 1 ELSE 0 END) + SUM(CASE WHEN usable_vote = 'no' THEN 1 ELSE 0 END)) as success_rate,
+                                   (SUM(CASE WHEN usable_vote = 'yes' THEN 1 ELSE 0 END) + SUM(CASE WHEN usable_vote = 'no' THEN 1 ELSE 0 END)) as total_votes
+                            FROM votes 
+                            GROUP BY osm_id
+                            HAVING total_votes >= 3 
                             ORDER BY success_rate DESC, total_votes DESC 
                             LIMIT 5";
             $topUsable = $db->query($queryUsable)->fetchAll(PDO::FETCH_ASSOC);
-            
         } catch (Exception $e) {
             $error = "Datenbankfehler: " . $e->getMessage();
         }
     }
-
-    echo "<!DOCTYPE html>
-    <html lang='de'>
-    <head>
-        <meta charset='UTF-8'>
-        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-        <title>Loocator Statistik</title>
-        <style>
-            body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f3f4f6; color: #1f2937; padding: 20px; line-height: 1.5; }
-            .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-            h1 { text-align: center; color: #2563eb; font-size: 2.5em; margin-bottom: 5px; }
-            .visits { text-align: center; font-size: 1.1em; color: #6b7280; margin-bottom: 40px; }
-            .visits b { color: #1f2937; font-size: 1.4em; }
-            .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-            @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
-            h2 { font-size: 1.5em; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px; margin-bottom: 20px; }
-            h2.clean { color: #8b5cf6; border-color: #ddd6fe; }
-            h2.usable { color: #10b981; border-color: #d1fae5; }
-            .list-item { background: #f9fafb; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #e5e7eb; }
-            .osm-link { display: inline-block; background: #2563eb; color: white; text-decoration: none; padding: 6px 12px; border-radius: 6px; font-size: 0.85em; font-weight: bold; margin-top: 8px; }
-            .osm-link:hover { opacity: 0.9; }
-            .badge { display: inline-block; padding: 3px 8px; border-radius: 999px; font-size: 0.8em; font-weight: bold; margin-bottom: 5px; }
-            .badge-clean { background: #ede9fe; color: #6d28d9; }
-            .badge-usable { background: #d1fae5; color: #047857; }
-        </style>
-    </head>
-    <body>
-        <div class='container'>
-            <h1>🚽 Loocator Stats</h1>
-            <div class='visits'>Die App wurde seit dem 28.06.2026 in <b>$daysNum</b> Tagen <b>$count</b> Mal aufgerufen.</div>";
-
-    if (isset($error)) echo "<p style='color: red;'>$error</p>";
-    else {
-        echo "<div class='grid'><div><h2 class='clean'>✨ Top Sauberkeit</h2>";
-        if (empty($topClean)) echo "<p>Noch nicht genug Bewertungen.</p>";
-        else {
-            foreach ($topClean as $i => $row) {
-                $avg = number_format($row['avg_clean'], 1, ',', '.');
-                $osmNode = "https://www.openstreetmap.org/node/" . $row['osm_id'];
-                
-                echo "<div class='list-item'>
-                        <span class='badge badge-clean'>Platz ".($i+1)."</span><br>
-                        <b>$avg Sterne</b> (aus {$row['cleanliness_count']} Stimmen)<br>
-                        <a href='$osmNode' target='_blank' class='osm-link'>Auf Karte ansehen 🗺️</a>
-                      </div>";
-            }
-        }
-        echo "</div><div><h2 class='usable'>✅ Top Zuverlässigkeit</h2>";
+?>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loocator Statistik</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-4 md:p-10 font-sans text-gray-800">
+    <div class="max-w-2xl mx-auto space-y-6">
         
-        if (empty($topUsable)) echo "<p>Noch nicht genug Bewertungen.</p>";
-        else {
-            foreach ($topUsable as $i => $row) {
-                $percent = round($row['success_rate'] * 100);
-                $osmNode = "https://www.openstreetmap.org/node/" . $row['osm_id'];
-                
-                echo "<div class='list-item'>
-                        <span class='badge badge-usable'>Platz ".($i+1)."</span><br>
-                        <b>$percent% Erfolg</b> ({$row['usable_yes']}x Ja, {$row['usable_no']}x Nein)<br>
-                        <a href='$osmNode' target='_blank' class='osm-link'>Auf Karte ansehen 🗺️</a>
-                      </div>";
-            }
-        }
-        echo "</div></div></div></body></html>";
-    }
+        <div class="bg-white rounded-3xl shadow-xl p-8 text-center border border-gray-100">
+            <h1 class="text-xl font-bold text-gray-400 mb-2 uppercase tracking-widest">Loocator Aufrufe</h1>
+            <div class="text-7xl font-black text-blue-600 tracking-tighter mb-4">
+                <?= number_format($count, 0, ',', '.') ?>
+            </div>
+            <p class="text-sm font-medium text-gray-500 bg-gray-50 inline-block px-4 py-2 rounded-xl">
+                In <?= $daysNum ?> Tagen (Ø <?= number_format($count / $daysNum, 0, ',', '.') ?> / Tag)
+            </p>
+        </div>
+
+        <?php if ($error): ?>
+            <div class="bg-red-100 text-red-700 p-4 rounded-xl font-bold">
+                <?= $error ?>
+            </div>
+        <?php endif; ?>
+
+        <div class="grid md:grid-cols-2 gap-6">
+            <!-- Sauberste WCs -->
+            <div class="bg-white rounded-3xl shadow-lg p-6 border border-gray-100">
+                <h2 class="text-lg font-black text-indigo-700 mb-4 flex items-center gap-2">
+                    <span class="text-2xl">✨</span> Top 5 Sauberkeit
+                </h2>
+                <p class="text-xs text-gray-400 mb-4">(Ab 2 Bewertungen)</p>
+                <div class="space-y-3">
+                    <?php 
+                    if (empty($topClean)) {
+                        echo "<p class='text-sm text-gray-500 italic'>Noch nicht genug Bewertungen.</p>";
+                    } else {
+                        foreach ($topClean as $i => $row) {
+                            $avg = number_format($row['avg_clean'], 1, ',', '.');
+                            $osmNode = "https://www.openstreetmap.org/node/" . $row['osm_id'];
+                            echo "
+                            <a href='{$osmNode}' target='_blank' class='flex justify-between items-center bg-gray-50 hover:bg-indigo-50 p-3 rounded-xl transition-colors'>
+                                <span class='font-bold text-gray-700'>#" . ($i+1) . "</span>
+                                <span class='text-sm text-gray-500'>ID: {$row['osm_id']}</span>
+                                <div class='text-right'>
+                                    <span class='font-black text-indigo-600'>{$avg} ⭐</span>
+                                    <span class='text-[10px] block text-gray-400'>{$row['cleanliness_count']} Votes</span>
+                                </div>
+                            </a>";
+                        }
+                    }
+                    ?>
+                </div>
+            </div>
+
+            <!-- Zuverlässigste WCs -->
+            <div class="bg-white rounded-3xl shadow-lg p-6 border border-gray-100">
+                <h2 class="text-lg font-black text-green-700 mb-4 flex items-center gap-2">
+                    <span class="text-2xl">✅</span> Top 5 Zuverlässig
+                </h2>
+                <p class="text-xs text-gray-400 mb-4">(Ab 3 Bewertungen)</p>
+                <div class="space-y-3">
+                    <?php 
+                    if (empty($topUsable)) {
+                        echo "<p class='text-sm text-gray-500 italic'>Noch nicht genug Bewertungen.</p>";
+                    } else {
+                        foreach ($topUsable as $i => $row) {
+                            $percent = round($row['success_rate'] * 100);
+                            $osmNode = "https://www.openstreetmap.org/node/" . $row['osm_id'];
+                            echo "
+                            <a href='{$osmNode}' target='_blank' class='flex justify-between items-center bg-gray-50 hover:bg-green-50 p-3 rounded-xl transition-colors'>
+                                <span class='font-bold text-gray-700'>#" . ($i+1) . "</span>
+                                <span class='text-sm text-gray-500'>ID: {$row['osm_id']}</span>
+                                <div class='text-right'>
+                                    <span class='font-black text-green-600'>{$percent}% 👍</span>
+                                    <span class='text-[10px] block text-gray-400'>{$row['total_votes']} Votes</span>
+                                </div>
+                            </a>";
+                        }
+                    }
+                    ?>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
+<?php 
     exit;
-}
+} 
 ?>
