@@ -93,7 +93,7 @@ const dict = {
         reportExistingHint: "Stimmt etwas mit diesem Eintrag nicht? (Bitte nur echte Karten-Fehler melden!)",
         feeFree: "Kostenlos",
         accLimited: "Eingeschränkt",
-        btnContact: "Kontaktiere mich",
+        btnContact: "Kontakt aufnehmen",
         contactModalTitle: "Kontakt",
         contactModalText: "Fragen, Feedback oder Fehler? Schreib mir direkt hier.",
         contactNamePlaceholder: "Dein Name",
@@ -103,7 +103,7 @@ const dict = {
         contactClose: "Schließen",
         contactSuccess: "Danke! Deine Nachricht wurde erfolgreich gesendet.",
         contactError: "Die Nachricht konnte gerade nicht gesendet werden. Bitte versuche es später erneut.",
-        btnReportExisting: "Karten-Fehler melden"
+        btnReportExisting: "Fehler melden"
     },
     'en': {
         appDesc: "Find WCs, Eurokeys & Changing Tables",
