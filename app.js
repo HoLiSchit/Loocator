@@ -91,7 +91,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const newRankIndex = getRankIndex(currentKarma);
         if (newRankIndex > currentRankIndex) {
             currentRankIndex = newRankIndex;
-            // KONFETTI! 🎉 (Prüfen ob Skript geladen ist)
+            
+            // Konfetti auslösen
             if(typeof confetti === 'function') {
                 confetti({
                     particleCount: 150, spread: 80, origin: { y: 0.6 },
@@ -99,6 +100,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     zIndex: 9999
                 });
             }
+            
+            // NEU: Toast mit Erklärung
+            const newRankName = t(karmaRanks[currentRankIndex].key);
+            const newRankEmoji = karmaRanks[currentRankIndex].emoji;
+            showToast(t('rankUp', { rank: newRankName + ' ' + newRankEmoji }), 'success');
         }
         updateKarmaUI();
     }
