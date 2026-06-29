@@ -102,7 +102,7 @@ const dict = {
         contactSubmit: "Nachricht senden",
         contactClose: "Schließen",
         contactSuccess: "Danke! Deine Nachricht wurde erfolgreich gesendet.",
-        contactError: "Die Nachricht konnte gerade nicht gesendet werden. Bitte versuche es später erneut."
+        contactError: "Die Nachricht konnte gerade nicht gesendet werden. Bitte versuche es später erneut.",
         btnReportExisting: "Karten-Fehler melden"
     },
     'en': {
