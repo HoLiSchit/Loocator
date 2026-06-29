@@ -33,6 +33,76 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     const customAlert = (msg) => showToast(msg, 'error');
 
+        // --- KARMA SYSTEM ---
+    let currentKarma = parseInt(localStorage.getItem('loocator_karma')) || 0;
+    
+    // Unsere Endgame-Kurve bis 1000!
+    const karmaRanks = [
+        { min: 0, key: "rank0", emoji: "🧻" },
+        { min: 1, key: "rank1", emoji: "🚶‍♂️" },
+        { min: 5, key: "rank2", emoji: "🔑" },
+        { min: 15, key: "rank3", emoji: "🕵️‍♀️" },
+        { min: 35, key: "rank4", emoji: "🚓" },
+        { min: 75, key: "rank5", emoji: "👑" },
+        { min: 150, key: "rank6", emoji: "🛡️" },
+        { min: 300, key: "rank7", emoji: "🌟" },
+        { min: 600, key: "rank8", emoji: "🏰" },
+        { min: 1000, key: "rank9", emoji: "🔱" }
+    ];
+
+    function getRankIndex(points) {
+        let index = 0;
+        for (let i = 0; i < karmaRanks.length; i++) {
+            if (points >= karmaRanks[i].min) index = i;
+        }
+        return index;
+    }
+
+    let currentRankIndex = getRankIndex(currentKarma);
+
+    function updateKarmaUI() {
+        const rank = karmaRanks[currentRankIndex];
+        const titleEl = document.getElementById('karma-title');
+        const pointsEl = document.getElementById('karma-points');
+        const emojiEl = document.getElementById('karma-emoji');
+        const leftEl = document.getElementById('karma-left');
+        const nextLabelEl = document.getElementById('karma-next-label');
+
+        if(titleEl) titleEl.innerText = t(rank.key);
+        if(pointsEl) pointsEl.innerText = t('karmaPoints', { points: currentKarma });
+        if(emojiEl) emojiEl.innerText = rank.emoji;
+
+        if(leftEl && nextLabelEl) {
+            if (currentRankIndex < karmaRanks.length - 1) {
+                const nextRank = karmaRanks[currentRankIndex + 1];
+                leftEl.innerText = nextRank.min - currentKarma;
+                nextLabelEl.innerText = t('karmaNext');
+            } else {
+                leftEl.innerText = "MAX";
+                nextLabelEl.innerText = t('karmaMax');
+            }
+        }
+    }
+
+    function addKarmaPoint() {
+        currentKarma++;
+        localStorage.setItem('loocator_karma', currentKarma);
+        
+        const newRankIndex = getRankIndex(currentKarma);
+        if (newRankIndex > currentRankIndex) {
+            currentRankIndex = newRankIndex;
+            // KONFETTI! 🎉 (Prüfen ob Skript geladen ist)
+            if(typeof confetti === 'function') {
+                confetti({
+                    particleCount: 150, spread: 80, origin: { y: 0.6 },
+                    colors: ['#3b82f6', '#22c55e', '#eab308', '#a855f7'],
+                    zIndex: 9999
+                });
+            }
+        }
+        updateKarmaUI();
+    }
+
     const offlineBanner = document.getElementById('offline-banner');
     function updateOnlineStatus() {
         if (navigator.onLine) offlineBanner.classList.add('hidden');
@@ -1116,6 +1186,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (payload.usable === 'no') globalRatingsDb[payload.id].usable_no += 1;
 
             showToast(t('voteThanks'), 'success');
+            addKarmaPoint();
             loadRatings(payload.id);
             checkVotedStatus(payload.id);
             renderMarkers();
@@ -1156,5 +1227,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    updateKarmaUI();
     fetchToilets();
 });

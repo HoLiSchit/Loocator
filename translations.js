@@ -93,6 +93,7 @@ const dict = {
         reportExistingHint: "Stimmt etwas mit diesem Eintrag nicht? (Bitte nur echte Karten-Fehler melden!)",
         feeFree: "Kostenlos",
         accLimited: "Eingeschränkt",
+        //Kontaktformular
         btnContact: "Kontakt aufnehmen",
         contactModalTitle: "Kontakt",
         contactModalText: "Fragen, Feedback oder Fehler? Schreib mir direkt hier.",
@@ -103,6 +104,21 @@ const dict = {
         contactClose: "Schließen",
         contactSuccess: "Danke! Deine Nachricht wurde erfolgreich gesendet.",
         contactError: "Die Nachricht konnte gerade nicht gesendet werden. Bitte versuche es später erneut.",
+        // Karma & Ränge
+        karmaPoints: "{points} Bewertungen",
+        karmaNext: "Nächster Rang in:",
+        karmaMax: "Maximaler Rang!",
+        rank0: "Spüler-Azubi",
+        rank1: "Klo-Entdecker",
+        rank2: "Eurokey-Scout",
+        rank3: "Hygiene-Inspektor",
+        rank4: "Schüssel-Sheriff",
+        rank5: "Porzellan-Prinz",
+        rank6: "WC-Wächter",
+        rank7: "Loocator-Legende",
+        rank8: "Lord of the Loo",
+        rank9: "Toiletten-Titan",
+        //Melden
         btnReportExisting: "Fehler melden"
     },
     'en': {
@@ -199,6 +215,7 @@ const dict = {
         reportExistingHint: "Is something wrong with this entry? (Please only report actual map errors!)",
         feeFree: "Free",
         accLimited: "Limited",
+        //Contact form
         btnContact: "Contact me",
         contactModalTitle: "Contact",
         contactModalText: "Questions, feedback or bugs? Send me a message right here.",
@@ -209,6 +226,20 @@ const dict = {
         contactClose: "Close",
         contactSuccess: "Thanks! Your message was sent successfully.",
         contactError: "Your message could not be sent right now. Please try again later.",
+        // Karma & Ranks
+        karmaPoints: "{points} Reviews",
+        karmaNext: "Next rank in:",
+        karmaMax: "Maximum rank!",
+        rank0: "Dishwasher Apprentice",
+        rank1: "Loo Explorer",
+        rank2: "Eurokey Scout",
+        rank3: "Hygiene Inspector",
+        rank4: "Bowl Sheriff",
+        rank5: "Porcelain Prince",
+        rank6: "WC Warden",
+        rank7: "Loocator Legend",
+        rank8: "Lord of the Loo",
+        rank9: "Toilet Titan",
         btnReportExisting: "Report map error"
     }
 };
