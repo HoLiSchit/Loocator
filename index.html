@@ -120,9 +120,7 @@
 
         <button id="btn-report" data-i18n="btnReport" class="mt-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-xl text-sm font-bold active:bg-gray-200 transition-colors border border-gray-200 dark:border-gray-600"></button>
 
-        <button id="btn-contact" data-i18n="btnContact"
-        class="mt-2 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-4 py-3 rounded-xl text-sm font-bold text-center active:scale-95 transition-transform border border-blue-200 dark:border-blue-800 shadow-sm">
-        </button>
+        <button id="btn-contact" data-i18n="btnContact" class="mt-2 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-4 py-3 rounded-xl text-sm font-bold text-center active:scale-95 transition-transform border border-blue-200 dark:border-blue-800 shadow-sm"></button>
 
         <a href="https://ko-fi.com/loocator" target="_blank" rel="noopener noreferrer" class="mt-2 bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300 px-4 py-3 rounded-xl text-sm font-bold text-center active:scale-95 transition-transform flex items-center justify-center gap-2 border border-orange-200 dark:border-orange-800 shadow-sm">
         <span data-i18n="btnSupport"></span>
@@ -320,6 +318,66 @@
             </div>
 
             <button id="btn-close-tutorial" class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold py-3.5 rounded-xl transition-colors shadow-lg" data-i18n="tutStart"></button>
+        </div>
+    </div>
+
+    <div id="contact-modal" class="hidden fixed inset-0 bg-gray-900/80 z-[9000] flex items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-300">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 max-w-sm w-full shadow-2xl">
+            <div class="flex justify-between items-start mb-4">
+                <div class="flex flex-col">
+                   <h2 class="text-xl font-black text-blue-600 dark:text-blue-400" data-i18n="contactModalTitle"></h2>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 leading-tight pr-2" data-i18n="contactModalText"></p>
+                </div>
+             <button id="btn-close-contact" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-xl font-bold p-1">✕</button>
+            </div>
+
+            <form id="contact-form" class="flex flex-col gap-3">
+                <input type="hidden" name="access_key" value="378c3cbc-7276-47d4-b2a8-a6d08d33f6e5">
+                <input type="hidden" name="subject" value="Loocator Kontaktformular">
+                <input type="hidden" name="from_name" value="Loocator">
+                <input type="checkbox" name="botcheck" class="hidden" tabindex="-1" autocomplete="off">
+
+                <input
+                    id="contact-name"
+                    type="text"
+                    name="name"
+                    data-i18n-placeholder="contactNamePlaceholder"
+                    class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500"
+                    required
+                >
+
+                <input
+                    id="contact-email"
+                    type="email"
+                    name="email"
+                    data-i18n-placeholder="contactEmailPlaceholder"
+                    class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500"
+                    required
+                >
+
+                <textarea
+                    id="contact-message"
+                    name="message"
+                    rows="4"
+                    data-i18n-placeholder="contactMessagePlaceholder"
+                    class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500"
+                    required
+                ></textarea>
+
+                <button
+                    id="btn-submit-contact"
+                    type="submit"
+                    class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold py-3.5 rounded-xl transition-colors shadow-lg"
+                    data-i18n="contactSubmit"
+                ></button>
+
+                <button
+                    id="btn-close-contact-secondary"
+                    type="button"
+                    class="w-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-100 font-bold py-3 rounded-xl active:bg-gray-200 dark:active:bg-gray-600 transition-colors border border-gray-200 dark:border-gray-600"
+                    data-i18n="contactClose"
+                ></button>
+            </form>
         </div>
     </div>
 

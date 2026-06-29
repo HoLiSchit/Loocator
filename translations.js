@@ -13,7 +13,7 @@ const dict = {
         btnInstall: "Loocator als App installieren",
         btnReport: "Karten-Fehler melden",
         btnSupport: "🥤 Unterstütze das Projekt",
-        impressum: "100% kostenlos, aber ich freue mich über deine Unterstützung! Kontakt: info@loocator.org",
+        //impressum: "100% kostenlos, aber ich freue mich über deine Unterstützung! Kontakt: info@loocator.org",
         statsText: "{toilets} WCs bewertet • {votes} Community-Votes",
         howWasIt: "Dein Feedback hilft anderen",
         couldYouUse: "Hat alles geklappt?",
@@ -94,6 +94,15 @@ const dict = {
         feeFree: "Kostenlos",
         accLimited: "Eingeschränkt",
         btnContact: "Kontaktiere mich",
+        contactModalTitle: "Kontakt",
+        contactModalText: "Fragen, Feedback oder Fehler? Schreib mir direkt hier.",
+        contactNamePlaceholder: "Dein Name",
+        contactEmailPlaceholder: "Deine E-Mail",
+        contactMessagePlaceholder: "Deine Nachricht",
+        contactSubmit: "Nachricht senden",
+        contactClose: "Schließen",
+        contactSuccess: "Danke! Deine Nachricht wurde erfolgreich gesendet.",
+        contactError: "Die Nachricht konnte gerade nicht gesendet werden. Bitte versuche es später erneut."
         btnReportExisting: "Karten-Fehler melden"
     },
     'en': {
@@ -112,7 +121,7 @@ const dict = {
         distTimeMin: " min. walk",
         btnReport: "Report map error",
         btnSupport: "🥤 Support the project",
-        impressum: "100% free, but your support is greatly appreciated! Contact: info@loocator.org",
+        //impressum: "100% free, but your support is greatly appreciated! Contact: info@loocator.org",
         statsText: "{toilets} WCs rated • {votes} community votes",
         howWasIt: "Your feedback helps others",
         couldYouUse: "Did everything work out?",
@@ -191,6 +200,15 @@ const dict = {
         feeFree: "Free",
         accLimited: "Limited",
         btnContact: "Contact me",
+        contactModalTitle: "Contact",
+        contactModalText: "Questions, feedback or bugs? Send me a message right here.",
+        contactNamePlaceholder: "Your name",
+        contactEmailPlaceholder: "Your email",
+        contactMessagePlaceholder: "Your message",
+        contactSubmit: "Send message",
+        contactClose: "Close",
+        contactSuccess: "Thanks! Your message was sent successfully.",
+        contactError: "Your message could not be sent right now. Please try again later."
         btnReportExisting: "Report map error"
     }
 };
