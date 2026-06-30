@@ -1,7 +1,7 @@
 {
   "name": "Loocator",
   "short_name": "Loocator",
-  "description": "Finde öffentliche Toiletten und Eurokey-WCs in deiner Nähe.",
+  "description": "Finde öffentliche Toiletten und Euroschlüssel-WCs in deiner Nähe.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
