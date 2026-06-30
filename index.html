@@ -56,78 +56,105 @@
         </svg>
     </button>
 
-    <div id="main-menu" class="absolute top-4 left-4 right-4 max-h-[85vh] overflow-y-auto bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-xl ui-layer z-[1000] flex flex-col gap-2 transition-all duration-200">
+    <div id="main-menu" class="absolute top-4 left-4 right-4 max-h-[85vh] overflow-y-auto bg-white dark:bg-gray-800 p-5 rounded-3xl shadow-2xl ui-layer z-[1000] flex flex-col gap-4 transition-all duration-300">
+        
+        <!-- Header: Titel & Buttons -->
         <div class="flex justify-between items-start">
             <div>
                 <h1 class="text-2xl font-black text-blue-600 dark:text-blue-400 tracking-tight">Loocator</h1>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5 font-medium" data-i18n="appDesc"></p>
+                <p class="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5 font-bold uppercase tracking-widest" data-i18n="appDesc"></p>
             </div>
-            <div class="flex items-center gap-1">
-                <button id="btn-theme-toggle" class="text-xl p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 active:scale-95 transition-transform" title="Light/Dark Mode"></button>
-                <button id="btn-close-menu" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 font-bold text-xl p-2 active:scale-95">✕</button>
+            <div class="flex items-center gap-1 bg-gray-50 dark:bg-gray-700 p-1 rounded-full border border-gray-100 dark:border-gray-600">
+                <button id="btn-theme-toggle" class="text-lg p-1.5 rounded-full hover:bg-white dark:hover:bg-gray-600 shadow-sm active:scale-95 transition-all" title="Light/Dark Mode"></button>
+                <button id="btn-close-menu" class="text-gray-500 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white font-bold text-lg p-1.5 rounded-full hover:bg-white dark:hover:bg-gray-600 shadow-sm active:scale-95 transition-all">✕</button>
             </div>
         </div>
 
-        <div class="relative flex flex-col mt-1">
-            <form id="search-form" class="flex gap-2">
-                <input type="text" id="search-input" data-i18n-placeholder="searchPlaceholder" class="flex-1 border-2 border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-blue-600 transition-colors" autocomplete="off">
-                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-bold active:bg-blue-800 transition-colors flex items-center justify-center">
-                    <img src="img/search.svg" alt="Search" class="w-5 h-5 filter brightness-0 invert">
-                </button>
+        <!-- Moderne Suche -->
+        <div class="relative flex flex-col">
+            <form id="search-form" class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                    <img src="img/search.svg" alt="Search" class="w-4 h-4 opacity-40 dark:invert">
+                </div>
+                <input type="text" id="search-input" data-i18n-placeholder="searchPlaceholder" class="w-full bg-gray-100 dark:bg-gray-700 dark:text-white border-transparent focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 rounded-2xl py-3 pl-10 pr-4 text-sm font-medium transition-all outline-none" autocomplete="off">
             </form>
-            <ul id="search-suggestions" class="hidden absolute top-full left-0 w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 shadow-2xl rounded-b-xl mt-1 max-h-48 overflow-y-auto z-50 text-sm"></ul>
+            <ul id="search-suggestions" class="hidden absolute top-full left-0 w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 shadow-xl rounded-2xl mt-2 max-h-48 overflow-y-auto z-50 text-sm"></ul>
         </div>
 
-        <!-- Kompakterer Filter-Bereich -->
-        <div class="border-t border-gray-100 dark:border-gray-700 pt-2 flex flex-col gap-2.5">
-            <label class="flex items-center gap-3 cursor-pointer">
-                <input type="checkbox" id="filter-public" class="w-5 h-5 accent-blue-600 rounded" checked>
-                <span class="text-sm font-medium" data-i18n="filterPublic"></span>
+        <!-- Moderne Filter-Chips (Die Checkboxen sind unsichtbar im Hintergrund) -->
+        <div class="flex flex-wrap gap-2 pt-1">
+            <label class="cursor-pointer">
+                <input type="checkbox" id="filter-public" class="peer sr-only" checked>
+                <div class="px-3.5 py-2 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-600 dark:peer-checked:bg-blue-500 shadow-sm">
+                    <span data-i18n="filterPublic"></span>
+                </div>
             </label>
-            <label class="flex items-center gap-3 cursor-pointer">
-                <input type="checkbox" id="filter-eurokey" class="w-5 h-5 accent-blue-600 rounded" checked>
-                <span class="text-sm font-medium" data-i18n="filterEurokey"></span>
+            <label class="cursor-pointer">
+                <input type="checkbox" id="filter-eurokey" class="peer sr-only" checked>
+                <div class="px-3.5 py-2 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-600 dark:peer-checked:bg-blue-500 shadow-sm">
+                    <span data-i18n="filterEurokey"></span>
+                </div>
             </label>
-            <label class="flex items-center gap-3 cursor-pointer">
-                <input type="checkbox" id="filter-free" class="w-5 h-5 accent-teal-500 rounded">
-                <span class="text-sm font-medium" data-i18n="filterFree"></span>
+            <label class="cursor-pointer">
+                <input type="checkbox" id="filter-free" class="peer sr-only">
+                <div class="px-3.5 py-2 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-teal-500 peer-checked:text-white peer-checked:border-teal-500 shadow-sm">
+                    <span data-i18n="filterFree"></span>
+                </div>
             </label>
-            <label class="flex items-center gap-3 cursor-pointer">
-                <input type="checkbox" id="filter-changing" class="w-5 h-5 accent-purple-500 rounded">
-                <span class="text-sm font-medium" data-i18n="filterChanging"></span>
+            <label class="cursor-pointer">
+                <input type="checkbox" id="filter-changing" class="peer sr-only">
+                <div class="px-3.5 py-2 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-purple-500 peer-checked:text-white peer-checked:border-purple-500 shadow-sm">
+                    <span data-i18n="filterChanging"></span>
+                </div>
             </label>
-            <label class="flex items-center gap-3 cursor-pointer">
-                <input type="checkbox" id="filter-open" class="w-5 h-5 accent-green-600 rounded">
-                <span class="text-sm font-medium" data-i18n="filterOpen"></span>
+            <label class="cursor-pointer">
+                <input type="checkbox" id="filter-open" class="peer sr-only">
+                <div class="px-3.5 py-2 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-green-600 peer-checked:text-white peer-checked:border-green-600 shadow-sm">
+                    <span data-i18n="filterOpen"></span>
+                </div>
             </label>
-            <label class="flex items-center gap-3 cursor-pointer">
-                <input type="checkbox" id="filter-success" class="w-5 h-5 accent-yellow-500 rounded">
-                <span class="text-sm font-medium" data-i18n="filterSuccess"></span>
+            <label class="cursor-pointer">
+                <input type="checkbox" id="filter-success" class="peer sr-only">
+                <div class="px-3.5 py-2 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-yellow-500 peer-checked:text-white peer-checked:border-yellow-500 shadow-sm">
+                    <span data-i18n="filterSuccess"></span>
+                </div>
             </label>
-            <label class="flex items-center gap-3 cursor-pointer">
-                <input type="checkbox" id="filter-nobad" class="w-5 h-5 accent-orange-500 rounded">
-                <span class="text-sm font-medium" data-i18n="filterNoBad"></span>
+            <label class="cursor-pointer">
+                <input type="checkbox" id="filter-nobad" class="peer sr-only">
+                <div class="px-3.5 py-2 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-orange-500 peer-checked:text-white peer-checked:border-orange-500 shadow-sm">
+                    <span data-i18n="filterNoBad"></span>
+                </div>
             </label>
-            <label class="flex items-center gap-3 cursor-pointer border-t border-gray-100 dark:border-gray-700 pt-2">
-                <input type="checkbox" id="filter-favorites" class="w-5 h-5 accent-red-500 rounded">
-                <span class="text-sm font-medium text-red-600 dark:text-red-400" data-i18n="filterFav"></span>
+            <label class="cursor-pointer mt-2 w-full">
+                <input type="checkbox" id="filter-favorites" class="peer sr-only">
+                <div class="px-4 py-2.5 rounded-xl border-2 border-red-100 dark:border-red-900/30 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-xs font-bold transition-all peer-checked:bg-red-500 peer-checked:text-white peer-checked:border-red-500 shadow-sm flex items-center justify-center">
+                    <span data-i18n="filterFav"></span>
+                </div>
             </label>
         </div>
 
-        <button id="btn-install" data-i18n="btnInstall" class="hidden mt-1 bg-green-500 text-white px-4 py-2.5 rounded-xl text-sm font-bold active:bg-green-700 transition-colors shadow"></button>
+        <!-- PWA Install Area -->
+        <button id="btn-install" data-i18n="btnInstall" class="hidden mt-1 bg-green-500 text-white px-4 py-3 rounded-xl text-sm font-bold active:bg-green-700 transition-colors shadow-md flex items-center justify-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+            <span data-i18n="btnInstall"></span>
+        </button>
         
-        <div id="ios-install-hint" class="hidden mt-1 bg-blue-50 dark:bg-gray-700 p-2.5 rounded-xl text-xs border border-blue-200 dark:border-gray-600 text-blue-800 dark:text-blue-200">
+        <div id="ios-install-hint" class="hidden mt-1 bg-blue-50 dark:bg-gray-700 p-3 rounded-xl text-xs border border-blue-200 dark:border-gray-600 text-blue-800 dark:text-blue-200">
             <span class="font-bold" data-i18n="iosHintTitle"></span><br>
             <span data-i18n="iosHintBody"></span>
         </div>
 
-        <!-- Melden und Kontakt nebeneinander -->
+        <!-- Action Buttons (Melden & Kontakt) -->
         <div class="flex gap-2 mt-1">
-            <button id="btn-report" data-i18n="btnReport" class="flex-1 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 px-2 py-2.5 rounded-xl text-sm font-bold text-center active:scale-95 transition-transform border border-red-200 dark:border-red-800 shadow-sm"></button>
-            <button id="btn-contact" data-i18n="btnContact" class="flex-1 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-2.5 rounded-xl text-sm font-bold text-center active:scale-95 transition-transform border border-blue-200 dark:border-blue-800 shadow-sm"></button>
+            <button id="btn-report" class="flex-1 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 px-2 py-2.5 rounded-xl text-sm font-bold text-center active:scale-95 transition-transform border border-red-200 dark:border-red-800 shadow-sm">
+                <span data-i18n="btnReport"></span>
+            </button>
+            <button id="btn-contact" class="flex-1 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-2.5 rounded-xl text-sm font-bold text-center active:scale-95 transition-transform border border-blue-200 dark:border-blue-800 shadow-sm">
+                <span data-i18n="btnContact"></span>
+            </button>
         </div>
 
-        <!-- Support Bereich -->
+        <!-- Footer / Support -->
         <div class="mt-1 flex flex-col gap-1.5">
             <p data-i18n="SupportMe" class="text-[11px] text-center text-gray-500 dark:text-gray-400 px-1 leading-snug"></p>
             <a href="https://ko-fi.com/loocator" target="_blank" rel="noopener noreferrer" class="bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300 px-4 py-2.5 rounded-xl text-sm font-bold text-center active:scale-95 transition-transform flex items-center justify-center gap-2 border border-orange-200 dark:border-orange-800 shadow-sm">
@@ -135,7 +162,6 @@
             </a>
         </div>
 
-        <!-- Kompakterer Footer -->
         <div class="mt-1 text-center flex flex-col gap-1.5">
             <div id="app-stats" class="text-[11px] text-gray-500 dark:text-gray-400 font-medium bg-gray-50 dark:bg-gray-700 py-1.5 rounded-lg border border-gray-100 dark:border-gray-600 hidden"></div>
             <a class="text-[10px] text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors leading-tight">
