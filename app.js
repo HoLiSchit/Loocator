@@ -122,33 +122,45 @@ document.addEventListener("DOMContentLoaded", () => {
     const isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
     if (isIos && !isInStandaloneMode) document.getElementById('ios-install-hint').classList.remove('hidden');
 
-    const themeToggleBtn = document.getElementById('btn-theme-toggle');
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        htmlTag.classList.add('dark');
-        themeToggleBtn.innerText = '☀️';
-        themeToggleBtn.classList.add('bg-gray-800', 'text-white');
-        themeToggleBtn.classList.remove('bg-gray-100', 'text-gray-800');
-    } else {
-        htmlTag.classList.remove('dark');
-        themeToggleBtn.innerText = '🌙';
-        themeToggleBtn.classList.add('bg-gray-100', 'text-gray-800');
-        themeToggleBtn.classList.remove('bg-gray-800', 'text-white');
+    // --- NEU: Eleganter Theme Switcher ---
+    const btnLight = document.getElementById('btn-theme-light');
+    const btnDark = document.getElementById('btn-theme-dark');
+
+    function updateThemeUI(isDark) {
+        if (isDark) {
+            btnDark.classList.add('bg-white', 'dark:bg-gray-600', 'text-blue-500', 'dark:text-blue-400', 'shadow-sm');
+            btnDark.classList.remove('text-gray-400', 'dark:text-gray-500');
+            btnLight.classList.add('text-gray-400', 'dark:text-gray-500');
+            btnLight.classList.remove('bg-white', 'text-orange-500', 'shadow-sm');
+        } else {
+            btnLight.classList.add('bg-white', 'text-orange-500', 'shadow-sm');
+            btnLight.classList.remove('text-gray-400', 'dark:text-gray-500');
+            btnDark.classList.add('text-gray-400', 'dark:text-gray-500');
+            btnDark.classList.remove('bg-white', 'dark:bg-gray-600', 'text-blue-500', 'dark:text-blue-400', 'shadow-sm');
+        }
     }
 
-    themeToggleBtn.addEventListener('click', () => {
-        if (htmlTag.classList.contains('dark')) {
-            htmlTag.classList.remove('dark');
-            localStorage.theme = 'light';
-            themeToggleBtn.innerText = '🌙';
-            themeToggleBtn.classList.add('bg-gray-100', 'text-gray-800');
-            themeToggleBtn.classList.remove('bg-gray-800', 'text-white');
-        } else {
-            htmlTag.classList.add('dark');
-            localStorage.theme = 'dark';
-            themeToggleBtn.innerText = '☀️';
-            themeToggleBtn.classList.add('bg-gray-800', 'text-white');
-            themeToggleBtn.classList.remove('bg-gray-100', 'text-gray-800');
-        }
+    // Beim Start prüfen
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        htmlTag.classList.add('dark');
+        updateThemeUI(true);
+    } else {
+        htmlTag.classList.remove('dark');
+        updateThemeUI(false);
+    }
+
+    // Klick auf Hell
+    btnLight.addEventListener('click', () => {
+        htmlTag.classList.remove('dark');
+        localStorage.theme = 'light';
+        updateThemeUI(false);
+    });
+
+    // Klick auf Dunkel
+    btnDark.addEventListener('click', () => {
+        htmlTag.classList.add('dark');
+        localStorage.theme = 'dark';
+        updateThemeUI(true);
     });
 
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');

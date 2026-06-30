@@ -1,6 +1,6 @@
 const dict = {
     'de': {
-        appDesc: "Finde WCs, Euroschlüssel & Wickeltische",
+        appDesc: "Finde weltweit WCs, Euroschlüssel & Wickeltische",
         offline: "Du bist offline. Loocator benötigt eine Internetverbindung.",
         searchPlaceholder: "Ort suchen...",
         filterPublic: "🚻 Öffentliche Toiletten",
@@ -123,7 +123,7 @@ const dict = {
         btnReportExisting: "Fehler melden"
     },
     'en': {
-        appDesc: "Find WCs, Eurokeys & Changing Tables",
+        appDesc: "Find WCs, Eurokeys & Changing Tables worldwide",
         offline: "You are offline. Loocator requires an internet connection.",
         searchPlaceholder: "Search location...",
         filterPublic: "🚻 Public Toilets",
