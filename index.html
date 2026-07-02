@@ -91,63 +91,65 @@
             <ul id="search-suggestions" class="hidden absolute top-full left-0 w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 shadow-xl rounded-2xl mt-2 max-h-48 overflow-y-auto z-50 text-sm"></ul>
         </div>
 
-        <!-- Moderne Filter-Chips (Horizontal scrollbar wie bei Maps) -->
-        <div class="flex gap-2 pt-1 pb-2 overflow-x-auto snap-x snap-mandatory hide-scrollbar -mx-5 px-5">
-            
+        <!-- Filter-Bereich: Zeile 1 (Typ & Harte Faktoren) -->
+        <div class="flex gap-2 pt-1 pb-1 overflow-x-auto snap-x snap-mandatory hide-scrollbar -mx-5 px-5">
             <label class="cursor-pointer snap-start shrink-0">
                 <input type="checkbox" id="filter-favorites" class="peer sr-only">
                 <div class="px-4 py-2.5 rounded-full border border-red-200 dark:border-red-900/50 bg-white dark:bg-gray-700 text-red-600 dark:text-red-400 text-xs font-bold transition-all peer-checked:bg-red-500 peer-checked:text-white peer-checked:border-red-500 shadow-sm flex items-center gap-1.5 whitespace-nowrap">
-                    ❤️ <span data-i18n="filterFav"></span>
+                    <span data-i18n="filterFav"></span>
                 </div>
             </label>
 
-            <div class="w-px h-6 bg-gray-200 dark:bg-gray-600 shrink-0 my-auto mx-1"></div> <!-- Kleiner optischer Trenner -->
+            <div class="w-px h-6 bg-gray-200 dark:bg-gray-600 shrink-0 my-auto mx-1"></div>
 
             <label class="cursor-pointer snap-start shrink-0">
                 <input type="checkbox" id="filter-public" class="peer sr-only" checked>
-                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-600 dark:peer-checked:bg-blue-500 shadow-sm whitespace-nowrap">
+                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-600 dark:peer-checked:bg-blue-500 shadow-sm whitespace-nowrap flex items-center gap-1.5">
                     <span data-i18n="filterPublic"></span>
                 </div>
             </label>
 
             <label class="cursor-pointer snap-start shrink-0">
                 <input type="checkbox" id="filter-eurokey" class="peer sr-only" checked>
-                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-600 dark:peer-checked:bg-blue-500 shadow-sm whitespace-nowrap">
+                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-600 dark:peer-checked:bg-blue-500 shadow-sm whitespace-nowrap flex items-center gap-1.5">
                     <span data-i18n="filterEurokey"></span>
                 </div>
             </label>
 
             <label class="cursor-pointer snap-start shrink-0">
-                <input type="checkbox" id="filter-free" class="peer sr-only">
-                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-teal-500 peer-checked:text-white peer-checked:border-teal-500 shadow-sm whitespace-nowrap">
-                    <span data-i18n="filterFree"></span>
-                </div>
-            </label>
-
-            <label class="cursor-pointer snap-start shrink-0">
                 <input type="checkbox" id="filter-changing" class="peer sr-only">
-                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-purple-500 peer-checked:text-white peer-checked:border-purple-500 shadow-sm whitespace-nowrap">
+                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-purple-500 peer-checked:text-white peer-checked:border-purple-500 shadow-sm whitespace-nowrap flex items-center gap-1.5">
                     <span data-i18n="filterChanging"></span>
                 </div>
             </label>
+            
+            <label class="cursor-pointer snap-start shrink-0">
+                <input type="checkbox" id="filter-free" class="peer sr-only">
+                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-teal-500 peer-checked:text-white peer-checked:border-teal-500 shadow-sm whitespace-nowrap flex items-center gap-1.5">
+                    <span data-i18n="filterFree"></span>
+                </div>
+            </label>
+        </div>
 
+        <!-- Filter-Bereich: Zeile 2 (Status & Zuverlässigkeit) -->
+        <div class="flex gap-2 pt-1 pb-2 overflow-x-auto snap-x snap-mandatory hide-scrollbar -mx-5 px-5">
             <label class="cursor-pointer snap-start shrink-0">
                 <input type="checkbox" id="filter-open" class="peer sr-only">
-                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-green-600 peer-checked:text-white peer-checked:border-green-600 shadow-sm whitespace-nowrap">
+                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-green-600 peer-checked:text-white peer-checked:border-green-600 shadow-sm whitespace-nowrap flex items-center gap-1.5">
                     <span data-i18n="filterOpen"></span>
                 </div>
             </label>
 
             <label class="cursor-pointer snap-start shrink-0">
                 <input type="checkbox" id="filter-success" class="peer sr-only">
-                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-yellow-500 peer-checked:text-white peer-checked:border-yellow-500 shadow-sm whitespace-nowrap">
+                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-yellow-500 peer-checked:text-white peer-checked:border-yellow-500 shadow-sm whitespace-nowrap flex items-center gap-1.5">
                     <span data-i18n="filterSuccess"></span>
                 </div>
             </label>
 
             <label class="cursor-pointer snap-start shrink-0">
                 <input type="checkbox" id="filter-nobad" class="peer sr-only">
-                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-orange-500 peer-checked:text-white peer-checked:border-orange-500 shadow-sm whitespace-nowrap">
+                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-orange-500 peer-checked:text-white peer-checked:border-orange-500 shadow-sm whitespace-nowrap flex items-center gap-1.5">
                     <span data-i18n="filterNoBad"></span>
                 </div>
             </label>
