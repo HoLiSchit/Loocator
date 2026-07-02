@@ -63,3 +63,12 @@ html.dark #map.is-sat-mode .leaflet-tile {
     from { opacity: 1; transform: translateY(0); }
     to { opacity: 0; transform: translateY(20px); }
 }
+
+/* Versteckt die Scrollbar im neuen Filter-Menü, lässt aber Wischen zu */
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
