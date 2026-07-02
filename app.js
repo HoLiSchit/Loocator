@@ -1031,14 +1031,9 @@ document.addEventListener("DOMContentLoaded", () => {
                             if (cStr.length > 0) str.push(cStr.join(' '));
                             
                             if (str.length > 0) {
-                                // NEU: Wir setzen den übersetzten Text "In der Nähe von:" davor!
-                                let finalAddr = t('addrNear') + ' ' + str.join(', ');
-                                
-                                addressCache[cacheKey] = finalAddr;
-                                // Wenn wir noch dasselbe WC anschauen, updaten!
-                                if (currentToiletData && currentToiletData.id === id) {
-                                    addressEl.innerText = finalAddr;
-                                }
+                                const fullAddress = str.join(', ');
+                                addressCache[cacheKey] = fullAddress;
+                                addressEl.innerText = fullAddress;
                             } else {
                                 addressCache[cacheKey] = null;
                                 addressEl.classList.add('hidden');
