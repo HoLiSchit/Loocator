@@ -68,7 +68,13 @@ html.dark #map.is-sat-mode .leaflet-tile {
 .hide-scrollbar::-webkit-scrollbar {
     display: none;
 }
+
+/* --- UI Helfer --- */
+/* Versteckt die horizontale Scrollbar im Menü, das Wischen bleibt aber komplett erhalten */
 .hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+    -ms-overflow-style: none;  /* Für Internet Explorer und Edge */
+    scrollbar-width: none;  /* Für Firefox */
+}
+.hide-scrollbar::-webkit-scrollbar {
+    display: none; /* Für Chrome, Safari und Opera */
 }
