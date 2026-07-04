@@ -75,7 +75,19 @@ try {
 
         if (!$id) die(json_encode(['error' => 'No ID']));
 
-        // Speichert den einzelnen Vote ab
+        // NEU: Validierung - nur erlaubte Werte akzeptieren
+        if ($usable !== null && !in_array($usable, ['yes', 'no'], true)) {
+            $usable = null;
+        }
+        if ($cleanliness !== null && ($cleanliness < 1 || $cleanliness > 5)) {
+            $cleanliness = null;
+        }
+        // Wenn nach der Prüfung nichts Sinnvolles übrig bleibt, abbrechen
+        if ($usable === null && $cleanliness === null) {
+            http_response_code(400);
+            die(json_encode(['error' => 'Invalid vote data']));
+        }
+
         $stmt = $db->prepare("INSERT INTO votes (osm_id, usable_vote, cleanliness_vote) VALUES (?, ?, ?)");
         $stmt->execute([$id, $usable, $cleanliness]);
 
