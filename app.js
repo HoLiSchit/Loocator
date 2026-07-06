@@ -1250,30 +1250,49 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function checkVotedStatus(osmId) {
         const voted = JSON.parse(localStorage.getItem('loocator_voted')) || {};
-        const thisVote = voted[osmId];
+        const thisVote = voted[osmId] || {};
         const btnYes = document.getElementById('btn-usable-yes');
         const btnNo = document.getElementById('btn-usable-no');
         const starDiv = document.getElementById('star-rating');
 
+        // 1. Entfernung dynamisch für diese Toilette prüfen
+        let isTooFarToVote = true;
+        if (userLocation && currentToilets) {
+            const toilet = currentToilets.find(t => t.id === osmId);
+            if (toilet) {
+                const distance = calculateDistance(
+                    userLocation.lat, userLocation.lng, 
+                    toilet.lat, toilet.lon
+                );
+                isTooFarToVote = distance > 150; // true, wenn weiter als 150m weg
+            }
+        }
+
+        // 2. Buttons sperren, wenn zu weit weg
         if (isTooFarToVote) {
-            btnYes.disabled = true;
-            btnNo.disabled = true;
-            starDiv.classList.add('opacity-50', 'pointer-events-none');
-            return;
+            if (btnYes) { btnYes.disabled = true; btnYes.classList.add('opacity-50'); }
+            if (btnNo) { btnNo.disabled = true; btnNo.classList.add('opacity-50'); }
+            if (starDiv) starDiv.classList.add('opacity-50', 'pointer-events-none');
+            return; // Hier abbrechen, da keine Votes erlaubt sind
         }
 
-        if(thisVote.usable) {
-            btnYes.disabled = true; btnYes.classList.add('opacity-50');
-            btnNo.disabled = true; btnNo.classList.add('opacity-50');
-        } else {
-            btnYes.disabled = false; btnYes.classList.remove('opacity-50');
-            btnNo.disabled = false; btnNo.classList.remove('opacity-50');
+        // 3. Normaler Status, wenn nah genug (bereits gevotet?)
+        if (btnYes && btnNo) {
+            if (thisVote.usable !== undefined) {
+                btnYes.disabled = true; btnYes.classList.add('opacity-50');
+                btnNo.disabled = true; btnNo.classList.add('opacity-50');
+            } else {
+                btnYes.disabled = false; btnYes.classList.remove('opacity-50');
+                btnNo.disabled = false; btnNo.classList.remove('opacity-50');
+            }
         }
 
-        if(thisVote.cleanliness) {
-            starDiv.classList.add('opacity-50', 'pointer-events-none');
-        } else {
-            starDiv.classList.remove('opacity-50', 'pointer-events-none');
+        if (starDiv) {
+            if (thisVote.cleanliness) {
+                starDiv.classList.add('opacity-50', 'pointer-events-none');
+            } else {
+                starDiv.classList.remove('opacity-50', 'pointer-events-none');
+            }
         }
     }
 
