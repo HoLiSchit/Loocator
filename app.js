@@ -252,6 +252,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let searchMarker = null;
     let activeMarkers = [];
     let currentToiletData = null;
+    let isTooFarToVote = false;
     let isFetching = false;
     let initialLoadComplete = false;
     let globalRatingsDb = {};
@@ -1125,7 +1126,8 @@ document.addEventListener("DOMContentLoaded", () => {
         sheetState = 1;
         updateSheetState();
 
-        const tooFar = !isNearToilet();
+        isTooFarToVote = !isNearToilet();
+        const tooFar = isTooFarToVote;
         const voteButtons = [document.getElementById('btn-usable-yes'), document.getElementById('btn-usable-no')];
         const starButtons = document.querySelectorAll('.btn-star');
         if (tooFar) {
@@ -1253,6 +1255,20 @@ document.addEventListener("DOMContentLoaded", () => {
         const btnYes = document.getElementById('btn-usable-yes');
         const btnNo = document.getElementById('btn-usable-no');
         const starDiv = document.getElementById('star-rating');
+
+        function checkVotedStatus(osmId) {
+        const voted = JSON.parse(localStorage.getItem('loocator_voted')) || {};
+        const thisVote = voted[osmId];
+        const btnYes = document.getElementById('btn-usable-yes');
+        const btnNo = document.getElementById('btn-usable-no');
+        const starDiv = document.getElementById('star-rating');
+
+        if (isTooFarToVote) {
+            btnYes.disabled = true;
+            btnNo.disabled = true;
+            starDiv.classList.add('opacity-50', 'pointer-events-none');
+            return;
+        }
 
         if(thisVote.usable) {
             btnYes.disabled = true; btnYes.classList.add('opacity-50');
