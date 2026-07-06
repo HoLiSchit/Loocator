@@ -1249,10 +1249,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function checkVotedStatus(osmId) {
-        const voted = JSON.parse(localStorage.getItem('loocator_voted') || '{}');
-        const thisVote = voted[osmId] || {};
-
-        function checkVotedStatus(osmId) {
         const voted = JSON.parse(localStorage.getItem('loocator_voted')) || {};
         const thisVote = voted[osmId];
         const btnYes = document.getElementById('btn-usable-yes');
