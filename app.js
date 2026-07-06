@@ -1251,10 +1251,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function checkVotedStatus(osmId) {
         const voted = JSON.parse(localStorage.getItem('loocator_voted') || '{}');
         const thisVote = voted[osmId] || {};
-        
-        const btnYes = document.getElementById('btn-usable-yes');
-        const btnNo = document.getElementById('btn-usable-no');
-        const starDiv = document.getElementById('star-rating');
 
         function checkVotedStatus(osmId) {
         const voted = JSON.parse(localStorage.getItem('loocator_voted')) || {};
