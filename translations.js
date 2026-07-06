@@ -120,7 +120,10 @@ const dict = {
         rank9: "Toiletten-Titan",
         yourRank: "Dein Rang:",
         //Melden
-        btnReportExisting: "Fehler melden"
+        btnReportExisting: "Fehler melden",
+        //Entfernungs-Check
+        alertTooFarToVote: "Du musst näher am WC sein, um es zu bewerten (max. 150m).",
+        voteDisabledTooFar: "Zu weit entfernt zum Bewerten",
     },
     'en': {
         appDesc: "Find WCs, Eurokeys & Changing Tables worldwide",
@@ -242,7 +245,10 @@ const dict = {
         rank8: "Lord of the Loo",
         rank9: "Toilet Titan",
         yourRank: "Your Rank:",
-        btnReportExisting: "Report map error"
+        btnReportExisting: "Report map error",
+        //Proximity-Check
+        alertTooFarToVote: "You need to be closer to the WC to rate it (max. 150m).",
+        voteDisabledTooFar: "Too far away to rate",
     }
 };
 

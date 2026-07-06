@@ -1125,6 +1125,18 @@ document.addEventListener("DOMContentLoaded", () => {
         sheetState = 1;
         updateSheetState();
 
+        const tooFar = !isNearToilet();
+        const voteButtons = [document.getElementById('btn-usable-yes'), document.getElementById('btn-usable-no')];
+        const starButtons = document.querySelectorAll('.btn-star');
+        if (tooFar) {
+            voteButtons.forEach(b => { b.disabled = true; b.classList.add('opacity-30'); });
+            starButtons.forEach(b => { b.disabled = true; b.classList.add('opacity-30', 'pointer-events-none'); });
+            document.getElementById('stat-usable').innerText = t('voteDisabledTooFar');
+        } else {
+            voteButtons.forEach(b => { b.classList.remove('opacity-30'); });
+            starButtons.forEach(b => { b.classList.remove('opacity-30', 'pointer-events-none'); });
+        }
+
         await loadRatings(toilet.id);
         checkVotedStatus(toilet.id);
     }
@@ -1184,7 +1196,19 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    function isNearToilet(maxMeters = 150) {
+        if (!userLocation || !currentToiletData) return false;
+        const targetLat = currentToiletData.lat || currentToiletData.center.lat;
+        const targetLon = currentToiletData.lon || currentToiletData.center.lon;
+        const targetLatLng = L.latLng(targetLat, targetLon);
+        return map.distance(userLocation, targetLatLng) <= maxMeters;
+    }
+
     async function sendVote(payload) {
+        if (!isNearToilet()) {
+            customAlert(t('alertTooFarToVote'));
+        return;
+        }
         payload.id = currentToiletData.id;
         try {
             await fetch('backend.php', {
