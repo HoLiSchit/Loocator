@@ -181,6 +181,62 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // ============================================
+    // REDESIGN: SVG-Icon-Set + Google-Style Pin Builder
+    // ============================================
+    const ICONS = {
+        public: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><rect x="6" y="4" width="12" height="14" rx="2"/><line x1="6" y1="9" x2="18" y2="9"/></svg>`,
+        eurokey: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="8" cy="8" r="4"/><line x1="11" y1="11" x2="19" y2="19"/><line x1="15" y1="15" x2="17.5" y2="12.5"/><line x1="17" y1="17" x2="19.5" y2="14.5"/></svg>`,
+        wheelchair: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="10" cy="5" r="1.8" fill="white" stroke="none"/><path d="M9 9h5l2 8h5M10 9v5h6"/><circle cx="13" cy="16" r="4"/></svg>`,
+        changing: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="7" r="2.5" fill="white" stroke="none"/><path d="M5 15q7-7 14 0"/></svg>`,
+        favorite: `<svg viewBox="0 0 24 24" fill="white" stroke="none"><path d="M12 20s-8-5.5-8-11a4.5 4.5 0 018-2.5A4.5 4.5 0 0120 9c0 5.5-8 11-8 11z"/></svg>`,
+        defect: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>`
+    };
+
+    const PRIO_COLORS = {
+        favorite:   '#e5316b',
+        eurokey:    '#eab308',
+        wheelchair: '#2563eb',
+        changing:   '#a855f7',
+        public:     '#64748b',
+        defect:     '#9ca3af'
+    };
+
+    function buildPinIcon(priorityKey, statusDots = [], isDefectMode = false) {
+        const color = isDefectMode ? PRIO_COLORS.defect : PRIO_COLORS[priorityKey];
+        const iconSvg = isDefectMode ? ICONS.defect : ICONS[priorityKey];
+        const dashArray = isDefectMode ? 'stroke-dasharray="4 2"' : '';
+
+        const dotPositions = [
+            { top: '-2px',  left: '50%',  transform: 'translateX(-50%)' },
+            { top: '4px',   left: '82%' },
+            { top: '4px',   left: '18%',  transform: 'translateX(-100%)' },
+            { top: '20px',  left: '88%' },
+            { top: '20px',  left: '12%',  transform: 'translateX(-100%)' },
+            { top: '34px',  left: '82%' }
+        ];
+
+        const dotsHtml = statusDots.slice(0, 6).map((dotColor, i) => {
+            const pos = dotPositions[i];
+            const tf = pos.transform ? `transform:${pos.transform};` : '';
+            return `<div style="position:absolute; top:${pos.top}; left:${pos.left}; ${tf}
+                        width:11px; height:11px; border-radius:50%; background:${dotColor};
+                        border:2px solid white; box-shadow:0 1px 2px rgba(0,0,0,0.25);"></div>`;
+        }).join('');
+
+        return `
+            <div style="position:relative; width:44px; height:56px;">
+                <svg width="44" height="56" viewBox="0 0 44 56" style="position:absolute; top:0; left:0; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.3));">
+                    <path d="M22 2 C10 2 2 10 2 21 C2 34 22 54 22 54 C22 54 42 34 42 21 C42 10 34 2 22 2 Z"
+                          fill="white" stroke="${color}" stroke-width="2" ${dashArray}/>
+                    <circle cx="22" cy="21" r="14" fill="${color}"/>
+                </svg>
+                <div style="position:absolute; top:9px; left:9px; width:26px; height:26px;">${iconSvg}</div>
+                ${dotsHtml}
+            </div>
+        `;
+    }
+
     const map = L.map('map', { zoomControl: false }).setView([49.0069, 8.4037], 14);
     const layerOSM = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
         maxZoom: 19,
@@ -789,36 +845,44 @@ document.addEventListener("DOMContentLoaded", () => {
             if (reqNoBad && isBad) return; // NEU
             const is247 = (tags.opening_hours === '24/7');
 
-            let baseClass = isEurokeyOrWheelchair 
-                ? 'text-2xl bg-yellow-300 dark:bg-yellow-600 rounded-full border-2 border-yellow-500 p-1 shadow-md relative' 
-                : 'text-2xl relative bg-white dark:bg-gray-600 rounded-full border border-gray-200 dark:border-gray-500 p-1 shadow-md';
-            
-            let iconSymbol = isEurokeyOrWheelchair ? '🔑' : '🚽';
-            let dotHtml = is247 ? `<div class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full shadow-sm animate-pulse"></div>` : '';
-            let defectHtml = isDefect ? `<div class="absolute -bottom-1 -left-1 w-4 h-4 bg-red-600 rounded-full shadow border-2 border-white dark:border-gray-800"></div>` : '';
-            let changingHtml = hasChanging ? `<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-purple-500 rounded-full shadow border-2 border-white dark:border-gray-800"></div>` : '';
-            
-            let badgeHtml = '';
+            // --- REDESIGN: Google-Style Pin mit Prioritäts-Farbe + Status-Randpunkten ---
+
+            // Defekte WCs werden standardmäßig ausgeblendet, außer der Opt-in-Filter ist aktiv
+            const showDefectCheckbox = document.getElementById('filter-show-defect');
+            const reqShowDefect = showDefectCheckbox ? showDefectCheckbox.checked : false;
+            if (isDefect && !reqShowDefect) return;
+
+            // Priorität bestimmen (höchste zuerst): Favorit > Eurokey > Barrierefrei > Wickeltisch > Normal
+            let priorityKey = 'public';
             if (savedFavs.includes(toilet.id)) {
-                badgeHtml = `<div class="absolute -top-2 -left-2 text-sm drop-shadow-md">❤️</div>`;
-            } else if (isTopRated) {
-                badgeHtml = `<div class="absolute -top-1 -left-1 w-4 h-4 bg-yellow-400 rounded-full shadow border-2 border-white dark:border-gray-800"></div>`;
+                priorityKey = 'favorite';
+            } else if (isExplicitEurokey) {
+                priorityKey = 'eurokey';
+            } else if (isWheelchair) {
+                priorityKey = 'wheelchair';
+            } else if (hasChanging) {
+                priorityKey = 'changing';
             }
 
+            // Status-Punkte sammeln (alles außer der aktuellen Grundfarben-Priorität)
+            let statusDots = [];
+            if (is247) statusDots.push('#22c55e'); // grün = 24/7
+            if (priorityKey !== 'changing' && hasChanging) statusDots.push('#a855f7'); // lila = Wickeltisch
+            if (priorityKey !== 'eurokey' && isExplicitEurokey) statusDots.push('#eab308'); // gelb = Eurokey
+            if (priorityKey !== 'wheelchair' && isWheelchair) statusDots.push('#2563eb'); // blau = Barrierefrei
+            if (priorityKey !== 'favorite' && savedFavs.includes(toilet.id)) statusDots.push('#e5316b'); // pink = Favorit
+
+            const isDefectMode = isDefect && reqShowDefect;
+            const iconHtml = buildPinIcon(priorityKey, statusDots, isDefectMode);
+
             const customIcon = L.divIcon({
-                className: baseClass,
-                html: `<div class="flex items-center justify-center w-full h-full">${iconSymbol}</div>${dotHtml}${defectHtml}${changingHtml}${badgeHtml}`,
-                iconSize: [36, 36]
+                className: 'google-style-pin bg-transparent',
+                html: iconHtml,
+                iconSize: [44, 56],
+                iconAnchor: [22, 54]
             });
 
-            const marker = L.marker([lat, lon], { 
-                icon: customIcon, 
-                isTopRated: isTopRated,
-                is247: is247,
-                hasChanging: hasChanging,
-                isDefect: isDefect
-            });
-            marker.on('click', () => {
+                        marker.on('click', () => {
                 openSheet(toilet, isEurokeyOrWheelchair, isExplicitEurokey, isWheelchair, is247, hasChanging, isDefect, isTopRated, lat, lon);
                 toggleMenu(false);
             });

@@ -37,12 +37,29 @@ html, body {
     font-weight: bold; 
 }
 
-html.dark .leaflet-tile { 
-    filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%); 
+/* ============================================
+   REDESIGN: Google-Maps-näherer Kartenlook
+   ============================================ */
+
+/* Light Mode: HOT-Tiles etwas ruhiger, weniger knallig */
+#map {
+    filter: saturate(0.85) brightness(1.04) contrast(0.96);
+}
+
+/* Dark Mode: Invert-Filter passend zur neuen Light-Palette nachjustiert */
+html.dark #map .leaflet-tile { 
+    filter: invert(100%) hue-rotate(190deg) brightness(92%) contrast(88%) saturate(0.9); 
 }
 
 html.dark #map.is-sat-mode .leaflet-tile {
     filter: none;
+}
+
+/* Google-Style Pin Marker: kein zusätzliches CSS nötig, Style kommt inline aus dem JS,
+   aber wir sorgen dafür, dass Leaflet-DivIcons keinen eigenen Hintergrund/Schatten aufdrücken */
+.google-style-pin {
+    background: transparent !important;
+    border: none !important;
 }
 
 /* Animation für die neuen Toast-Notifications */

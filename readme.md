@@ -24,7 +24,7 @@ Zusätzlich verfügt Loocator über ein eigenes Rating-System: Nutzer können an
 Als **Progressive Web App (PWA)** kann Loocator ohne App-Store direkt auf jedem Smartphone installiert werden und verhält sich wie eine native App. Die Architektur setzt auf Leichtigkeit und Geschwindigkeit: Reines HTML, Vanilla JavaScript und Tailwind CSS sorgen für minimale Ladezeiten – auch bei schlechtem Mobilfunkempfang.
 
 ### Unterstützen & Kontakt
-Dir gefällt Loocator? Da wir komplett auf Werbung verzichten, freuen wir uns über Unterstützung für die Serverkosten via **[Ko-fi](https://ko-fi.com/)** (Link in der App).
+Dir gefällt Loocator? Da wir komplett auf Werbung verzichten, freuen wir uns über Unterstützung für die Serverkosten via **[Ko-fi](https://ko-fi.com/minecode)**.
 
 **Impressum & Kontakt:** [info@loocator.org](mailto:info@loocator.org)
 
@@ -50,6 +50,6 @@ Additionally, Loocator features its own rating system: users can anonymously rat
 Built as a **Progressive Web App (PWA)**, Loocator can be installed directly on any smartphone without needing an app store, feeling just like a native app. The architecture prioritizes lightweight performance: Pure HTML, Vanilla JavaScript, and Tailwind CSS ensure minimal loading times – even on poor mobile networks.
 
 ### Support & Contact
-Do you like Loocator? Since we are completely ad-free, we appreciate any support for our server costs via **[Ko-fi](https://ko-fi.com/)** (link available in the app).
+Do you like Loocator? Since we are completely ad-free, we appreciate any support for our server costs via **[Ko-fi](https://ko-fi.com/minecode)**.
 
 **Imprint & Contact:** [info@loocator.org](mailto:info@loocator.org)
