@@ -185,12 +185,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // GOOGLE-MAPS-STYLE: SVG-Icon-Set + Pin Builder
     // ============================================
     const ICONS = {
-        public: '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><rect x="6" y="4" width="12" height="14" rx="2"/><line x1="6" y1="9" x2="18" y2="9"/></svg>',
-        eurokey: '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="9" r="4"/><line x1="12" y1="12" x2="19" y2="19"/><line x1="15" y1="16" x2="17.5" y2="13.5"/><line x1="17" y1="18" x2="19.5" y2="15.5"/></svg>',
-        changing: '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="7" r="2.5" fill="white" stroke="none"/><path d="M5 15q7-7 14 0"/></svg>',
-        favorite: '<svg viewBox="0 0 24 24" fill="white" stroke="none"><path d="M12 20s-8-5.5-8-11a4.5 4.5 0 018-2.5A4.5 4.5 0 0120 9c0 5.5-8 11-8 11z"/></svg>',
-        free: '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="8" y1="8" x2="16" y2="16"/></svg>',
-        defect: '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>'
+        public: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><rect x="6" y="4" width="12" height="14" rx="2"/><line x1="6" y1="9" x2="18" y2="9"/></svg>',
+        eurokey: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="9" r="4"/><line x1="12" y1="12" x2="19" y2="19"/><line x1="15" y1="16" x2="17.5" y2="13.5"/><line x1="17" y1="18" x2="19.5" y2="15.5"/></svg>',
+        changing: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="7" r="2.5" fill="white" stroke="none"/><path d="M5 15q7-7 14 0"/></svg>',
+        favorite: '<svg width="26" height="26" viewBox="0 0 24 24" fill="white" stroke="none"><path d="M12 20s-8-5.5-8-11a4.5 4.5 0 018-2.5A4.5 4.5 0 0120 9c0 5.5-8 11-8 11z"/></svg>',
+        free: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="8" y1="8" x2="16" y2="16"/></svg>',
+        defect: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>'
     };
 
     const PRIO_COLORS = {
@@ -210,11 +210,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Punkte sitzen als Reihe OBERHALB des Pins (überfließend über den oberen Rand)
         const dotsHtml = statusDots.slice(0, 4).map((dotColor) => {
-            return '<div style="width:10px; height:10px; border-radius:50%; background:' + dotColor + '; border:2px solid white; box-shadow:0 1px 2px rgba(0,0,0,0.3); flex-shrink:0;"></div>';
+            return '<div style="width:16px; height:16px; border-radius:50%; background:' + dotColor + '; border:2.5px solid white; box-shadow:0 1px 3px rgba(0,0,0,0.4); flex-shrink:0;"></div>';
         }).join('');
 
         return '' +
-            '<div style="position:relative; width:44px; height:64px;">' +
+            '<div style="position:relative; width:44px; height:68px;">' +
                 '<div style="position:absolute; top:0; left:0; width:100%; display:flex; justify-content:center; gap:3px; z-index:20;">' +
                     dotsHtml +
                 '</div>' +
@@ -864,7 +864,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const customIcon = L.divIcon({
                 className: 'google-style-pin bg-transparent',
                 html: iconHtml,
-                iconSize: [44, 64],
+                iconSize: [44, 68],
                 iconAnchor: [22, 56]
             });
 
