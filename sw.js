@@ -1,4 +1,4 @@
-const CACHE_NAME = 'loocator-cache-v2';
+const CACHE_NAME = 'loocator-cache-v3';
 const OFFLINE_URLS = [
   './',
   'index.html',
