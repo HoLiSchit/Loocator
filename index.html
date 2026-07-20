@@ -50,13 +50,109 @@
 
     <div id="offline-banner" data-i18n="offline" class="hidden absolute top-0 w-full bg-red-600 text-white text-center p-2 text-sm font-bold ui-layer shadow-md transition-opacity"></div>
 
-    <button id="btn-open-menu" class="hidden absolute top-4 left-4 bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 p-3 rounded-full shadow-lg ui-layer active:scale-95 active:-rotate-12 transition-all duration-200 flex items-center justify-center">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-        </svg>
-    </button>
+    
 
-    <div id="main-menu" class="absolute top-4 left-4 right-4 max-h-[85vh] overflow-y-auto overflow-x-hidden bg-white dark:bg-gray-800 p-5 rounded-3xl shadow-2xl ui-layer z-[1000] flex flex-col gap-4 transition-all duration-300">
+    <!-- ============================================ -->
+    <!-- GOOGLE-MAPS-STYLE TOP BAR: Immer sichtbar (Suche + Menü-Button + Filter-Pillen) -->
+    <!-- ============================================ -->
+    <div id="top-bar" class="absolute top-4 left-4 right-4 z-[900] flex flex-col gap-3 ui-layer">
+        <!-- Moderne Suche mit integriertem Menü-Button (Google-Maps-Stil) -->
+        <div class="relative flex flex-col">
+            <div class="flex items-center gap-2">
+                <button id="btn-open-menu" class="shrink-0 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 p-3.5 rounded-full shadow-md active:scale-95 transition-all duration-200 flex items-center justify-center border border-gray-200 dark:border-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    </svg>
+                </button>
+                <form id="search-form" class="relative flex-1">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <img src="img/search.svg" alt="Search" class="w-4 h-4 opacity-40 dark:invert">
+                    </div>
+                    <input type="text" id="search-input" data-i18n-placeholder="searchPlaceholder" class="w-full bg-white dark:bg-gray-800 dark:text-white border border-gray-200 dark:border-gray-600 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900 rounded-full py-3.5 pl-11 pr-4 text-sm font-medium transition-all outline-none shadow-md" autocomplete="off">
+                </form>
+            </div>
+            <ul id="search-suggestions" class="hidden absolute top-full left-[3.25rem] w-[calc(100%-3.25rem)] bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 shadow-xl rounded-2xl mt-2 max-h-48 overflow-y-auto z-50 text-sm"></ul>
+        </div>
+
+        <!-- Filter-Bereich: Zeile 1 (Typ & Harte Faktoren) -->
+        <div class="flex gap-2 pt-1 pb-1 w-full overflow-x-auto snap-x snap-mandatory hide-scrollbar -mx-5 px-9">
+            <label class="cursor-pointer snap-start shrink-0">
+                <input type="checkbox" id="filter-favorites" class="peer sr-only">
+                <div class="shrink-0 w-2"></div>
+                <div class="ml-3 px-4 py-2.5 rounded-full border border-red-200 dark:border-red-900/50 bg-white dark:bg-gray-800 text-red-600 dark:text-red-400 text-xs font-bold transition-all peer-checked:bg-red-500 peer-checked:text-white peer-checked:border-red-500 shadow-md flex items-center gap-1.5 whitespace-nowrap">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 20s-8-5.5-8-11a4.5 4.5 0 018-2.5A4.5 4.5 0 0120 9c0 5.5-8 11-8 11z"/></svg>
+                    <span data-i18n="filterFav"></span>
+                </div>
+            </label>
+
+            <div class="w-px h-6 bg-gray-200 dark:bg-gray-600 shrink-0 my-auto mx-1"></div>
+
+            <label class="cursor-pointer snap-start shrink-0">
+                <input type="checkbox" id="filter-public" class="peer sr-only" checked>
+                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-600 dark:peer-checked:bg-blue-500 shadow-md whitespace-nowrap flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="12" height="14" rx="2"/><line x1="6" y1="9" x2="18" y2="9"/></svg>
+                    <span data-i18n="filterPublic"></span>
+                </div>
+            </label>
+
+            <label class="cursor-pointer snap-start shrink-0">
+                <input type="checkbox" id="filter-eurokey" class="peer sr-only" checked>
+                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-yellow-500 peer-checked:text-white peer-checked:border-yellow-500 shadow-md whitespace-nowrap flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="4"/><line x1="11" y1="11" x2="19" y2="19"/><line x1="15" y1="15" x2="17.5" y2="12.5"/><line x1="17" y1="17" x2="19.5" y2="14.5"/></svg>
+                    <span data-i18n="filterEurokey"></span>
+                </div>
+            </label>
+
+            <label class="cursor-pointer snap-start shrink-0">
+                <input type="checkbox" id="filter-changing" class="peer sr-only">
+                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-purple-500 peer-checked:text-white peer-checked:border-purple-500 shadow-md whitespace-nowrap flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="2.5" fill="currentColor" stroke="none"/><path d="M5 15q7-7 14 0"/></svg>
+                    <span data-i18n="filterChanging"></span>
+                </div>
+            </label>
+
+            <label class="cursor-pointer snap-start shrink-0">
+                <input type="checkbox" id="filter-free" class="peer sr-only">
+                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-teal-500 peer-checked:text-white peer-checked:border-teal-500 shadow-md whitespace-nowrap flex items-center gap-1.5">
+                    <span data-i18n="filterFree"></span>
+                </div>
+            </label>
+        </div>
+
+        <!-- Filter-Bereich: Zeile 2 (Status & Zuverlässigkeit) -->
+        <div class="flex gap-2 pt-1 pb-1 w-full overflow-x-auto snap-x snap-mandatory hide-scrollbar -mx-5 px-9">
+            <label class="cursor-pointer snap-start shrink-0">
+                <input type="checkbox" id="filter-open" class="peer sr-only">
+                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-green-600 peer-checked:text-white peer-checked:border-green-600 shadow-md whitespace-nowrap flex items-center gap-1.5 ml-3">
+                    <span data-i18n="filterOpen"></span>
+                </div>
+            </label>
+
+            <label class="cursor-pointer snap-start shrink-0">
+                <input type="checkbox" id="filter-success" class="peer sr-only">
+                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-yellow-500 peer-checked:text-white peer-checked:border-yellow-500 shadow-md whitespace-nowrap flex items-center gap-1.5">
+                    <span data-i18n="filterSuccess"></span>
+                </div>
+            </label>
+
+            <label class="cursor-pointer snap-start shrink-0">
+                <input type="checkbox" id="filter-nobad" class="peer sr-only">
+                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-orange-500 peer-checked:text-white peer-checked:border-orange-500 shadow-md whitespace-nowrap flex items-center gap-1.5">
+                    <span data-i18n="filterNoBad"></span>
+                </div>
+            </label>
+
+            <label class="cursor-pointer snap-start shrink-0">
+                <input type="checkbox" id="filter-show-defect" class="peer sr-only">
+                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-gray-500 peer-checked:text-white peer-checked:border-gray-500 shadow-md whitespace-nowrap flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+                    <span data-i18n="filterShowDefect"></span>
+                </div>
+            </label>
+        </div>
+    </div>
+
+<div id="main-menu" class="hidden absolute top-[12rem] left-4 right-4 max-h-[70vh] overflow-y-auto overflow-x-hidden bg-white dark:bg-gray-800 p-5 rounded-3xl shadow-2xl ui-layer z-[950] flex flex-col gap-4 transition-all duration-300">
         
         <!-- Header: Titel & Buttons -->
         <div class="flex justify-between items-start">
@@ -78,95 +174,6 @@
 
                 <button id="btn-close-menu" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 font-bold text-xl p-2 active:scale-95 transition-transform">✕</button>
             </div>
-        </div>
-
-        <!-- Moderne Suche -->
-        <div class="relative flex flex-col">
-            <form id="search-form" class="relative">
-                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <img src="img/search.svg" alt="Search" class="w-4 h-4 opacity-40 dark:invert">
-                </div>
-                <input type="text" id="search-input" data-i18n-placeholder="searchPlaceholder" class="w-full bg-gray-100 dark:bg-gray-700 dark:text-white border-transparent focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-800 rounded-full py-3 pl-11 pr-4 text-sm font-medium transition-all outline-none shadow-sm" autocomplete="off">
-            </form>
-            <ul id="search-suggestions" class="hidden absolute top-full left-0 w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 shadow-xl rounded-2xl mt-2 max-h-48 overflow-y-auto z-50 text-sm"></ul>
-        </div>
-
-        <!-- Filter-Bereich: Zeile 1 (Typ & Harte Faktoren) - REDESIGN: Google-Style Pills + Icons passend zu den Marker-Icons -->
-        <div class="flex gap-2 pt-1 pb-1 w-full overflow-x-auto snap-x snap-mandatory hide-scrollbar -mx-5 px-9">
-            <label class="cursor-pointer snap-start shrink-0">
-                <input type="checkbox" id="filter-favorites" class="peer sr-only">
-                <div class="shrink-0 w-2"></div>
-                <div class="ml-3 px-5 py-2.5 rounded-full border border-red-100 dark:border-red-900/40 bg-white dark:bg-gray-700 text-red-500 dark:text-red-400 text-xs font-bold transition-all peer-checked:bg-[#e5316b] peer-checked:text-white peer-checked:border-[#e5316b] peer-checked:shadow-sm shadow-sm flex items-center gap-1.5 whitespace-nowrap">
-                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 20s-8-5.5-8-11a4.5 4.5 0 018-2.5A4.5 4.5 0 0120 9c0 5.5-8 11-8 11z"/></svg>
-                    <span data-i18n="filterFav"></span>
-                </div>
-            </label>
-
-            <div class="w-px h-6 bg-gray-200 dark:bg-gray-600 shrink-0 my-auto mx-1"></div>
-
-            <label class="cursor-pointer snap-start shrink-0">
-                <input type="checkbox" id="filter-public" class="peer sr-only" checked>
-                <div class="px-5 py-2.5 rounded-full border border-gray-100 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-500 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-slate-500 peer-checked:text-white peer-checked:border-slate-500 peer-checked:shadow-sm shadow-sm whitespace-nowrap flex items-center gap-1.5">
-                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="12" height="14" rx="2"/><line x1="6" y1="9" x2="18" y2="9"/></svg>
-                    <span data-i18n="filterPublic"></span>
-                </div>
-            </label>
-
-            <label class="cursor-pointer snap-start shrink-0">
-                <input type="checkbox" id="filter-eurokey" class="peer sr-only" checked>
-                <div class="px-5 py-2.5 rounded-full border border-gray-100 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-500 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-yellow-500 peer-checked:text-white peer-checked:border-yellow-500 peer-checked:shadow-sm shadow-sm whitespace-nowrap flex items-center gap-1.5">
-                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="4"/><line x1="11" y1="11" x2="19" y2="19"/></svg>
-                    <span data-i18n="filterEurokey"></span>
-                </div>
-            </label>
-
-            <label class="cursor-pointer snap-start shrink-0">
-                <input type="checkbox" id="filter-changing" class="peer sr-only">
-                <div class="px-5 py-2.5 rounded-full border border-gray-100 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-500 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-purple-500 peer-checked:text-white peer-checked:border-purple-500 peer-checked:shadow-sm shadow-sm whitespace-nowrap flex items-center gap-1.5">
-                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="2.5"/><path d="M5 15q7-7 14 0"/></svg>
-                    <span data-i18n="filterChanging"></span>
-                </div>
-            </label>
-
-            <label class="cursor-pointer snap-start shrink-0">
-                <input type="checkbox" id="filter-free" class="peer sr-only">
-                <div class="px-5 py-2.5 rounded-full border border-gray-100 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-500 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-teal-500 peer-checked:text-white peer-checked:border-teal-500 peer-checked:shadow-sm shadow-sm whitespace-nowrap flex items-center gap-1.5">
-                    <span data-i18n="filterFree"></span>
-                </div>
-            </label>
-
-            <!-- NEU: Opt-in Filter, um defekte WCs (standardmäßig ausgeblendet) trotzdem anzuzeigen -->
-            <label class="cursor-pointer snap-start shrink-0">
-                <input type="checkbox" id="filter-show-defect" class="peer sr-only">
-                <div class="px-5 py-2.5 rounded-full border border-gray-100 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-500 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-gray-500 peer-checked:text-white peer-checked:border-gray-500 peer-checked:shadow-sm shadow-sm whitespace-nowrap flex items-center gap-1.5">
-                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
-                    <span data-i18n="filterShowDefect"></span>
-                </div>
-            </label>
-        </div>
-
-        <!-- Filter-Bereich: Zeile 2 (Status & Zuverlässigkeit) -->
-        <div class="flex gap-2 pt-1 pb-1 w-full overflow-x-auto snap-x snap-mandatory hide-scrollbar -mx-5 px-9">
-            <label class="cursor-pointer snap-start shrink-0">
-                <input type="checkbox" id="filter-open" class="peer sr-only">
-                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-green-600 peer-checked:text-white peer-checked:border-green-600 shadow-sm whitespace-nowrap flex items-center gap-1.5 ml-3">
-                    <span data-i18n="filterOpen"></span>
-                </div>
-            </label>
-
-            <label class="cursor-pointer snap-start shrink-0">
-                <input type="checkbox" id="filter-success" class="peer sr-only">
-                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-yellow-500 peer-checked:text-white peer-checked:border-yellow-500 shadow-sm whitespace-nowrap flex items-center gap-1.5">
-                    <span data-i18n="filterSuccess"></span>
-                </div>
-            </label>
-
-            <label class="cursor-pointer snap-start shrink-0">
-                <input type="checkbox" id="filter-nobad" class="peer sr-only">
-                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-orange-500 peer-checked:text-white peer-checked:border-orange-500 shadow-sm whitespace-nowrap flex items-center gap-1.5">
-                    <span data-i18n="filterNoBad"></span>
-                </div>
-            </label>
         </div>
 
         <!-- PWA Install Area -->

@@ -182,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ============================================
-    // REDESIGN: SVG-Icon-Set + Google-Style Pin Builder
+    // GOOGLE-MAPS-STYLE: SVG-Icon-Set + Pin Builder
     // ============================================
     const ICONS = {
         public: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><rect x="6" y="4" width="12" height="14" rx="2"/><line x1="6" y1="9" x2="18" y2="9"/></svg>`,
@@ -198,7 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
         eurokey:    '#eab308',
         wheelchair: '#2563eb',
         changing:   '#a855f7',
-        public:     '#64748b',
+        public:     '#4285F4',
         defect:     '#9ca3af'
     };
 
@@ -845,14 +845,12 @@ document.addEventListener("DOMContentLoaded", () => {
             if (reqNoBad && isBad) return; // NEU
             const is247 = (tags.opening_hours === '24/7');
 
-            // --- REDESIGN: Google-Style Pin mit Prioritäts-Farbe + Status-Randpunkten ---
+            // --- GOOGLE-MAPS-STYLE: Pin mit Prioritäts-Farbe + Status-Randpunkten ---
 
-            // Defekte WCs werden standardmäßig ausgeblendet, außer der Opt-in-Filter ist aktiv
             const showDefectCheckbox = document.getElementById('filter-show-defect');
             const reqShowDefect = showDefectCheckbox ? showDefectCheckbox.checked : false;
             if (isDefect && !reqShowDefect) return;
 
-            // Priorität bestimmen (höchste zuerst): Favorit > Eurokey > Barrierefrei > Wickeltisch > Normal
             let priorityKey = 'public';
             if (savedFavs.includes(toilet.id)) {
                 priorityKey = 'favorite';
@@ -864,13 +862,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 priorityKey = 'changing';
             }
 
-            // Status-Punkte sammeln (alles außer der aktuellen Grundfarben-Priorität)
             let statusDots = [];
-            if (is247) statusDots.push('#22c55e'); // grün = 24/7
-            if (priorityKey !== 'changing' && hasChanging) statusDots.push('#a855f7'); // lila = Wickeltisch
-            if (priorityKey !== 'eurokey' && isExplicitEurokey) statusDots.push('#eab308'); // gelb = Eurokey
-            if (priorityKey !== 'wheelchair' && isWheelchair) statusDots.push('#2563eb'); // blau = Barrierefrei
-            if (priorityKey !== 'favorite' && savedFavs.includes(toilet.id)) statusDots.push('#e5316b'); // pink = Favorit
+            if (is247) statusDots.push('#22c55e');
+            if (priorityKey !== 'changing' && hasChanging) statusDots.push('#a855f7');
+            if (priorityKey !== 'eurokey' && isExplicitEurokey) statusDots.push('#eab308');
+            if (priorityKey !== 'wheelchair' && isWheelchair) statusDots.push('#2563eb');
+            if (priorityKey !== 'favorite' && savedFavs.includes(toilet.id)) statusDots.push('#e5316b');
 
             const isDefectMode = isDefect && reqShowDefect;
             const iconHtml = buildPinIcon(priorityKey, statusDots, isDefectMode);
@@ -882,7 +879,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 iconAnchor: [22, 54]
             });
 
-                        marker.on('click', () => {
+            const marker = L.marker([lat, lon], { 
+                icon: customIcon, 
+                isTopRated: isTopRated,
+                is247: is247,
+                hasChanging: hasChanging,
+                isDefect: isDefect,
+                priorityKey: priorityKey
+            });
+            marker.on('click', () => {
                 openSheet(toilet, isEurokeyOrWheelchair, isExplicitEurokey, isWheelchair, is247, hasChanging, isDefect, isTopRated, lat, lon);
                 toggleMenu(false);
             });
