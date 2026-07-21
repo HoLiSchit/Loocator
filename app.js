@@ -181,6 +181,53 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+        // ============================================
+    // GOOGLE-MAPS-STYLE: SVG-Icon-Set + Pin Builder
+    // ============================================
+    const ICONS = {
+        public:   '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiPjxyZWN0IHg9IjYiIHk9IjQiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxNCIgcng9IjIiLz48bGluZSB4MT0iNiIgeTE9IjkiIHgyPSIxOCIgeTI9IjkiLz48L3N2Zz4=" style="width:18px !important; height:18px !important; display:block !important; max-width:none !important; max-height:none !important; object-fit:contain;">',
+        eurokey:  '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiPjxjaXJjbGUgY3g9IjkiIGN5PSI5IiByPSI0Ii8+PGxpbmUgeDE9IjEyIiB5MT0iMTIiIHgyPSIxOSIgeTI9IjE5Ii8+PGxpbmUgeDE9IjE1IiB5MT0iMTYiIHgyPSIxNy41IiB5Mj0iMTMuNSIvPjxsaW5lIHgxPSIxNyIgeTE9IjE4IiB4Mj0iMTkuNSIgeTI9IjE1LjUiLz48L3N2Zz4=" style="width:18px !important; height:18px !important; display:block !important; max-width:none !important; max-height:none !important; object-fit:contain;">',
+        changing: '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiPjxjaXJjbGUgY3g9IjEyIiBjeT0iNyIgcj0iMi41IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJub25lIi8+PHBhdGggZD0iTTUgMTVxNy03IDE0IDAiLz48L3N2Zz4=" style="width:18px !important; height:18px !important; display:block !important; max-width:none !important; max-height:none !important; object-fit:contain;">',
+        favorite: '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiIHN0cm9rZT0ibm9uZSI+PHBhdGggZD0iTTEyIDIwcy04LTUuNS04LTExYTQuNSA0LjUgMCAwMTgtMi41QTQuNSA0LjUgMCAwMTIwIDljMCA1LjUtOCAxMS04IDExeiIvPjwvc3ZnPg==" style="width:18px !important; height:18px !important; display:block !important; max-width:none !important; max-height:none !important; object-fit:contain;">',
+        free:     '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjkiLz48bGluZSB4MT0iOCIgeTE9IjgiIHgyPSIxNiIgeTI9IjE2Ii8+PC9zdmc+" style="width:18px !important; height:18px !important; display:block !important; max-width:none !important; max-height:none !important; object-fit:contain;">',
+        defect:   '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyLjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PGxpbmUgeDE9IjYiIHkxPSI2IiB4Mj0iMTgiIHkyPSIxOCIvPjxsaW5lIHgxPSIxOCIgeTE9IjYiIHgyPSI2IiB5Mj0iMTgiLz48L3N2Zz4=" style="width:18px !important; height:18px !important; display:block !important; max-width:none !important; max-height:none !important; object-fit:contain;">'
+    };
+
+    const PRIO_COLORS = {
+        favorite:   '#e5316b',
+        eurokey:    '#eab308',
+        changing:   '#a855f7',
+        free:       '#16a34a',
+        public:     '#4285F4',
+        defect:     '#9ca3af'
+    };
+
+    // statusDots: Array von Farben, die als kleine Punkte OBEN am Pin überfließend sitzen sollen
+    function buildPinIcon(priorityKey, statusDots = [], isDefectMode = false) {
+        const color = isDefectMode ? PRIO_COLORS.defect : PRIO_COLORS[priorityKey];
+        const iconSvg = isDefectMode ? ICONS.defect : ICONS[priorityKey];
+        const dashArray = isDefectMode ? 'stroke-dasharray="4 2"' : '';
+
+        // Punkte sitzen als Reihe OBERHALB des Pins (überfließend über den oberen Rand)
+        const dotsHtml = statusDots.slice(0, 4).map((dotColor) => {
+            return '<div style="width:16px; height:16px; border-radius:50%; background:' + dotColor + '; border:2.5px solid white; box-shadow:0 1px 3px rgba(0,0,0,0.4); flex-shrink:0;"></div>';
+        }).join('');
+
+        return '' +
+            '<div style="position:relative; width:44px; height:68px;">' +
+                '<div style="position:absolute; top:0; left:0; width:100%; display:flex; justify-content:center; gap:3px; z-index:20;">' +
+                    dotsHtml +
+                '</div>' +
+                '<div style="position:absolute; bottom:0; left:0; width:44px; height:56px; z-index:10; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.3));">' +
+                    '<svg width="44" height="56" viewBox="0 0 44 56" xmlns="http://www.w3.org/2000/svg" style="position:absolute; top:0; left:0;">' +
+                        '<path d="M22 2 C10 2 2 10 2 21 C2 34 22 54 22 54 C22 54 42 34 42 21 C42 10 34 2 22 2 Z" fill="white" stroke="' + color + '" stroke-width="2" ' + dashArray + '/>' +
+                        '<circle cx="22" cy="21" r="14" fill="' + color + '"/>' +
+                    '</svg>' +
+                    '<div style="position:absolute; top:3px; left:0; width:44px; height:44px; z-index:11; display:flex; justify-content:center; align-items:center; overflow:hidden;">' + iconSvg + '</div>' +
+                '</div>' +
+            '</div>';
+    }
+
     const map = L.map('map', { zoomControl: false }).setView([49.0069, 8.4037], 14);
     const layerOSM = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
         maxZoom: 19,
@@ -789,26 +836,36 @@ document.addEventListener("DOMContentLoaded", () => {
             if (reqNoBad && isBad) return; // NEU
             const is247 = (tags.opening_hours === '24/7');
 
-            let baseClass = isEurokeyOrWheelchair 
-                ? 'text-2xl bg-yellow-300 dark:bg-yellow-600 rounded-full border-2 border-yellow-500 p-1 shadow-md relative' 
-                : 'text-2xl relative bg-white dark:bg-gray-600 rounded-full border border-gray-200 dark:border-gray-500 p-1 shadow-md';
-            
-            let iconSymbol = isEurokeyOrWheelchair ? '🔑' : '🚽';
-            let dotHtml = is247 ? `<div class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full shadow-sm animate-pulse"></div>` : '';
-            let defectHtml = isDefect ? `<div class="absolute -bottom-1 -left-1 w-4 h-4 bg-red-600 rounded-full shadow border-2 border-white dark:border-gray-800"></div>` : '';
-            let changingHtml = hasChanging ? `<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-purple-500 rounded-full shadow border-2 border-white dark:border-gray-800"></div>` : '';
-            
-            let badgeHtml = '';
+            // --- GOOGLE-MAPS-STYLE: Pin-Farbe nach Priorität + Status-Punkte oben überfließend ---
+            const isFree = (() => {
+                const fee = tags.fee || tags['toilets:fee'] || tags.charge;
+                return fee && ['no','0','false','none'].includes(String(fee).toLowerCase());
+            })();
+
+            let priorityKey = 'public';
             if (savedFavs.includes(toilet.id)) {
-                badgeHtml = `<div class="absolute -top-2 -left-2 text-sm drop-shadow-md">❤️</div>`;
-            } else if (isTopRated) {
-                badgeHtml = `<div class="absolute -top-1 -left-1 w-4 h-4 bg-yellow-400 rounded-full shadow border-2 border-white dark:border-gray-800"></div>`;
+                priorityKey = 'favorite';
+            } else if (isEurokeyOrWheelchair) {
+                priorityKey = 'eurokey';
+            } else if (hasChanging) {
+                priorityKey = 'changing';
+            } else if (isFree) {
+                priorityKey = 'free';
             }
 
+            let statusDots = [];
+            if (priorityKey !== 'eurokey' && isEurokeyOrWheelchair) statusDots.push(PRIO_COLORS.eurokey);
+            if (priorityKey !== 'changing' && hasChanging) statusDots.push(PRIO_COLORS.changing);
+            if (priorityKey !== 'free' && isFree) statusDots.push(PRIO_COLORS.free);
+            if (priorityKey !== 'favorite' && savedFavs.includes(toilet.id)) statusDots.push(PRIO_COLORS.favorite);
+
+            const iconHtml = buildPinIcon(priorityKey, statusDots, isDefect);
+
             const customIcon = L.divIcon({
-                className: baseClass,
-                html: `<div class="flex items-center justify-center w-full h-full">${iconSymbol}</div>${dotHtml}${defectHtml}${changingHtml}${badgeHtml}`,
-                iconSize: [36, 36]
+                className: 'google-style-pin bg-transparent',
+                html: iconHtml,
+                iconSize: [44, 68],
+                iconAnchor: [22, 56]
             });
 
             const marker = L.marker([lat, lon], { 
@@ -816,7 +873,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 isTopRated: isTopRated,
                 is247: is247,
                 hasChanging: hasChanging,
-                isDefect: isDefect
+                isDefect: isDefect,
+                priorityKey: priorityKey
             });
             marker.on('click', () => {
                 openSheet(toilet, isEurokeyOrWheelchair, isExplicitEurokey, isWheelchair, is247, hasChanging, isDefect, isTopRated, lat, lon);
