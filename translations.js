@@ -64,6 +64,7 @@ const dict = {
         levelEG: "Erdgeschoss (0)",
         searchFailed: "Suche fehlgeschlagen.",
         voteThanks: "Vielen Dank für dein Feedback! 💛",
+        //Tutorial
         tutWelcome: "Willkommen bei Loocator!",
         tutIntro: "Hier ist eine kurze Erklärung der Marker und Symbole auf der Karte:",
         tutLocation: "Bitte tippe beim Start von Loocator auf das Pinnadel-Icon unten rechts, damit wir dir WCs in deiner direkten Umgebung anzeigen können.",
@@ -75,6 +76,7 @@ const dict = {
         tutDefect: "Achtung: Oft als defekt gemeldet",
         tutFav: "Als Favorit markieren (Herz antippen)",
         tutStart: "Alles klar, los geht's!",
+        tutFree: "Kostenlose Toilette",
         accUnisex: "Zugang: Unisex / Alle Geschlechter",
         accBoth: "Zugang: Damen & Herren",
         accFemale: "Zugang: Nur Damen",
@@ -192,8 +194,10 @@ const dict = {
         levelEG: "Ground Floor (0)",
         searchFailed: "Search failed.",
         voteThanks: "Thank you for your feedback! 💛",
+        //Tutorial
         tutWelcome: "Welcome to Loocator!",
         tutIntro: "Here is a quick guide to the markers and symbols on the map:",
+        tutFree: "Cost free",
         tutEuro: "Eurokey / Wheelchair accessible WC",
         tutTop: "Top rated (Community favorite)",
         tut247: "Open 24/7",
