@@ -74,7 +74,7 @@ const dict = {
         tut247: "Durchgehend (24/7) geöffnet",
         tutChanging: "Wickeltisch vorhanden",
         tutDefect: "Achtung: Oft als defekt gemeldet",
-        tutFav: "Als Favorit markieren (Herz antippen)",
+        tutFav: "Als Favorit markiert (Herz antippen)",
         tutStart: "Alles klar, los geht's!",
         tutFree: "Kostenlose Toilette",
         accUnisex: "Zugang: Unisex / Alle Geschlechter",
