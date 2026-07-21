@@ -185,12 +185,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // GOOGLE-MAPS-STYLE: SVG-Icon-Set + Pin Builder
     // ============================================
     const ICONS = {
-        public:   '<img src="img/marker-public.svg" width="18" height="18" alt="" style="display:block;">',
-        eurokey:  '<img src="img/marker-eurokey.svg" width="18" height="18" alt="" style="display:block;">',
-        changing: '<img src="img/marker-changing.svg" width="18" height="18" alt="" style="display:block;">',
-        favorite: '<img src="img/marker-favorite.svg" width="18" height="18" alt="" style="display:block;">',
-        free:     '<img src="img/marker-free.svg" width="18" height="18" alt="" style="display:block;">',
-        defect:   '<img src="img/marker-defect.svg" width="18" height="18" alt="" style="display:block;">'
+        public:   '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiPjxyZWN0IHg9IjYiIHk9IjQiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxNCIgcng9IjIiLz48bGluZSB4MT0iNiIgeTE9IjkiIHgyPSIxOCIgeTI9IjkiLz48L3N2Zz4=" style="width:18px; height:18px; display:block; max-width:none;">',
+        eurokey:  '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiPjxjaXJjbGUgY3g9IjkiIGN5PSI5IiByPSI0Ii8+PGxpbmUgeDE9IjEyIiB5MT0iMTIiIHgyPSIxOSIgeTI9IjE5Ii8+PGxpbmUgeDE9IjE1IiB5MT0iMTYiIHgyPSIxNy41IiB5Mj0iMTMuNSIvPjxsaW5lIHgxPSIxNyIgeTE9IjE4IiB4Mj0iMTkuNSIgeTI9IjE1LjUiLz48L3N2Zz4=" style="width:18px; height:18px; display:block; max-width:none;">',
+        changing: '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiPjxjaXJjbGUgY3g9IjEyIiBjeT0iNyIgcj0iMi41IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJub25lIi8+PHBhdGggZD0iTTUgMTVxNy03IDE0IDAiLz48L3N2Zz4=" style="width:18px; height:18px; display:block; max-width:none;">',
+        favorite: '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiIHN0cm9rZT0ibm9uZSI+PHBhdGggZD0iTTEyIDIwcy04LTUuNS04LTExYTQuNSA0LjUgMCAwMTgtMi41QTQuNSA0LjUgMCAwMTIwIDljMCA1LjUtOCAxMS04IDExeiIvPjwvc3ZnPg==" style="width:18px; height:18px; display:block; max-width:none;">',
+        free:     '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjkiLz48bGluZSB4MT0iOCIgeTE9IjgiIHgyPSIxNiIgeTI9IjE2Ii8+PC9zdmc+" style="width:18px; height:18px; display:block; max-width:none;">',
+        defect:   '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyLjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PGxpbmUgeDE9IjYiIHkxPSI2IiB4Mj0iMTgiIHkyPSIxOCIvPjxsaW5lIHgxPSIxOCIgeTE9IjYiIHgyPSI2IiB5Mj0iMTgiLz48L3N2Zz4=" style="width:18px; height:18px; display:block; max-width:none;">'
     };
 
     const PRIO_COLORS = {
