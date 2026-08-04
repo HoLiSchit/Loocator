@@ -200,7 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (!installingWorker) return;
 
                 installingWorker.addEventListener('statechange', () => {
-                    if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    if (installingWorker.state === 'installed' && registration.waiting && navigator.serviceWorker.controller) {
                         openUpdateModal();
                     }
                 });

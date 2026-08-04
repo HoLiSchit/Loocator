@@ -35,11 +35,19 @@ self.addEventListener('fetch', event => {
 
   const requestUrl = new URL(event.request.url);
   const isSameOrigin = requestUrl.origin === self.location.origin;
+  const isAppAsset = [
+    '/index.html',
+    '/app.js',
+    '/styles.css',
+    '/translations.js',
+    '/manifest.json',
+    '/sw.js'
+  ].some(path => requestUrl.pathname.endsWith(path) || requestUrl.pathname === path);
 
-  if (isSameOrigin) {
+  if (isSameOrigin && isAppAsset) {
     event.respondWith(
       caches.match(event.request).then(cached => {
-        const networkFetch = fetch(event.request)
+        return fetch(event.request)
           .then(response => {
             if (response.status === 200) {
               const clone = response.clone();
@@ -48,22 +56,23 @@ self.addEventListener('fetch', event => {
             return response;
           })
           .catch(() => cached || new Response('Offline', { status: 503, statusText: 'Service Unavailable' }));
-
-        return cached ? networkFetch : networkFetch;
       })
+    );
+    return;
+  }
+
+  if (isSameOrigin && requestUrl.pathname.includes('.php')) {
+    event.respondWith(
+      fetch(event.request)
+        .then(response => response)
+        .catch(() => new Response('Offline', { status: 503, statusText: 'Service Unavailable' }))
     );
     return;
   }
 
   event.respondWith(
     fetch(event.request)
-      .then(response => {
-        if (response.status === 200) {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-        }
-        return response;
-      })
+      .then(response => response)
       .catch(() => caches.match(event.request).then(cached => cached || new Response('Offline', { status: 503, statusText: 'Service Unavailable' })))
   );
 });
