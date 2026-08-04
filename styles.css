@@ -41,6 +41,16 @@ html, body {
     font-weight: bold; 
 }
 
+.leaflet-div-icon {
+    background: transparent !important;
+    border: none !important;
+}
+
+.google-style-pin {
+    background: transparent !important;
+    border: none !important;
+}
+
 html.dark .leaflet-tile { 
     filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%); 
 }

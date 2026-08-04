@@ -253,6 +253,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const color = isDefectMode ? PRIO_COLORS.defect : PRIO_COLORS[priorityKey];
         const iconSvg = isDefectMode ? ICONS.defect : ICONS[priorityKey];
         const dashArray = isDefectMode ? 'stroke-dasharray="4 2"' : '';
+        const iconDataUrl = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(iconSvg);
 
         // Punkte sitzen als Reihe OBERHALB des Pins (überfließend über den oberen Rand)
         const dotsHtml = statusDots.slice(0, 4).map((dotColor) => {
@@ -269,7 +270,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         '<path d="M22 2 C10 2 2 10 2 21 C2 34 22 54 22 54 C22 54 42 34 42 21 C42 10 34 2 22 2 Z" fill="white" stroke="' + color + '" stroke-width="2" ' + dashArray + '/>' +
                         '<circle cx="22" cy="21" r="14" fill="' + color + '"/>' +
                     '</svg>' +
-                    '<div style="position:absolute; top:3px; left:0; width:44px; height:44px; z-index:11; display:flex; justify-content:center; align-items:center; overflow:hidden;">' + iconSvg + '</div>' +
+                    '<div style="position:absolute; top:3px; left:0; width:44px; height:44px; z-index:11; display:flex; justify-content:center; align-items:center; overflow:hidden;">' +
+                        '<img src="' + iconDataUrl + '" alt="" style="width:18px; height:18px; display:block; pointer-events:none;">' +
+                    '</div>' +
                 '</div>' +
             '</div>';
     }
