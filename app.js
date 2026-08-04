@@ -1317,16 +1317,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         isTooFarToVote = !isNearToilet();
         const tooFar = isTooFarToVote;
-        const voteButtons = [document.getElementById('btn-usable-yes'), document.getElementById('btn-usable-no')];
-        const starButtons = document.querySelectorAll('.btn-star');
-        if (tooFar) {
-            voteButtons.forEach(b => { b.disabled = true; b.classList.add('opacity-30'); });
-            starButtons.forEach(b => { b.disabled = true; b.classList.add('opacity-30', 'pointer-events-none'); });
-            document.getElementById('stat-usable').innerText = t('voteDisabledTooFar');
-        } else {
-            voteButtons.forEach(b => { b.classList.remove('opacity-30'); });
-            starButtons.forEach(b => { b.classList.remove('opacity-30', 'pointer-events-none'); });
-        }
+        updateVoteUIState(tooFar);
 
         await loadRatings(toilet.id);
         checkVotedStatus(toilet.id);
@@ -1389,10 +1380,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function isNearToilet(maxMeters = 150) {
         if (!userLocation || !currentToiletData) return false;
-        const targetLat = currentToiletData.lat || currentToiletData.center.lat;
-        const targetLon = currentToiletData.lon || currentToiletData.center.lon;
+        const targetLat = currentToiletData.lat || (currentToiletData.center && currentToiletData.center.lat);
+        const targetLon = currentToiletData.lon || (currentToiletData.center && currentToiletData.center.lon);
+        if (!targetLat || !targetLon) return false;
         const targetLatLng = L.latLng(targetLat, targetLon);
         return map.distance(userLocation, targetLatLng) <= maxMeters;
+    }
+
+    function updateVoteUIState(tooFar) {
+        const voteButtons = [document.getElementById('btn-usable-yes'), document.getElementById('btn-usable-no')];
+        const starButtons = document.querySelectorAll('.btn-star');
+        const voteOverlay = document.getElementById('vote-overlay');
+        const statUsable = document.getElementById('stat-usable');
+
+        voteButtons.forEach(b => {
+            if (!b) return;
+            b.disabled = tooFar;
+            b.classList.toggle('opacity-30', tooFar);
+            b.classList.toggle('pointer-events-none', tooFar);
+        });
+
+        starButtons.forEach(b => {
+            if (!b) return;
+            b.disabled = tooFar;
+            b.classList.toggle('opacity-30', tooFar);
+            b.classList.toggle('pointer-events-none', tooFar);
+        });
+
+        if (voteOverlay) {
+            voteOverlay.classList.toggle('hidden', !tooFar);
+        }
+
+        if (statUsable) {
+            statUsable.innerText = tooFar ? t('voteDisabledTooFar') : t('statLoading');
+        }
     }
 
     async function sendVote(payload) {
@@ -1443,36 +1464,24 @@ document.addEventListener("DOMContentLoaded", () => {
         const btnYes = document.getElementById('btn-usable-yes');
         const btnNo = document.getElementById('btn-usable-no');
         const starDiv = document.getElementById('star-rating');
+        const tooFar = !isNearToilet();
 
-        // 1. Entfernung dynamisch für diese Toilette prüfen
-        let isTooFarToVote = true;
-        if (userLocation && currentToilets) {
-            const toilet = currentToilets.find(t => t.id === osmId);
-            if (toilet) {
-                const distance = calculateDistance(
-                    userLocation.lat, userLocation.lng, 
-                    toilet.lat, toilet.lon
-                );
-                isTooFarToVote = distance > 150; // true, wenn weiter als 150m weg
-            }
+        if (tooFar) {
+            updateVoteUIState(true);
+            return;
         }
 
-        // 2. Buttons sperren, wenn zu weit weg
-        if (isTooFarToVote) {
-            if (btnYes) { btnYes.disabled = true; btnYes.classList.add('opacity-50'); }
-            if (btnNo) { btnNo.disabled = true; btnNo.classList.add('opacity-50'); }
-            if (starDiv) starDiv.classList.add('opacity-50', 'pointer-events-none');
-            return; // Hier abbrechen, da keine Votes erlaubt sind
-        }
-
-        // 3. Normaler Status, wenn nah genug (bereits gevotet?)
         if (btnYes && btnNo) {
             if (thisVote.usable !== undefined) {
-                btnYes.disabled = true; btnYes.classList.add('opacity-50');
-                btnNo.disabled = true; btnNo.classList.add('opacity-50');
+                btnYes.disabled = true;
+                btnYes.classList.add('opacity-50');
+                btnNo.disabled = true;
+                btnNo.classList.add('opacity-50');
             } else {
-                btnYes.disabled = false; btnYes.classList.remove('opacity-50');
-                btnNo.disabled = false; btnNo.classList.remove('opacity-50');
+                btnYes.disabled = false;
+                btnYes.classList.remove('opacity-50');
+                btnNo.disabled = false;
+                btnNo.classList.remove('opacity-50');
             }
         }
 

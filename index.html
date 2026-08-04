@@ -239,7 +239,11 @@
         
         <p id="sheet-info" class="text-sm text-gray-500 dark:text-gray-400 mb-5 leading-relaxed"></p>
 
-        <div id="feedback-section" class="bg-gray-50 dark:bg-gray-700 rounded-2xl p-5 mb-5 border border-gray-100 dark:border-gray-600 shadow-inner transition-opacity duration-300">
+        <div id="feedback-section" class="bg-gray-50 dark:bg-gray-700 rounded-2xl p-5 mb-5 border border-gray-100 dark:border-gray-600 shadow-inner transition-opacity duration-300 relative overflow-hidden">
+            <div id="vote-overlay" class="hidden absolute inset-0 z-10 bg-white/90 dark:bg-gray-800/90 backdrop-blur-[2px] flex items-center justify-center px-5 text-center">
+                <div class="text-sm font-bold text-gray-800 dark:text-gray-100 leading-relaxed" data-i18n="voteOverlayText"></div>
+            </div>
+
             <h3 class="font-bold mb-3" data-i18n="howWasIt"></h3>
             
             <div class="mb-5">

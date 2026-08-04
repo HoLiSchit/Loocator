@@ -135,6 +135,7 @@ const dict = {
         //Entfernungs-Check
         alertTooFarToVote: "Du musst näher am WC sein, um es zu bewerten (max. 150m).",
         voteDisabledTooFar: "Zu weit entfernt zum Bewerten",
+        voteOverlayText: "Du musst dich innerhalb von 150 m befinden, um das WC bewerten zu können.",
     },
     'en': {
         appDesc: "Find WCs, Eurokeys & Changing Tables worldwide",
@@ -271,6 +272,7 @@ const dict = {
         //Proximity-Check
         alertTooFarToVote: "You need to be closer to the WC to rate it (max. 150m).",
         voteDisabledTooFar: "Too far away to rate",
+        voteOverlayText: "You need to be within 150 m to rate this toilet.",
     }
 };
 
