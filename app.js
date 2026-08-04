@@ -163,7 +163,50 @@ document.addEventListener("DOMContentLoaded", () => {
         updateThemeUI(true);
     });
 
-    if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+    const updateModal = document.getElementById('update-modal');
+    const btnReloadApp = document.getElementById('btn-reload-app');
+    const btnDismissUpdate = document.getElementById('btn-dismiss-update');
+    const updateModalSessionKey = 'loocator_update_modal_shown';
+    let updateModalWasShown = sessionStorage.getItem(updateModalSessionKey) === 'true';
+
+    function openUpdateModal() {
+        if (updateModalWasShown) return;
+        if (updateModal) {
+            updateModal.classList.remove('hidden');
+            updateModalWasShown = true;
+            sessionStorage.setItem(updateModalSessionKey, 'true');
+        }
+    }
+
+    function closeUpdateModal() {
+        if (updateModal) {
+            updateModal.classList.add('hidden');
+        }
+    }
+
+    btnReloadApp?.addEventListener('click', () => {
+        if (navigator.serviceWorker?.controller) {
+            navigator.serviceWorker.controller.postMessage({ type: 'SKIP_WAITING' });
+        }
+        window.location.reload();
+    });
+
+    btnDismissUpdate?.addEventListener('click', closeUpdateModal);
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').then((registration) => {
+            registration.addEventListener('updatefound', () => {
+                const installingWorker = registration.installing;
+                if (!installingWorker) return;
+
+                installingWorker.addEventListener('statechange', () => {
+                    if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                        openUpdateModal();
+                    }
+                });
+            });
+        }).catch(() => {});
+    }
 
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -185,12 +228,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // GOOGLE-MAPS-STYLE: SVG-Icon-Set + Pin Builder
     // ============================================
     const ICONS = {
-        public:   '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiPjxyZWN0IHg9IjYiIHk9IjQiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxNCIgcng9IjIiLz48bGluZSB4MT0iNiIgeTE9IjkiIHgyPSIxOCIgeTI9IjkiLz48L3N2Zz4=" style="width:18px !important; height:18px !important; display:block !important; max-width:none !important; max-height:none !important; object-fit:contain;">',
-        eurokey:  '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiPjxjaXJjbGUgY3g9IjkiIGN5PSI5IiByPSI0Ii8+PGxpbmUgeDE9IjEyIiB5MT0iMTIiIHgyPSIxOSIgeTI9IjE5Ii8+PGxpbmUgeDE9IjE1IiB5MT0iMTYiIHgyPSIxNy41IiB5Mj0iMTMuNSIvPjxsaW5lIHgxPSIxNyIgeTE9IjE4IiB4Mj0iMTkuNSIgeTI9IjE1LjUiLz48L3N2Zz4=" style="width:18px !important; height:18px !important; display:block !important; max-width:none !important; max-height:none !important; object-fit:contain;">',
-        changing: '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiPjxjaXJjbGUgY3g9IjEyIiBjeT0iNyIgcj0iMi41IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJub25lIi8+PHBhdGggZD0iTTUgMTVxNy03IDE0IDAiLz48L3N2Zz4=" style="width:18px !important; height:18px !important; display:block !important; max-width:none !important; max-height:none !important; object-fit:contain;">',
-        favorite: '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiIHN0cm9rZT0ibm9uZSI+PHBhdGggZD0iTTEyIDIwcy04LTUuNS04LTExYTQuNSA0LjUgMCAwMTgtMi41QTQuNSA0LjUgMCAwMTIwIDljMCA1LjUtOCAxMS04IDExeiIvPjwvc3ZnPg==" style="width:18px !important; height:18px !important; display:block !important; max-width:none !important; max-height:none !important; object-fit:contain;">',
-        free:     '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjkiLz48bGluZSB4MT0iOCIgeTE9IjgiIHgyPSIxNiIgeTI9IjE2Ii8+PC9zdmc+" style="width:18px !important; height:18px !important; display:block !important; max-width:none !important; max-height:none !important; object-fit:contain;">',
-        defect:   '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyLjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PGxpbmUgeDE9IjYiIHkxPSI2IiB4Mj0iMTgiIHkyPSIxOCIvPjxsaW5lIHgxPSIxOCIgeTE9IjYiIHgyPSI2IiB5Mj0iMTgiLz48L3N2Zz4=" style="width:18px !important; height:18px !important; display:block !important; max-width:none !important; max-height:none !important; object-fit:contain;">'
+        public:   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="6" y="4" width="12" height="14" rx="2" stroke="white" stroke-width="2"/><path d="M6 9H18" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>',
+        eurokey:  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="9" cy="9" r="4" stroke="white" stroke-width="2"/><path d="M12 12L19 19" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M14.5 15.5L17 13" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M16.5 17.5L19 15" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>',
+        changing: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="7" r="2.5" fill="white"/><path d="M5 15C8 12 16 12 19 15" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>',
+        favorite: '<svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 20.5S4 15.5 4 9.5C4 7.3 5.8 5.5 8 5.5C9.5 5.5 10.8 6.4 12 8C13.2 6.4 14.5 5.5 16 5.5C18.2 5.5 20 7.3 20 9.5C20 15.5 12 20.5 12 20.5Z"/></svg>',
+        free:     '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="white" stroke-width="2"/><path d="M8 8L16 16" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>',
+        defect:   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M6 6L18 18" stroke="white" stroke-width="2.4" stroke-linecap="round"/><path d="M18 6L6 18" stroke="white" stroke-width="2.4" stroke-linecap="round"/></svg>'
     };
 
     const PRIO_COLORS = {
@@ -307,6 +350,18 @@ document.addEventListener("DOMContentLoaded", () => {
     let addressCache = {};
     let autoFollow = false;
     let allToilets = [];
+    const ADDRESS_CACHE_TTL = 1000 * 60 * 60 * 24 * 7;
+    const TOILET_CACHE_TTL = 1000 * 60 * 60 * 12;
+    const TOILET_CACHE_KEY = 'loocator_cached_toilets';
+
+    try {
+        const cachedAddresses = JSON.parse(localStorage.getItem('loocator_address_cache') || '{}');
+        if (cachedAddresses && typeof cachedAddresses === 'object') {
+            addressCache = cachedAddresses;
+        }
+    } catch (e) {
+        addressCache = {};
+    }
 
     const btnLocation = document.getElementById('btn-location');
     const mainMenu = document.getElementById('main-menu');
@@ -315,6 +370,56 @@ document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.getElementById('search-input');
     const searchSuggestions = document.getElementById('search-suggestions');
     const btnCloseSheet = document.getElementById('btn-close-sheet');
+    const emptyStateEl = document.getElementById('empty-state');
+
+    function showEmptyState(message) {
+        if (emptyStateEl) {
+            emptyStateEl.innerText = message;
+            emptyStateEl.classList.remove('hidden');
+        }
+    }
+
+    function hideEmptyState() {
+        if (emptyStateEl) {
+            emptyStateEl.classList.add('hidden');
+            emptyStateEl.innerText = '';
+        }
+    }
+
+    function getBoundsCacheKey(bounds) {
+        return `bbox:${bounds.getSouth().toFixed(5)}:${bounds.getWest().toFixed(5)}:${bounds.getNorth().toFixed(5)}:${bounds.getEast().toFixed(5)}`;
+    }
+
+    function loadCachedToiletsForBounds(cacheKey) {
+        try {
+            const raw = localStorage.getItem(TOILET_CACHE_KEY);
+            if (!raw) return null;
+            const data = JSON.parse(raw);
+            if (!data || typeof data !== 'object' || !data[cacheKey]) return null;
+
+            const entry = data[cacheKey];
+            if (!entry || !Array.isArray(entry.elements)) return null;
+            if ((Date.now() - entry.savedAt) > TOILET_CACHE_TTL) return null;
+
+            return entry.elements;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function saveCachedToiletsForBounds(cacheKey, elements) {
+        try {
+            const raw = localStorage.getItem(TOILET_CACHE_KEY);
+            const data = raw ? JSON.parse(raw) : {};
+            data[cacheKey] = {
+                savedAt: Date.now(),
+                elements
+            };
+            localStorage.setItem(TOILET_CACHE_KEY, JSON.stringify(data));
+        } catch (e) {
+            // Ignore cache write failures gracefully.
+        }
+    }
 
     function updateLocationButtonUI() {
         if (autoFollow) {
@@ -450,7 +555,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const oldText = btnSubmitContact.innerText;
 
         btnSubmitContact.disabled = true;
-        btnSubmitContact.innerText = '...';
+        btnSubmitContact.innerText = t('loading');
 
         try {
             const response = await fetch('https://api.web3forms.com/submit', {
@@ -640,7 +745,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         const submitBtn = document.getElementById('btn-submit-report');
         const oldText = submitBtn.innerText;
-        submitBtn.innerText = '...';
+        submitBtn.innerText = t('loading');
         submitBtn.disabled = true;
 
         try {
@@ -706,7 +811,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     async function fetchToilets() {
-        if (isFetching || map.getZoom() < 12) return;
+        if (map.getZoom() < 12) {
+            showEmptyState(t('zoomHint'));
+            return;
+        }
+
+        if (isFetching) return;
         isFetching = true;
         document.getElementById('loading-spinner').classList.remove('hidden');
 
@@ -729,6 +839,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (e) { }
 
         const bounds = map.getBounds();
+        const cacheKey = getBoundsCacheKey(bounds);
         const query = `
             [out:json][timeout:25];
             (
@@ -744,9 +855,18 @@ document.addEventListener("DOMContentLoaded", () => {
             const res = await fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`);
             const data = await res.json();
             allToilets = data.elements;
+            saveCachedToiletsForBounds(cacheKey, allToilets);
             renderMarkers();
         } catch (error) {
-            console.error(error);
+            const cachedElements = loadCachedToiletsForBounds(cacheKey);
+            if (cachedElements && cachedElements.length > 0) {
+                allToilets = cachedElements;
+                renderMarkers();
+                showToast(t('offline'), 'info');
+            } else {
+                console.error(error);
+                showEmptyState(t('loadErrorHint'));
+            }
         } finally {
             isFetching = false;
             document.getElementById('loading-spinner').classList.add('hidden');
@@ -757,6 +877,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderMarkers() {
         markerClusterGroup.clearLayers();
         activeMarkers = [];
+        hideEmptyState();
         
         // 1. Welche Filter sind aktiv?
         const reqPub = document.getElementById('filter-public').checked;
@@ -1063,13 +1184,14 @@ document.addEventListener("DOMContentLoaded", () => {
             addressEl.classList.remove('hidden');
         } else {
             const cacheKey = `${lat.toFixed(5)},${lon.toFixed(5)}`;
-            if (addressCache[cacheKey] !== undefined) {
-                if (addressCache[cacheKey] !== null) {
-                    addressEl.innerText = addressCache[cacheKey];
-                    addressEl.classList.remove('hidden');
-                } else {
-                    addressEl.classList.add('hidden');
-                }
+            const cacheEntry = addressCache[cacheKey];
+            const now = Date.now();
+
+            if (cacheEntry && cacheEntry.expires > now && cacheEntry.value) {
+                addressEl.innerText = cacheEntry.value;
+                addressEl.classList.remove('hidden');
+            } else if (cacheEntry && cacheEntry.expires > now && cacheEntry.value === null) {
+                addressEl.classList.add('hidden');
             } else {
                 addressEl.innerText = t('addrLoading');
                 addressEl.classList.remove('hidden');
@@ -1091,14 +1213,23 @@ document.addEventListener("DOMContentLoaded", () => {
                             
                             if (str.length > 0) {
                                 const fullAddress = str.join(', ');
-                                addressCache[cacheKey] = fullAddress;
+                                addressCache[cacheKey] = { value: fullAddress, expires: now + ADDRESS_CACHE_TTL };
+                                try {
+                                    localStorage.setItem('loocator_address_cache', JSON.stringify(addressCache));
+                                } catch (e) {}
                                 addressEl.innerText = fullAddress;
                             } else {
-                                addressCache[cacheKey] = null;
+                                addressCache[cacheKey] = { value: null, expires: now + ADDRESS_CACHE_TTL };
+                                try {
+                                    localStorage.setItem('loocator_address_cache', JSON.stringify(addressCache));
+                                } catch (e) {}
                                 addressEl.classList.add('hidden');
                             }
                         } else {
-                            addressCache[cacheKey] = null;
+                            addressCache[cacheKey] = { value: null, expires: now + ADDRESS_CACHE_TTL };
+                            try {
+                                localStorage.setItem('loocator_address_cache', JSON.stringify(addressCache));
+                            } catch (e) {}
                             addressEl.classList.add('hidden');
                         }
                     }).catch(() => {

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'loocator-cache-v3';
+const CACHE_NAME = 'loocator-cache-v4';
 const OFFLINE_URLS = [
   './',
   'index.html',
@@ -24,19 +24,46 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+
 self.addEventListener('fetch', event => {
+  if (event.request.method !== 'GET') return;
+
+  const requestUrl = new URL(event.request.url);
+  const isSameOrigin = requestUrl.origin === self.location.origin;
+
+  if (isSameOrigin) {
+    event.respondWith(
+      caches.match(event.request).then(cached => {
+        const networkFetch = fetch(event.request)
+          .then(response => {
+            if (response.status === 200) {
+              const clone = response.clone();
+              caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+            }
+            return response;
+          })
+          .catch(() => cached || new Response('Offline', { status: 503, statusText: 'Service Unavailable' }));
+
+        return cached ? networkFetch : networkFetch;
+      })
+    );
+    return;
+  }
+
   event.respondWith(
     fetch(event.request)
       .then(response => {
-        // Erfolgreiche Antworten zusätzlich im Cache aktualisieren (z.B. neue Kartenkacheln)
-        if (event.request.method === 'GET' && response.status === 200) {
+        if (response.status === 200) {
           const clone = response.clone();
           caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
         }
         return response;
       })
-      .catch(() => caches.match(event.request).then(cached => {
-        return cached || new Response("Offline", { status: 503, statusText: "Service Unavailable" });
-      }))
+      .catch(() => caches.match(event.request).then(cached => cached || new Response('Offline', { status: 503, statusText: 'Service Unavailable' })))
   );
 });
