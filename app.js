@@ -212,6 +212,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 });
             });
+
+            // iOS Safari kann Tabs sehr lange im Hintergrund "einfrieren" und prüft
+            // dann nicht zuverlässig von selbst auf ein neues sw.js - beim Zurückkehren
+            // in den Vordergrund explizit eine Update-Prüfung anstoßen.
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') {
+                    registration.update().catch(() => {});
+                }
+            });
         }).catch(() => {});
     }
 

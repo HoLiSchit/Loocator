@@ -1,0 +1,23 @@
+# Cache-Steuerung: verhindert, dass iOS Safari (und andere Browser) eine alte
+# sw.js/app.js aus dem HTTP-Cache weiterverwenden, nachdem ein neuer Deploy
+# einen Bugfix ausgeliefert hat. Ohne das kann ein Browser-Tab auf Wochen alten
+# Code "feststecken", weil er den Service-Worker-Script-Request selbst nie
+# neu an den Server schickt.
+<IfModule mod_headers.c>
+    # Der Service-Worker-Script selbst: NIE aus dem Cache bedienen, sonst
+    # bemerkt der Browser ein neues sw.js unter Umständen nie.
+    <FilesMatch "^sw\.js$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+    </FilesMatch>
+
+    # App-Code und Markup, das sich bei jedem Deploy ändern kann: immer neu
+    # validieren statt ungeprüft aus dem Cache zu übernehmen.
+    <FilesMatch "\.(html|js|json|css)$">
+        Header set Cache-Control "no-cache, must-revalidate"
+    </FilesMatch>
+
+    # Statische, praktisch unveränderliche Assets: aggressiv langfristig cachen.
+    <FilesMatch "\.(woff2?|ttf|otf|png|jpg|jpeg|svg|webp|ico)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+</IfModule>
