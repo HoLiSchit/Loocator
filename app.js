@@ -842,11 +842,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Öffentliche Overpass-Instanzen sind einzeln nicht sehr zuverlässig (häufig 429/503
-    // unter Last) - mehrere Mirrors nacheinander probieren, bevor wir aufgeben.
+    // unter Last, teils auch nur regionale Daten) - mehrere Mirrors nacheinander probieren,
+    // bevor wir aufgeben. overpass.osm.ch liefert HTTP 200 aber nur Schweizer Daten - daher
+    // NICHT als Mirror verwenden, sonst würde ein "erfolgreiches" leeres Ergebnis für jede
+    // Anfrage außerhalb der Schweiz fälschlich als final akzeptiert.
     const OVERPASS_MIRRORS = [
         'https://overpass-api.de/api/interpreter',
-        'https://overpass.kumi.systems/api/interpreter',
-        'https://overpass.openstreetmap.ru/api/interpreter'
+        'https://overpass.openstreetmap.fr/api/interpreter',
+        'https://overpass.kumi.systems/api/interpreter'
     ];
 
     async function fetchOverpassWithFallback(query) {
@@ -854,13 +857,31 @@ document.addEventListener("DOMContentLoaded", () => {
         for (const base of OVERPASS_MIRRORS) {
             try {
                 const controller = new AbortController();
-                const timeout = setTimeout(() => controller.abort(), 8000);
-                const res = await fetch(`${base}?data=${encodeURIComponent(query)}`, { signal: controller.signal });
+                const timeout = setTimeout(() => controller.abort(), 10000);
+                // POST statt GET (von Overpass selbst für alles außer trivialen Anfragen
+                // empfohlen) - vermeidet außerdem, dass zwischengeschaltete CDNs/Proxys
+                // GET-Query-Strings anders cachen/behandeln als POST-Bodies.
+                const res = await fetch(base, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'data=' + encodeURIComponent(query),
+                    signal: controller.signal
+                });
                 clearTimeout(timeout);
                 if (!res.ok) throw new Error(`Overpass ${res.status}`);
-                return await res.json();
+                const data = await res.json();
+                // Ein HTTP-200 mit leerem elements-Array kann ein regional beschränkter
+                // Mirror sein statt "wirklich keine Toiletten hier" - im Zweifel dem
+                // nächsten Mirror eine Chance geben, statt sofort leer zurückzugeben.
+                if (!data || !Array.isArray(data.elements) || data.elements.length === 0) {
+                    lastError = new Error(`Overpass ${base} returned no elements`);
+                    console.error('Overpass mirror returned empty result:', base);
+                    continue;
+                }
+                return data;
             } catch (e) {
                 lastError = e;
+                console.error('Overpass mirror failed:', base, e);
             }
         }
         throw lastError;
