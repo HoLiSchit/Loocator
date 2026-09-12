@@ -23,7 +23,18 @@ html, body {
     width: 100%;
     height: 100dvh;
     overflow: hidden;
-    overscroll-behavior-y: contain;
+    overscroll-behavior: none;
+}
+
+/* iOS Safari: overflow:hidden allein reicht nicht - der ganze Viewport lässt
+   sich per Touch trotzdem "verschieben" (Rubber-Band-Bounce der Seite selbst,
+   nicht der Karte), sobald irgendwo außerhalb einer scrollbaren Fläche gezogen
+   wird. Das reißt hässliche Ränder auf und verschiebt die fixed-positionierten
+   UI-Elemente relativ zum sichtbaren Ausschnitt. position:fixed nimmt body
+   komplett aus dem normalen Scroll-Fluss und macht ihn dadurch unbeweglich. */
+body {
+    position: fixed;
+    inset: 0;
 }
 
 #map {

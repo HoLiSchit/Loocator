@@ -563,8 +563,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Legende (Marker-Farben) dauerhaft über einen eigenen Button erreichbar,
-    // nicht nur einmalig im Tutorial beim allerersten Start.
+    // nicht nur einmalig im Tutorial beim allerersten Start. Lebt in der Sidebar
+    // statt als schwebender Button auf der Karte (wurde dort ständig aus Versehen
+    // angetippt).
     document.getElementById('btn-legend')?.addEventListener('click', () => {
+        toggleMenu(false);
         document.getElementById('tutorial-modal').classList.remove('hidden');
     });
         const btnContact = document.getElementById('btn-contact');
