@@ -1,22 +1,18 @@
 <?php
-// ha-stats.php (Angepasst an die neue "Selbstheilungs"-Datenbank)
+// ha-stats.php - kompakte All-Time-Statistik als JSON, z. B. für Home Assistant
+require_once __DIR__ . '/db.php';
+
 header('Content-Type: application/json');
 
-$dbFile = 'loocator.sqlite';
-if (!file_exists($dbFile)) {
-    echo json_encode(['error' => 'DB nicht gefunden']);
-    exit;
-}
+$db = loocator_db();
 
-$db = new PDO('sqlite:' . $dbFile);
-
-// Zählt die einzelnen Votes aus der neuen Tabelle zusammen (All-Time Statistik für dein Dashboard)
+// Zählt die einzelnen Votes aus der votes-Tabelle zusammen (All-Time Statistik)
 $stmt = $db->query("
-    SELECT 
+    SELECT
         SUM(CASE WHEN usable_vote = 'yes' THEN 1 ELSE 0 END) as yes,
         SUM(CASE WHEN usable_vote = 'no' THEN 1 ELSE 0 END) as no,
         SUM(CASE WHEN cleanliness_vote IS NOT NULL THEN 1 ELSE 0 END) as clean_votes,
-        SUM(cleanliness_vote) as clean_sum 
+        SUM(cleanliness_vote) as clean_sum
     FROM votes
 ");
 
@@ -36,4 +32,3 @@ echo json_encode([
     'usable_no' => $no,
     'avg_cleanliness' => $avg_clean
 ]);
-?>

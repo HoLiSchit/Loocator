@@ -1,10 +1,40 @@
+/* Baloo 2 (variable, self-gehostet aus Datenschutzgründen statt Google Fonts CDN) -
+   trägt die Markenstimme (Splash, Sidebar-Wordmark, Karma-Ränge), siehe tailwind.config.js */
+@font-face {
+    font-family: 'Baloo 2';
+    font-style: normal;
+    font-weight: 400 800;
+    font-display: swap;
+    src: url('fonts/baloo2-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122;
+}
+@font-face {
+    font-family: 'Baloo 2';
+    font-style: normal;
+    font-weight: 400 800;
+    font-display: swap;
+    src: url('fonts/baloo2-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1EFF, U+2020, U+20A0-20AB, U+2113;
+}
+
 html, body {
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100dvh;
     overflow: hidden;
-    overscroll-behavior-y: contain;
+    overscroll-behavior: none;
+}
+
+/* iOS Safari: overflow:hidden allein reicht nicht - der ganze Viewport lässt
+   sich per Touch trotzdem "verschieben" (Rubber-Band-Bounce der Seite selbst,
+   nicht der Karte), sobald irgendwo außerhalb einer scrollbaren Fläche gezogen
+   wird. Das reißt hässliche Ränder auf und verschiebt die fixed-positionierten
+   UI-Elemente relativ zum sichtbaren Ausschnitt. position:fixed nimmt body
+   komplett aus dem normalen Scroll-Fluss und macht ihn dadurch unbeweglich. */
+body {
+    position: fixed;
+    inset: 0;
 }
 
 #map {
@@ -25,20 +55,6 @@ html, body {
 
 .ui-layer { 
     z-index: 40; 
-}
-
-.marker-cluster-small, 
-.marker-cluster-medium, 
-.marker-cluster-large { 
-    background-color: rgba(59, 130, 246, 0.6); 
-}
-
-.marker-cluster-small div, 
-.marker-cluster-medium div, 
-.marker-cluster-large div { 
-    background-color: rgba(59, 130, 246, 0.9); 
-    color: white; 
-    font-weight: bold; 
 }
 
 .leaflet-div-icon {
@@ -78,17 +94,19 @@ html.dark #map.is-sat-mode .leaflet-tile {
     to { opacity: 0; transform: translateY(20px); }
 }
 
-/* Versteckt die Scrollbar im neuen Filter-Menü, lässt aber Wischen zu */
-.hide-scrollbar::-webkit-scrollbar {
-    display: none;
-}
-
 /* --- UI Helfer --- */
-/* Versteckt die horizontale Scrollbar im Menü, das Wischen bleibt aber komplett erhalten */
+/* Versteckt die horizontale Scrollbar im Filter-Menü, das Wischen bleibt aber komplett erhalten */
 .hide-scrollbar {
     -ms-overflow-style: none;  /* Für Internet Explorer und Edge */
     scrollbar-width: none;  /* Für Firefox */
 }
 .hide-scrollbar::-webkit-scrollbar {
     display: none; /* Für Chrome, Safari und Opera */
+}
+
+/* Weicher Rand statt hartem Abschneiden am Ende scrollbarer Filter-Reihen -
+   signalisiert "hier geht noch was" statt wie ein UI-Bug auszusehen. */
+.fade-scroll-x {
+    -webkit-mask-image: linear-gradient(to right, transparent 0, black 24px, black calc(100% - 28px), transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, black 24px, black calc(100% - 28px), transparent 100%);
 }

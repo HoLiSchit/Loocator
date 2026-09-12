@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // ------------------------------------------
     
     const htmlTag = document.getElementById('html-tag');
-    htmlTag.lang = userLang;
+    htmlTag.lang = lang; // tatsächlich verwendete Inhaltssprache (de/en), nicht die rohe Browser-Locale
 
     document.querySelectorAll('[data-i18n]').forEach(el => {
         el.innerText = t(el.getAttribute('data-i18n'));
@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function showToast(message, type = 'info') {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
-        let bgColor = 'bg-blue-600';
+        let bgColor = 'bg-brand-600';
         if (type === 'error') bgColor = 'bg-red-600';
         if (type === 'success') bgColor = 'bg-green-600';
 
@@ -39,41 +39,46 @@ document.addEventListener("DOMContentLoaded", () => {
         // --- KARMA SYSTEM ---
     let currentKarma = parseInt(localStorage.getItem('loocator_karma')) || 0;
     
-    // Unsere Endgame-Kurve bis 1000!
-    const karmaRanks = [
-        { min: 0, key: "rank0", emoji: "🧻" },
-        { min: 1, key: "rank1", emoji: "🚶‍♂️" },
-        { min: 5, key: "rank2", emoji: "🔑" },
-        { min: 15, key: "rank3", emoji: "🕵️‍♀️" },
-        { min: 35, key: "rank4", emoji: "🚓" },
-        { min: 75, key: "rank5", emoji: "👑" },
-        { min: 150, key: "rank6", emoji: "🛡️" },
-        { min: 300, key: "rank7", emoji: "🌟" },
-        { min: 600, key: "rank8", emoji: "🏰" },
-        { min: 1000, key: "rank9", emoji: "🔱" }
-    ];
-
-    function getRankIndex(points) {
-        let index = 0;
-        for (let i = 0; i < karmaRanks.length; i++) {
-            if (points >= karmaRanks[i].min) index = i;
-        }
-        return index;
-    }
+    // Karma-Ränge + Rangberechnung leben (mit Tests) in src/lib/karma.js
+    const { karmaRanks, getRankIndex } = window.LoocatorLib.karma;
 
     let currentRankIndex = getRankIndex(currentKarma);
+
+    // Ein Icon (Klopapierrolle), farblich eskalierendes Badge + 0-3 Sterne als
+    // Fortschritt + Krone nur beim Maximalrang - ein zusammenhängendes System
+    // statt 10 emoji mit völlig unterschiedlichem visuellem Gewicht.
+    function buildKarmaBadgeSvg(badge) {
+        let starsHtml = '';
+        for (let i = 0; i < 3; i++) {
+            const cx = 13 + i * 7;
+            const filled = i < badge.stars;
+            starsHtml += `<path transform="translate(${cx - 2.5},28.5) scale(0.18)" d="M14 2l3.5 7.3 8 1.2-5.8 5.7 1.4 8-7.1-3.9-7.1 3.9 1.4-8L2.6 10.5l8-1.2z" fill="${filled ? '#ffffff' : 'rgba(255,255,255,0.3)'}"/>`;
+        }
+        const crownHtml = badge.crown
+            ? `<path transform="translate(11,3.5)" d="M0 6l3.5 3 3.5-5 3.5 5L14 6l1 6H-1z" fill="#fde68a" stroke="#f59e0b" stroke-width="0.6" stroke-linejoin="round"/>`
+            : '';
+        return `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="20" cy="20" r="18" fill="${badge.color}" stroke="white" stroke-width="2"/>
+            <g transform="translate(11,7) scale(0.68)">
+                <path d="M7 2h9a1 1 0 0 1 1 1v3H6V3a1 1 0 0 1 1-1z" fill="white"/>
+                <path d="M5 8h15a1 1 0 0 1 1 1v.5a2 2 0 0 1-1.3 1.87V13a6.7 6.7 0 0 1-6.7 6.7h-.5A6.7 6.7 0 0 1 5.3 13v-1.63A2 2 0 0 1 4 9.5V9a1 1 0 0 1 1-1z" fill="white"/>
+            </g>
+            ${starsHtml}
+            ${crownHtml}
+        </svg>`;
+    }
 
     function updateKarmaUI() {
         const rank = karmaRanks[currentRankIndex];
         const titleEl = document.getElementById('karma-title');
         const pointsEl = document.getElementById('karma-points');
-        const emojiEl = document.getElementById('karma-emoji');
+        const badgeEl = document.getElementById('karma-badge');
         const leftEl = document.getElementById('karma-left');
         const nextLabelEl = document.getElementById('karma-next-label');
 
         if(titleEl) titleEl.innerText = t(rank.key);
         if(pointsEl) pointsEl.innerText = t('karmaPoints', { points: currentKarma });
-        if(emojiEl) emojiEl.innerText = rank.emoji;
+        if(badgeEl) badgeEl.innerHTML = buildKarmaBadgeSvg(rank.badge);
 
         if(leftEl && nextLabelEl) {
             if (currentRankIndex < karmaRanks.length - 1) {
@@ -99,15 +104,14 @@ document.addEventListener("DOMContentLoaded", () => {
             if(typeof confetti === 'function') {
                 confetti({
                     particleCount: 150, spread: 80, origin: { y: 0.6 },
-                    colors: ['#3b82f6', '#22c55e', '#eab308', '#a855f7'],
+                    colors: ['#0d9488', '#e5316b', '#eab308', '#a855f7'],
                     zIndex: 9999
                 });
             }
             
             // NEU: Toast mit Erklärung
             const newRankName = t(karmaRanks[currentRankIndex].key);
-            const newRankEmoji = karmaRanks[currentRankIndex].emoji;
-            showToast(t('rankUp', { rank: newRankName + ' ' + newRankEmoji }), 'success');
+            showToast(t('rankUp', { rank: newRankName }), 'success');
         }
         updateKarmaUI();
     }
@@ -131,7 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function updateThemeUI(isDark) {
         if (isDark) {
-            btnDark.classList.add('bg-white', 'dark:bg-gray-600', 'text-blue-500', 'dark:text-blue-400', 'shadow-sm');
+            btnDark.classList.add('bg-white', 'dark:bg-gray-600', 'text-brand-500', 'dark:text-brand-400', 'shadow-sm');
             btnDark.classList.remove('text-gray-400', 'dark:text-gray-500');
             btnLight.classList.add('text-gray-400', 'dark:text-gray-500');
             btnLight.classList.remove('bg-white', 'text-orange-500', 'shadow-sm');
@@ -139,7 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
             btnLight.classList.add('bg-white', 'text-orange-500', 'shadow-sm');
             btnLight.classList.remove('text-gray-400', 'dark:text-gray-500');
             btnDark.classList.add('text-gray-400', 'dark:text-gray-500');
-            btnDark.classList.remove('bg-white', 'dark:bg-gray-600', 'text-blue-500', 'dark:text-blue-400', 'shadow-sm');
+            btnDark.classList.remove('bg-white', 'dark:bg-gray-600', 'text-brand-500', 'dark:text-brand-400', 'shadow-sm');
         }
     }
 
@@ -208,6 +212,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 });
             });
+
+            // iOS Safari kann Tabs sehr lange im Hintergrund "einfrieren" und prüft
+            // dann nicht zuverlässig von selbst auf ein neues sw.js - beim Zurückkehren
+            // in den Vordergrund explizit eine Update-Prüfung anstoßen.
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') {
+                    registration.update().catch(() => {});
+                }
+            });
         }).catch(() => {});
     }
 
@@ -231,20 +244,23 @@ document.addEventListener("DOMContentLoaded", () => {
     // GOOGLE-MAPS-STYLE: SVG-Icon-Set + Pin Builder
     // ============================================
     const ICONS = {
-        public:   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="6" y="4" width="12" height="14" rx="2" stroke="white" stroke-width="2"/><path d="M6 9H18" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>',
-        eurokey:  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="9" cy="9" r="4" stroke="white" stroke-width="2"/><path d="M12 12L19 19" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M14.5 15.5L17 13" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M16.5 17.5L19 15" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>',
-        changing: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="7" r="2.5" fill="white"/><path d="M5 15C8 12 16 12 19 15" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>',
+        public:   '<svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7 2h9a1 1 0 0 1 1 1v3H6V3a1 1 0 0 1 1-1z"/><path d="M5 8h15a1 1 0 0 1 1 1v.5a2 2 0 0 1-1.3 1.87V13a6.7 6.7 0 0 1-6.7 6.7h-.5A6.7 6.7 0 0 1 5.3 13v-1.63A2 2 0 0 1 4 9.5V9a1 1 0 0 1 1-1z"/></svg>',
+        eurokey:  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"/></svg>',
+        changing: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2" fill="white" stroke="none"/><path d="M9.3 8.7c.5.9 1.4 1.3 2.7 1.3s2.2-.4 2.7-1.3" stroke="#0d9488"/><path d="M6.5 20v-2.5a5.5 5.5 0 0111 0V20"/></svg>',
         favorite: '<svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 20.5S4 15.5 4 9.5C4 7.3 5.8 5.5 8 5.5C9.5 5.5 10.8 6.4 12 8C13.2 6.4 14.5 5.5 16 5.5C18.2 5.5 20 7.3 20 9.5C20 15.5 12 20.5 12 20.5Z"/></svg>',
         free:     '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="white" stroke-width="2"/><path d="M8 8L16 16" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>',
         defect:   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M6 6L18 18" stroke="white" stroke-width="2.4" stroke-linecap="round"/><path d="M18 6L6 18" stroke="white" stroke-width="2.4" stroke-linecap="round"/></svg>'
     };
 
+    // Muss mit den Farb-Tokens in tailwind.config.js (brand/accent/eurokey/changing/
+    // free/defect) übereinstimmen - Marker werden als reines SVG gebaut, kann daher
+    // keine Tailwind-Klassen nutzen, deshalb hier als Hex-Werte dupliziert.
     const PRIO_COLORS = {
-        favorite:   '#e5316b',
+        favorite:   '#e5316b', // accent-500
         eurokey:    '#eab308',
         changing:   '#a855f7',
         free:       '#16a34a',
-        public:     '#4285F4',
+        public:     '#0d9488', // brand-600 (teal)
         defect:     '#9ca3af'
     };
 
@@ -280,7 +296,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const map = L.map('map', { zoomControl: false }).setView([49.0069, 8.4037], 14);
     const layerOSM = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
         maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">HOT</a> | Loocator by <a href="https://mineco.de" target="_blank" rel="noopener">Adam Weiß</a> | Icons by <a href="https://www.svgrepo.com/collection/gentlecons-interface-icons/" target="_blank" rel="noopener">Konstantin Filatov</a>',
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">HOT</a> | Loocator by <a href="https://mineco.de" target="_blank" rel="noopener">Adam Weiß</a>',
         className: 'osm-tiles'
     });
     const layerSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
@@ -322,14 +338,14 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             let indicatorsHtml = '';
-            if (hasTopRated) indicatorsHtml += `<div class="w-2.5 h-2.5 bg-yellow-400 rounded-full border border-white"></div>`;
+            if (hasTopRated) indicatorsHtml += `<div class="w-2.5 h-2.5 bg-success rounded-full border border-white"></div>`;
             if (hasOpen247) indicatorsHtml += `<div class="w-2.5 h-2.5 bg-green-500 rounded-full border border-white"></div>`;
             if (hasChanging) indicatorsHtml += `<div class="w-2.5 h-2.5 bg-purple-500 rounded-full border border-white"></div>`;
             if (hasDefect) indicatorsHtml += `<div class="w-2.5 h-2.5 bg-red-600 rounded-full border border-white"></div>`;
 
             return L.divIcon({
                 html: `
-                    <div class="relative flex items-center justify-center w-10 h-10 bg-blue-600/90 text-white font-bold rounded-full shadow-md border-2 border-white">
+                    <div class="relative flex items-center justify-center w-10 h-10 bg-brand-700 text-white font-bold rounded-full shadow-md border-2 border-white">
                         <span>${childCount}</span>
                         <div class="absolute -bottom-1.5 flex gap-0.5 justify-center w-full">
                             ${indicatorsHtml}
@@ -429,11 +445,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function updateLocationButtonUI() {
         if (autoFollow) {
-            btnLocation.classList.remove('bg-white', 'text-blue-600', 'dark:bg-gray-800', 'dark:text-blue-400');
-            btnLocation.classList.add('bg-blue-600', 'text-white');
+            btnLocation.classList.remove('bg-white', 'text-brand-600', 'dark:bg-gray-800', 'dark:text-brand-400');
+            btnLocation.classList.add('bg-brand-600', 'text-white');
         } else {
-            btnLocation.classList.remove('bg-blue-600', 'text-white');
-            btnLocation.classList.add('bg-white', 'text-blue-600', 'dark:bg-gray-800', 'dark:text-blue-400');
+            btnLocation.classList.remove('bg-brand-600', 'text-white');
+            btnLocation.classList.add('bg-white', 'text-brand-600', 'dark:bg-gray-800', 'dark:text-brand-400');
         }
     }
 
@@ -496,38 +512,64 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+
+    // Echte linke Sidebar (Drawer), statt der vorherigen schwebenden Menü-Karte -
+    // schiebt von links rein/raus statt zu faden, mit abdunkelndem Hintergrund.
     function toggleMenu(show) {
-        if(show) {
-            mainMenu.classList.remove('hidden');
-            // Menü leicht nach oben schieben und unsichtbar machen, dann animiert einfliegen lassen
-            mainMenu.classList.add('opacity-0', '-translate-y-4');
-            // Ein winziger Moment Verzögerung, damit der Browser das Zeichnen mitbekommt
-            setTimeout(() => {
-                mainMenu.classList.remove('opacity-0', '-translate-y-4');
-            }, 10);
-            
-            // Den runden Öffnen-Button weich ausblenden
-            btnOpenMenu.classList.add('opacity-0', 'scale-90');
-            setTimeout(() => btnOpenMenu.classList.add('hidden'), 200);
+        if (show) {
+            sidebarBackdrop.classList.remove('hidden');
+            requestAnimationFrame(() => {
+                mainMenu.classList.remove('-translate-x-full');
+                sidebarBackdrop.classList.remove('opacity-0');
+            });
         } else {
-            // Menü weich ausblenden und leicht nach oben schieben
-            mainMenu.classList.add('opacity-0', '-translate-y-4');
+            mainMenu.classList.add('-translate-x-full');
+            sidebarBackdrop.classList.add('opacity-0');
             searchSuggestions.classList.add('hidden');
             searchInput.blur();
-            
-            setTimeout(() => {
-                mainMenu.classList.add('hidden');
-                mainMenu.classList.remove('opacity-0', '-translate-y-4');
-                
-                // Den runden Öffnen-Button wieder einblenden
-                btnOpenMenu.classList.remove('hidden');
-                setTimeout(() => btnOpenMenu.classList.remove('opacity-0', 'scale-90'), 10);
-            }, 200);
+            setTimeout(() => sidebarBackdrop.classList.add('hidden'), 300);
         }
     }
 
     btnOpenMenu.addEventListener('click', () => toggleMenu(true));
     btnCloseMenu.addEventListener('click', () => toggleMenu(false));
+    sidebarBackdrop.addEventListener('click', () => toggleMenu(false));
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !mainMenu.classList.contains('-translate-x-full')) toggleMenu(false);
+    });
+
+    // Sprachwechsler: überschreibt die Browser-Spracherkennung dauerhaft und lädt neu,
+    // damit wirklich jeder bereits gerenderte Text (inkl. dynamischer Inhalte) konsistent ist.
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        if (btn.dataset.lang === lang) btn.classList.add('bg-brand-500', 'text-white', 'border-brand-500');
+        btn.addEventListener('click', () => {
+            localStorage.setItem('loocator_lang', btn.dataset.lang);
+            window.location.reload();
+        });
+    });
+
+    // Sekundäre Filter-Zeile eingeklappt lassen, bis der Nutzer sie explizit öffnet
+    // (weniger gleichzeitig sichtbare Entscheidungen beim ersten Laden)
+    const btnToggleMoreFilters = document.getElementById('btn-toggle-more-filters');
+    const secondaryFilters = document.getElementById('secondary-filters');
+    const iconMoreFilters = document.getElementById('icon-more-filters');
+    btnToggleMoreFilters?.addEventListener('click', () => {
+        const isOpen = !secondaryFilters.classList.contains('hidden');
+        secondaryFilters.classList.toggle('hidden', isOpen);
+        secondaryFilters.classList.toggle('flex', !isOpen);
+        iconMoreFilters.classList.toggle('rotate-180', !isOpen);
+        btnToggleMoreFilters.setAttribute('aria-expanded', String(!isOpen));
+    });
+
+    // Legende (Marker-Farben) dauerhaft über einen eigenen Button erreichbar,
+    // nicht nur einmalig im Tutorial beim allerersten Start. Lebt in der Sidebar
+    // statt als schwebender Button auf der Karte (wurde dort ständig aus Versehen
+    // angetippt).
+    document.getElementById('btn-legend')?.addEventListener('click', () => {
+        toggleMenu(false);
+        document.getElementById('tutorial-modal').classList.remove('hidden');
+    });
         const btnContact = document.getElementById('btn-contact');
     const contactModal = document.getElementById('contact-modal');
     const btnCloseContact = document.getElementById('btn-close-contact');
@@ -604,8 +646,9 @@ document.addEventListener("DOMContentLoaded", () => {
             map.stopLocate();
         }
         if (searchMarker) map.removeLayer(searchMarker);
+        const searchPinSvg = '<svg width="34" height="44" viewBox="0 0 34 44" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 2px 3px rgba(0,0,0,0.3))"><path d="M17 2C9 2 2 8 2 16c0 10 15 26 15 26s15-16 15-26C32 8 25 2 17 2z" fill="#e5316b" stroke="white" stroke-width="2"/><circle cx="17" cy="16" r="5.5" fill="white"/></svg>';
         searchMarker = L.marker([lat, lon], {
-            icon: L.divIcon({ className: 'bg-transparent text-4xl drop-shadow-lg', html: '📍', iconSize: [40, 40], iconAnchor: [20, 20] })
+            icon: L.divIcon({ className: 'bg-transparent', html: searchPinSvg, iconSize: [34, 44], iconAnchor: [17, 44] })
         }).addTo(map);
     }
 
@@ -616,13 +659,15 @@ document.addEventListener("DOMContentLoaded", () => {
         if (query.length < 3) { searchSuggestions.classList.add('hidden'); return; }
         searchTimeout = setTimeout(async () => {
             try {
-                const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&countrycodes=de,at,ch,us,uk`);
+                // Weltweite Suche - vorher war das hart auf 5 Länder beschränkt (und "uk" war
+                // sowieso kein gültiger ISO-Code; korrekt wäre "gb" für Großbritannien gewesen).
+                const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`);
                 const data = await res.json();
                 searchSuggestions.innerHTML = '';
                 if (data.length > 0) {
                     data.forEach(place => {
                         const li = document.createElement('li');
-                        li.className = 'p-3 border-b border-gray-100 dark:border-gray-600 hover:bg-blue-50 dark:hover:bg-gray-600 cursor-pointer truncate font-medium';
+                        li.className = 'p-3 border-b border-gray-100 dark:border-gray-600 hover:bg-brand-50 dark:hover:bg-gray-600 cursor-pointer truncate font-medium';
                         const shortName = place.display_name.split(',').slice(0, 3).join(',');
                         li.innerText = shortName;
                         li.onclick = () => jumpToSearchResult(place.lat, place.lon, shortName);
@@ -769,18 +814,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     // ----------------------------------------------------
 
-    function isLikelyClosedNow(openingHoursStr) {
-        if (!openingHoursStr || openingHoursStr === '24/7') return false;
-        const timeMatch = openingHoursStr.match(/(\d{2}):(\d{2})-(\d{2}):(\d{2})/);
-        if (timeMatch) {
-            const now = new Date();
-            const currentMinutes = now.getHours() * 60 + now.getMinutes();
-            const startMinutes = parseInt(timeMatch[1]) * 60 + parseInt(timeMatch[2]);
-            const endMinutes = parseInt(timeMatch[3]) * 60 + parseInt(timeMatch[4]);
-            if (currentMinutes < startMinutes || currentMinutes > endMinutes) return true;
-        }
-        return false;
-    }
+    // opening_hours-Auswertung lebt (mit Tests) in src/lib/openingHours.js
+    const { isLikelyClosedNow } = window.LoocatorLib.openingHours;
+    // Toilet-Klassifizierung (Filter/Marker-Farbe) lebt (mit Tests) in src/lib/toiletRules.js
+    const ToiletRules = window.LoocatorLib.toiletRules;
 
     let fetchTimeout;
     map.on('moveend', () => {
@@ -816,9 +853,56 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Öffentliche Overpass-Instanzen sind einzeln nicht sehr zuverlässig (häufig 429/503
+    // unter Last, teils auch nur regionale Daten) - mehrere Mirrors nacheinander probieren,
+    // bevor wir aufgeben. overpass.osm.ch liefert HTTP 200 aber nur Schweizer Daten - daher
+    // NICHT als Mirror verwenden, sonst würde ein "erfolgreiches" leeres Ergebnis für jede
+    // Anfrage außerhalb der Schweiz fälschlich als final akzeptiert.
+    const OVERPASS_MIRRORS = [
+        'https://overpass-api.de/api/interpreter',
+        'https://overpass.openstreetmap.fr/api/interpreter',
+        'https://overpass.kumi.systems/api/interpreter'
+    ];
+
+    async function fetchOverpassWithFallback(query) {
+        let lastError;
+        for (const base of OVERPASS_MIRRORS) {
+            try {
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), 10000);
+                // POST statt GET (von Overpass selbst für alles außer trivialen Anfragen
+                // empfohlen) - vermeidet außerdem, dass zwischengeschaltete CDNs/Proxys
+                // GET-Query-Strings anders cachen/behandeln als POST-Bodies.
+                const res = await fetch(base, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'data=' + encodeURIComponent(query),
+                    signal: controller.signal
+                });
+                clearTimeout(timeout);
+                if (!res.ok) throw new Error(`Overpass ${res.status}`);
+                const data = await res.json();
+                // Ein HTTP-200 mit leerem elements-Array kann ein regional beschränkter
+                // Mirror sein statt "wirklich keine Toiletten hier" - im Zweifel dem
+                // nächsten Mirror eine Chance geben, statt sofort leer zurückzugeben.
+                if (!data || !Array.isArray(data.elements) || data.elements.length === 0) {
+                    lastError = new Error(`Overpass ${base} returned no elements`);
+                    console.error('Overpass mirror returned empty result:', base);
+                    continue;
+                }
+                return data;
+            } catch (e) {
+                lastError = e;
+                console.error('Overpass mirror failed:', base, e);
+            }
+        }
+        throw lastError;
+    }
+
     async function fetchToilets() {
         if (map.getZoom() < 12) {
             showEmptyState(t('zoomHint'));
+            removeSplashScreen(); // Sicherstellen, dass der Splash nie hängen bleibt
             return;
         }
 
@@ -858,8 +942,7 @@ document.addEventListener("DOMContentLoaded", () => {
             out center;
         `;
         try {
-            const res = await fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`);
-            const data = await res.json();
+            const data = await fetchOverpassWithFallback(query);
             allToilets = data.elements;
             saveCachedToiletsForBounds(cacheKey, allToilets);
             renderMarkers();
@@ -906,79 +989,42 @@ document.addEventListener("DOMContentLoaded", () => {
         allToilets.forEach(toilet => { 
             if (reqFav && !savedFavs.includes(toilet.id)) return; 
             
-            const tags = toilet.tags; 
-            const lat = toilet.lat || (toilet.center && toilet.center.lat); 
-            const lon = toilet.lon || (toilet.center && toilet.center.lon); 
-            if (!lat || !lon) return; 
-            
-            // --- NEUE FILTER-LOGIK (KATEGORIEN) --- 
-            const access = tags.access || tags['toilets:access'] || 'yes'; 
-            const isPublic = (access !== 'private' && access !== 'customers'); 
-            const isExplicitEurokey = (tags['central_key'] === 'eurokey' || tags['eurokey'] === 'yes' || tags.access === 'central_key' || tags['toilets:eurokey'] === 'yes' || tags['toilets:central_key'] === 'eurokey'); 
-            const isWheelchair = (tags.wheelchair === 'yes' || tags.wheelchair === 'designated' || tags['toilets:wheelchair'] === 'yes' || tags['toilets:wheelchair'] === 'designated'); 
-            const isEurokeyOrWheelchair = isExplicitEurokey || isWheelchair; 
-            
-            if (!reqPub && !reqEuro) return; 
-            
-            let matchesFilter = false; 
-            if (reqPub && isPublic) matchesFilter = true; 
-            if (reqEuro && isEurokeyOrWheelchair) matchesFilter = true; 
-            
-            if (!matchesFilter) return; 
-            // --- ENDE NEUE FILTER-LOGIK ---
+            const tags = toilet.tags;
+            const lat = toilet.lat || (toilet.center && toilet.center.lat);
+            const lon = toilet.lon || (toilet.center && toilet.center.lon);
+            if (!lat || !lon) return;
+
+            // --- Klassifizierung (mit Tests) aus src/lib/toiletRules.js ---
+            const isPublic = ToiletRules.isPublicAccess(tags);
+            const isExplicitEurokey = ToiletRules.isExplicitEurokey(tags);
+            const isWheelchair = ToiletRules.isWheelchairAccessible(tags);
+            const isEurokeyOrWheelchair = isExplicitEurokey || isWheelchair;
+
+            if (!reqPub && !reqEuro) return;
+
+            let matchesFilter = false;
+            if (reqPub && isPublic) matchesFilter = true;
+            if (reqEuro && isEurokeyOrWheelchair) matchesFilter = true;
+
+            if (!matchesFilter) return;
+            // --- ENDE FILTER-LOGIK ---
 
             // --- UND-FILTER ---
-            const hasChanging = (tags['changing_table'] === 'yes' || tags.diaper === 'yes');
+            const hasChanging = ToiletRules.hasChangingTable(tags);
             if (reqChange && !hasChanging) return;
             if (reqOpen && isLikelyClosedNow(tags['opening_hours'])) return;
 
-            if (reqFree) {
-                const fee = tags.fee || tags['toilets:fee'] || tags.charge;
-                if (fee && !['no', '0', 'false', 'none'].includes(fee.toLowerCase())) return;
-            }
-            
-            let isDefect = false;
-            let isTopRated = false;
-            let isBad = false; // NEU
-            
-            const rating = globalRatingsDb[toilet.id];
-            if (rating) {
-                const total = (parseInt(rating.usable_yes)||0) + (parseInt(rating.usable_no)||0);
-                if (total > 0) {
-                    const successRate = (parseInt(rating.usable_yes)||0) / total;
-                    if (successRate < 0.4) isDefect = true; 
-                    if (total >= 2 && successRate >= 0.85) isTopRated = true; 
-                    if (total >= 2 && successRate < 0.5) isBad = true; // NEU
-                }
-                
-                const cleanCount = parseInt(rating.cleanliness_count)||0;
-                const cleanSum = parseInt(rating.cleanliness_sum)||0;
-                if (cleanCount >= 2) {
-                    const avgClean = cleanSum / cleanCount;
-                    if (avgClean <= 2.0) isBad = true; // NEU
-                }
-            }
-            
+            const isFree = ToiletRules.isFreeToilet(tags);
+            if (reqFree && !isFree) return;
+
+            const { isDefect, isTopRated, isBad } = ToiletRules.classifyRating(globalRatingsDb[toilet.id]);
+
             if (reqSucc && !isTopRated) return;
-            if (reqNoBad && isBad) return; // NEU
-            const is247 = (tags.opening_hours === '24/7');
+            if (reqNoBad && isBad) return;
+            const is247 = ToiletRules.isOpen247(tags);
 
             // --- GOOGLE-MAPS-STYLE: Pin-Farbe nach Priorität + Status-Punkte oben überfließend ---
-            const isFree = (() => {
-                const fee = tags.fee || tags['toilets:fee'] || tags.charge;
-                return fee && ['no','0','false','none'].includes(String(fee).toLowerCase());
-            })();
-
-            let priorityKey = 'public';
-            if (savedFavs.includes(toilet.id)) {
-                priorityKey = 'favorite';
-            } else if (isEurokeyOrWheelchair) {
-                priorityKey = 'eurokey';
-            } else if (hasChanging) {
-                priorityKey = 'changing';
-            } else if (isFree) {
-                priorityKey = 'free';
-            }
+            const priorityKey = ToiletRules.getPriorityKey(tags, savedFavs.includes(toilet.id));
 
             let statusDots = [];
             if (priorityKey !== 'eurokey' && isEurokeyOrWheelchair) statusDots.push(PRIO_COLORS.eurokey);
@@ -1245,6 +1291,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const noteEl = document.getElementById('sheet-note');
+        const noteTextEl = noteEl.querySelector('span');
         let extraNotes = [];
         if (tags.level !== undefined) {
             let lvl = parseInt(tags.level);
@@ -1257,7 +1304,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (tags.description) extraNotes.push(tags.description);
         
         if (extraNotes.length > 0) {
-            noteEl.innerText = extraNotes.join('\n');
+            noteTextEl.innerText = extraNotes.join('\n');
             noteEl.classList.remove('hidden');
         } else {
             noteEl.classList.add('hidden');
@@ -1345,10 +1392,15 @@ document.addEventListener("DOMContentLoaded", () => {
     function updateFavButtonUI() {
         if (!currentToiletData) return;
         let favs = JSON.parse(localStorage.getItem('loocator_favs') || '[]');
+        const icon = document.getElementById('btn-fav-icon');
         if (favs.includes(currentToiletData.id)) {
-            document.getElementById('btn-fav').innerText = '❤️';
+            icon.setAttribute('fill', 'currentColor');
+            icon.classList.remove('text-gray-300', 'dark:text-gray-500');
+            icon.classList.add('text-accent-500');
         } else {
-            document.getElementById('btn-fav').innerText = '🤍';
+            icon.setAttribute('fill', 'none');
+            icon.classList.remove('text-accent-500');
+            icon.classList.add('text-gray-300', 'dark:text-gray-500');
         }
     }
 
@@ -1384,37 +1436,49 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function isNearToilet(maxMeters = 150) {
-        if (!userLocation || !currentToiletData) return false;
+    // Gibt die Distanz in Metern zurück, oder null wenn sie nicht berechnet werden kann.
+    function distanceToToilet() {
+        if (!userLocation || !currentToiletData) return null;
         const targetLat = currentToiletData.lat || (currentToiletData.center && currentToiletData.center.lat);
         const targetLon = currentToiletData.lon || (currentToiletData.center && currentToiletData.center.lon);
-        if (!targetLat || !targetLon) return false;
-        const targetLatLng = L.latLng(targetLat, targetLon);
-        return map.distance(userLocation, targetLatLng) <= maxMeters;
+        if (!targetLat || !targetLon) return null;
+        return map.distance(userLocation, L.latLng(targetLat, targetLon));
     }
 
-    function updateVoteUIState(tooFar) {
+    function isNearToilet(maxMeters = 150) {
+        const dist = distanceToToilet();
+        return dist !== null && dist <= maxMeters;
+    }
+
+    // Statt die Bewertungs-Karte interaktiv aussehen zu lassen und den Nutzer erst NACH
+    // dem Tippen mit einem harten "Verboten"-Overlay abzuweisen, zeigen wir proaktiv einen
+    // warmen Hinweis mit der tatsächlichen Distanz - Fehlervermeidung statt Fehlerreaktion.
+    function updateVoteUIState(tooFar, maxMeters = 150) {
         const voteButtons = [document.getElementById('btn-usable-yes'), document.getElementById('btn-usable-no')];
         const starButtons = document.querySelectorAll('.btn-star');
-        const voteOverlay = document.getElementById('vote-overlay');
+        const voteControls = document.getElementById('vote-controls');
+        const voteHint = document.getElementById('vote-distance-hint');
         const statUsable = document.getElementById('stat-usable');
 
         voteButtons.forEach(b => {
             if (!b) return;
             b.disabled = tooFar;
-            b.classList.toggle('opacity-30', tooFar);
-            b.classList.toggle('pointer-events-none', tooFar);
         });
-
         starButtons.forEach(b => {
             if (!b) return;
             b.disabled = tooFar;
-            b.classList.toggle('opacity-30', tooFar);
-            b.classList.toggle('pointer-events-none', tooFar);
         });
 
-        if (voteOverlay) {
-            voteOverlay.classList.toggle('hidden', !tooFar);
+        if (voteControls) voteControls.classList.toggle('hidden', tooFar);
+        if (voteHint) {
+            voteHint.classList.toggle('hidden', !tooFar);
+            if (tooFar) {
+                const dist = distanceToToilet();
+                const remaining = dist !== null ? Math.max(0, Math.round(dist - maxMeters)) : null;
+                voteHint.querySelector('span').innerText = remaining !== null
+                    ? t('voteDistanceHint', { dist: remaining })
+                    : t('voteOverlayText');
+            }
         }
 
         if (statUsable) {
