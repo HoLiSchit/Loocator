@@ -1,0 +1,22 @@
+{
+  "name": "loocator",
+  "version": "1.0.0",
+  "description": "Loocator - WC & Eurokey Finder PWA",
+  "private": true,
+  "scripts": {
+    "build:css": "tailwindcss -i ./src/input.css -o ./output.css --minify",
+    "watch:css": "tailwindcss -i ./src/input.css -o ./output.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mineco-de/Loocator.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mineco-de/Loocator/issues"
+  },
+  "homepage": "https://github.com/mineco-de/Loocator#readme",
+  "devDependencies": {
+    "tailwindcss": "^3.4.19"
+  }
+}
