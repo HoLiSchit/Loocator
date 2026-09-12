@@ -1234,6 +1234,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const noteEl = document.getElementById('sheet-note');
+        const noteTextEl = noteEl.querySelector('span');
         let extraNotes = [];
         if (tags.level !== undefined) {
             let lvl = parseInt(tags.level);
@@ -1246,7 +1247,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (tags.description) extraNotes.push(tags.description);
         
         if (extraNotes.length > 0) {
-            noteEl.innerText = extraNotes.join('\n');
+            noteTextEl.innerText = extraNotes.join('\n');
             noteEl.classList.remove('hidden');
         } else {
             noteEl.classList.add('hidden');
