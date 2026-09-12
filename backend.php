@@ -1,24 +1,13 @@
 <?php
-// backend.php - NEU: Mit Datum & Selbstheilung (90 Tage)
+// backend.php - Votes lesen/schreiben, mit Datum & Selbstheilung (90 Tage)
+require_once __DIR__ . '/db.php';
+
 header('Content-Type: application/json');
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type");
 
-$dbFile = 'loocator.sqlite';
-
 try {
-    $db = new PDO('sqlite:' . $dbFile);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    // Wir bauen eine neue, smarte Tabelle, die jeden Vote einzeln mit Datum speichert
-    $db->exec("CREATE TABLE IF NOT EXISTS votes (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        osm_id TEXT,
-        usable_vote TEXT, 
-        cleanliness_vote INTEGER,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )");
-
+    $db = loocator_db();
     $method = $_SERVER['REQUEST_METHOD'];
 
     // --- GET: App fragt Daten ab ---
@@ -42,7 +31,7 @@ try {
 
             if ($vote['usable_vote'] === 'yes') $result[$id]['usable_yes'] += 1;
             if ($vote['usable_vote'] === 'no') $result[$id]['usable_no'] += 1;
-            
+
             if ($vote['cleanliness_vote'] !== null) {
                 $result[$id]['cleanliness_sum'] += (int)$vote['cleanliness_vote'];
                 $result[$id]['cleanliness_count'] += 1;
@@ -64,10 +53,16 @@ try {
             echo json_encode(['osm_id' => $id, 'usable_yes' => 0, 'usable_no' => 0, 'cleanliness_sum' => 0, 'cleanliness_count' => 0]);
         }
         exit;
-    } 
-    
+    }
+
     // --- POST: Jemand stimmt ab ---
     elseif ($method === 'POST') {
+        // Max. 20 Stimmen pro IP und 15 Minuten - schützt vor Skript-Spam auf einzelne WCs
+        if (!loocator_rate_limit('vote', 20, 15 * 60)) {
+            http_response_code(429);
+            die(json_encode(['error' => 'Too many votes, please try again later']));
+        }
+
         $data = json_decode(file_get_contents('php://input'), true);
         $id = $data['id'] ?? '';
         $usable = $data['usable'] ?? null;
@@ -75,7 +70,7 @@ try {
 
         if (!$id) die(json_encode(['error' => 'No ID']));
 
-        // NEU: Validierung - nur erlaubte Werte akzeptieren
+        // Validierung - nur erlaubte Werte akzeptieren
         if ($usable !== null && !in_array($usable, ['yes', 'no'], true)) {
             $usable = null;
         }
@@ -98,4 +93,3 @@ try {
     http_response_code(500);
     echo json_encode(['error' => $e->getMessage()]);
 }
-?>
