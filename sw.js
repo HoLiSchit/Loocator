@@ -1,11 +1,24 @@
-const CACHE_NAME = 'loocator-cache-v4';
+const CACHE_NAME = 'loocator-cache-v5';
 const OFFLINE_URLS = [
   './',
   'index.html',
   'app.js',
+  'output.css',
   'styles.css',
   'translations.js',
-  'manifest.json'
+  'manifest.json',
+  'src/lib/openingHours.js',
+  'src/lib/karma.js',
+  'src/lib/toiletRules.js',
+  'img/loocator.svg',
+  'img/apple-touch-icon.png',
+  'img/deny.svg',
+  'img/map.svg',
+  'img/map-tag.svg',
+  'img/report.svg',
+  'img/route.svg',
+  'img/search.svg',
+  'img/share.svg'
 ];
 
 self.addEventListener('install', event => {
@@ -38,10 +51,14 @@ self.addEventListener('fetch', event => {
   const isAppAsset = [
     '/index.html',
     '/app.js',
+    '/output.css',
     '/styles.css',
     '/translations.js',
     '/manifest.json',
-    '/sw.js'
+    '/sw.js',
+    '/src/lib/openingHours.js',
+    '/src/lib/karma.js',
+    '/src/lib/toiletRules.js'
   ].some(path => requestUrl.pathname.endsWith(path) || requestUrl.pathname === path);
 
   if (isSameOrigin && isAppAsset) {

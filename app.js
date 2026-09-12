@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // ------------------------------------------
     
     const htmlTag = document.getElementById('html-tag');
-    htmlTag.lang = userLang;
+    htmlTag.lang = lang; // tatsächlich verwendete Inhaltssprache (de/en), nicht die rohe Browser-Locale
 
     document.querySelectorAll('[data-i18n]').forEach(el => {
         el.innerText = t(el.getAttribute('data-i18n'));
@@ -597,7 +597,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (query.length < 3) { searchSuggestions.classList.add('hidden'); return; }
         searchTimeout = setTimeout(async () => {
             try {
-                const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&countrycodes=de,at,ch,us,uk`);
+                // Weltweite Suche - vorher war das hart auf 5 Länder beschränkt (und "uk" war
+                // sowieso kein gültiger ISO-Code; korrekt wäre "gb" für Großbritannien gewesen).
+                const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`);
                 const data = await res.json();
                 searchSuggestions.innerHTML = '';
                 if (data.length > 0) {
