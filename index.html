@@ -505,6 +505,11 @@
 
     <div id="toast-container" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 flex flex-col gap-2 z-60 pointer-events-none w-11/12 max-w-sm"></div>
 
+    <!-- Getestete, reine Logikmodule (siehe test/) - müssen vor app.js geladen sein -->
+    <script src="src/lib/openingHours.js" defer></script>
+    <script src="src/lib/karma.js" defer></script>
+    <script src="src/lib/toiletRules.js" defer></script>
+
     <script src="translations.js" defer></script>
     <script src="app.js" defer></script>
 </body>

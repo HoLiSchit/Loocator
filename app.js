@@ -39,27 +39,8 @@ document.addEventListener("DOMContentLoaded", () => {
         // --- KARMA SYSTEM ---
     let currentKarma = parseInt(localStorage.getItem('loocator_karma')) || 0;
     
-    // Unsere Endgame-Kurve bis 1000!
-    const karmaRanks = [
-        { min: 0, key: "rank0", emoji: "🧻" },
-        { min: 1, key: "rank1", emoji: "🚶‍♂️" },
-        { min: 5, key: "rank2", emoji: "🔑" },
-        { min: 15, key: "rank3", emoji: "🕵️‍♀️" },
-        { min: 35, key: "rank4", emoji: "🚓" },
-        { min: 75, key: "rank5", emoji: "👑" },
-        { min: 150, key: "rank6", emoji: "🛡️" },
-        { min: 300, key: "rank7", emoji: "🌟" },
-        { min: 600, key: "rank8", emoji: "🏰" },
-        { min: 1000, key: "rank9", emoji: "🔱" }
-    ];
-
-    function getRankIndex(points) {
-        let index = 0;
-        for (let i = 0; i < karmaRanks.length; i++) {
-            if (points >= karmaRanks[i].min) index = i;
-        }
-        return index;
-    }
+    // Karma-Ränge + Rangberechnung leben (mit Tests) in src/lib/karma.js
+    const { karmaRanks, getRankIndex } = window.LoocatorLib.karma;
 
     let currentRankIndex = getRankIndex(currentKarma);
 
@@ -769,93 +750,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     // ----------------------------------------------------
 
-    // Vereinfachter, aber wochentags- und mehrfenster-fähiger OSM opening_hours-Parser.
-    // Deckt keine Feiertage (PH) oder Monats-/Saisonangaben ab - in solchen Fällen wird
-    // im Zweifel "geöffnet" angenommen, statt fälschlich als geschlossen zu markieren.
-    const OH_WEEKDAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']; // Date.getDay(): 0 = Sonntag
-
-    function expandOhDayToken(token) {
-        const days = new Set();
-        token.split(',').forEach(part => {
-            const rangeMatch = part.match(/^(Mo|Tu|We|Th|Fr|Sa|Su)-(Mo|Tu|We|Th|Fr|Sa|Su)$/);
-            if (rangeMatch) {
-                let i = OH_WEEKDAYS.indexOf(rangeMatch[1]);
-                const end = OH_WEEKDAYS.indexOf(rangeMatch[2]);
-                if (i === -1 || end === -1) return;
-                while (true) {
-                    days.add(i);
-                    if (i === end) break;
-                    i = (i + 1) % 7;
-                }
-            } else {
-                const idx = OH_WEEKDAYS.indexOf(part);
-                if (idx !== -1) days.add(idx);
-            }
-        });
-        return days;
-    }
-
-    function parseOhTimeRanges(str) {
-        const ranges = [];
-        str.split(',').forEach(part => {
-            const m = part.trim().match(/^(\d{1,2}):(\d{2})-(\d{1,2}):(\d{2})$/);
-            if (m) {
-                ranges.push([
-                    parseInt(m[1]) * 60 + parseInt(m[2]),
-                    parseInt(m[3]) * 60 + parseInt(m[4])
-                ]);
-            }
-        });
-        return ranges;
-    }
-
-    function isLikelyClosedNow(openingHoursStr) {
-        if (!openingHoursStr) return false;
-        const trimmed = openingHoursStr.trim();
-        if (trimmed === '24/7') return false;
-
-        const now = new Date();
-        const currentDay = now.getDay();
-        const prevDay = (currentDay + 6) % 7;
-        const currentMinutes = now.getHours() * 60 + now.getMinutes();
-
-        const rules = trimmed.split(';').map(r => r.trim()).filter(Boolean);
-        if (rules.length === 0) return false;
-
-        let todayRule = null;
-        let anyRuleCoversToday = false;
-
-        for (const rule of rules) {
-            if (/^PH\b/i.test(rule)) continue; // Feiertage können wir nicht berechnen
-
-            const dayMatch = rule.match(/^((?:Mo|Tu|We|Th|Fr|Sa|Su)(?:-(?:Mo|Tu|We|Th|Fr|Sa|Su))?(?:,(?:Mo|Tu|We|Th|Fr|Sa|Su)(?:-(?:Mo|Tu|We|Th|Fr|Sa|Su))?)*)\s+(.*)$/);
-            const dayToken = dayMatch ? dayMatch[1] : null;
-            const rest = dayMatch ? dayMatch[2] : rule;
-            const days = dayToken ? expandOhDayToken(dayToken) : new Set([0, 1, 2, 3, 4, 5, 6]);
-            const isOff = /\boff\b|\bclosed\b/i.test(rest);
-
-            if (days.has(currentDay)) {
-                anyRuleCoversToday = true;
-                todayRule = isOff ? { closed: true } : { closed: false, ranges: parseOhTimeRanges(rest) };
-            }
-
-            // Zeitfenster vom Vortag, das über Mitternacht bis in heute hineinreicht
-            if (days.has(prevDay) && !isOff) {
-                for (const [start, end] of parseOhTimeRanges(rest)) {
-                    if (end < start && currentMinutes <= end) return false;
-                }
-            }
-        }
-
-        if (!anyRuleCoversToday) return true; // Kein Regelsatz gilt heute -> vermutlich geschlossen
-        if (todayRule.closed) return true;
-        if (!todayRule.ranges || todayRule.ranges.length === 0) return false; // Format nicht erkannt -> im Zweifel offen
-
-        return !todayRule.ranges.some(([start, end]) =>
-            end >= start ? (currentMinutes >= start && currentMinutes <= end)
-                         : (currentMinutes >= start || currentMinutes <= end) // über Mitternacht
-        );
-    }
+    // opening_hours-Auswertung lebt (mit Tests) in src/lib/openingHours.js
+    const { isLikelyClosedNow } = window.LoocatorLib.openingHours;
+    // Toilet-Klassifizierung (Filter/Marker-Farbe) lebt (mit Tests) in src/lib/toiletRules.js
+    const ToiletRules = window.LoocatorLib.toiletRules;
 
     let fetchTimeout;
     map.on('moveend', () => {
@@ -981,79 +879,42 @@ document.addEventListener("DOMContentLoaded", () => {
         allToilets.forEach(toilet => { 
             if (reqFav && !savedFavs.includes(toilet.id)) return; 
             
-            const tags = toilet.tags; 
-            const lat = toilet.lat || (toilet.center && toilet.center.lat); 
-            const lon = toilet.lon || (toilet.center && toilet.center.lon); 
-            if (!lat || !lon) return; 
-            
-            // --- NEUE FILTER-LOGIK (KATEGORIEN) --- 
-            const access = tags.access || tags['toilets:access'] || 'yes'; 
-            const isPublic = (access !== 'private' && access !== 'customers'); 
-            const isExplicitEurokey = (tags['central_key'] === 'eurokey' || tags['eurokey'] === 'yes' || tags.access === 'central_key' || tags['toilets:eurokey'] === 'yes' || tags['toilets:central_key'] === 'eurokey'); 
-            const isWheelchair = (tags.wheelchair === 'yes' || tags.wheelchair === 'designated' || tags['toilets:wheelchair'] === 'yes' || tags['toilets:wheelchair'] === 'designated'); 
-            const isEurokeyOrWheelchair = isExplicitEurokey || isWheelchair; 
-            
-            if (!reqPub && !reqEuro) return; 
-            
-            let matchesFilter = false; 
-            if (reqPub && isPublic) matchesFilter = true; 
-            if (reqEuro && isEurokeyOrWheelchair) matchesFilter = true; 
-            
-            if (!matchesFilter) return; 
-            // --- ENDE NEUE FILTER-LOGIK ---
+            const tags = toilet.tags;
+            const lat = toilet.lat || (toilet.center && toilet.center.lat);
+            const lon = toilet.lon || (toilet.center && toilet.center.lon);
+            if (!lat || !lon) return;
+
+            // --- Klassifizierung (mit Tests) aus src/lib/toiletRules.js ---
+            const isPublic = ToiletRules.isPublicAccess(tags);
+            const isExplicitEurokey = ToiletRules.isExplicitEurokey(tags);
+            const isWheelchair = ToiletRules.isWheelchairAccessible(tags);
+            const isEurokeyOrWheelchair = isExplicitEurokey || isWheelchair;
+
+            if (!reqPub && !reqEuro) return;
+
+            let matchesFilter = false;
+            if (reqPub && isPublic) matchesFilter = true;
+            if (reqEuro && isEurokeyOrWheelchair) matchesFilter = true;
+
+            if (!matchesFilter) return;
+            // --- ENDE FILTER-LOGIK ---
 
             // --- UND-FILTER ---
-            const hasChanging = (tags['changing_table'] === 'yes' || tags.diaper === 'yes');
+            const hasChanging = ToiletRules.hasChangingTable(tags);
             if (reqChange && !hasChanging) return;
             if (reqOpen && isLikelyClosedNow(tags['opening_hours'])) return;
 
-            if (reqFree) {
-                const fee = tags.fee || tags['toilets:fee'] || tags.charge;
-                if (fee && !['no', '0', 'false', 'none'].includes(fee.toLowerCase())) return;
-            }
-            
-            let isDefect = false;
-            let isTopRated = false;
-            let isBad = false; // NEU
-            
-            const rating = globalRatingsDb[toilet.id];
-            if (rating) {
-                const total = (parseInt(rating.usable_yes)||0) + (parseInt(rating.usable_no)||0);
-                if (total > 0) {
-                    const successRate = (parseInt(rating.usable_yes)||0) / total;
-                    if (successRate < 0.4) isDefect = true; 
-                    if (total >= 2 && successRate >= 0.85) isTopRated = true; 
-                    if (total >= 2 && successRate < 0.5) isBad = true; // NEU
-                }
-                
-                const cleanCount = parseInt(rating.cleanliness_count)||0;
-                const cleanSum = parseInt(rating.cleanliness_sum)||0;
-                if (cleanCount >= 2) {
-                    const avgClean = cleanSum / cleanCount;
-                    if (avgClean <= 2.0) isBad = true; // NEU
-                }
-            }
-            
+            const isFree = ToiletRules.isFreeToilet(tags);
+            if (reqFree && !isFree) return;
+
+            const { isDefect, isTopRated, isBad } = ToiletRules.classifyRating(globalRatingsDb[toilet.id]);
+
             if (reqSucc && !isTopRated) return;
-            if (reqNoBad && isBad) return; // NEU
-            const is247 = (tags.opening_hours === '24/7');
+            if (reqNoBad && isBad) return;
+            const is247 = ToiletRules.isOpen247(tags);
 
             // --- GOOGLE-MAPS-STYLE: Pin-Farbe nach Priorität + Status-Punkte oben überfließend ---
-            const isFree = (() => {
-                const fee = tags.fee || tags['toilets:fee'] || tags.charge;
-                return fee && ['no','0','false','none'].includes(String(fee).toLowerCase());
-            })();
-
-            let priorityKey = 'public';
-            if (savedFavs.includes(toilet.id)) {
-                priorityKey = 'favorite';
-            } else if (isEurokeyOrWheelchair) {
-                priorityKey = 'eurokey';
-            } else if (hasChanging) {
-                priorityKey = 'changing';
-            } else if (isFree) {
-                priorityKey = 'free';
-            }
+            const priorityKey = ToiletRules.getPriorityKey(tags, savedFavs.includes(toilet.id));
 
             let statusDots = [];
             if (priorityKey !== 'eurokey' && isEurokeyOrWheelchair) statusDots.push(PRIO_COLORS.eurokey);

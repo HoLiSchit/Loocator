@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "build:css": "tailwindcss -i ./src/input.css -o ./output.css --minify",
-    "watch:css": "tailwindcss -i ./src/input.css -o ./output.css --watch"
+    "watch:css": "tailwindcss -i ./src/input.css -o ./output.css --watch",
+    "test": "node --test test/*.test.js"
   },
   "repository": {
     "type": "git",
