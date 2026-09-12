@@ -64,6 +64,7 @@ const dict = {
         levelEG: "Erdgeschoss (0)",
         searchFailed: "Suche fehlgeschlagen.",
         voteThanks: "Vielen Dank für dein Feedback! 💛",
+        rankUp: "🎉 Neuer Rang: {rank}!",
         //Tutorial
         tutWelcome: "Willkommen bei Loocator!",
         tutIntro: "Hier ist eine kurze Erklärung der Marker und Symbole auf der Karte:",
@@ -205,6 +206,7 @@ const dict = {
         levelEG: "Ground Floor (0)",
         searchFailed: "Search failed.",
         voteThanks: "Thank you for your feedback! 💛",
+        rankUp: "🎉 New rank: {rank}!",
         //Tutorial
         tutWelcome: "Welcome to Loocator!",
         tutIntro: "Here is a quick guide to the markers and symbols on the map:",
@@ -343,6 +345,7 @@ const dict = {
         levelEG: "Rez-de-chaussée (0)",
         searchFailed: "Échec de la recherche.",
         voteThanks: "Merci pour votre avis ! 💛",
+        rankUp: "🎉 Nouveau rang : {rank} !",
         //Tutoriel
         tutWelcome: "Bienvenue sur Loocator !",
         tutIntro: "Voici un aperçu rapide des marqueurs et symboles sur la carte :",
@@ -482,6 +485,7 @@ const dict = {
         levelEG: "Planta baja (0)",
         searchFailed: "Búsqueda fallida.",
         voteThanks: "¡Gracias por tu opinión! 💛",
+        rankUp: "🎉 ¡Nuevo rango: {rank}!",
         //Tutorial
         tutWelcome: "¡Bienvenido a Loocator!",
         tutIntro: "Aquí tienes una breve guía de los marcadores y símbolos del mapa:",

@@ -40,7 +40,9 @@ module.exports = {
         defect: { DEFAULT: '#9ca3af', 400: '#9ca3af' },
         // "Hohe Erfolgsrate" nutzte bisher dasselbe Gelb wie "Eurokey" - ein
         // echtes Verwechslungsrisiko (siehe Persona "Sam" in der Design-Kritik).
-        success: colors.teal[600],
+        // teal-700 statt teal-600, da weißer Text auf teal-600 nur 3.74:1 Kontrast
+        // erreicht (WCAG AA verlangt 4.5:1) - siehe Kritik-Runde 2.
+        success: colors.teal[700],
       },
     },
   },

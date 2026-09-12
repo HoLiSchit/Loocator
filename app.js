@@ -44,17 +44,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let currentRankIndex = getRankIndex(currentKarma);
 
+    // Ein Icon (Klopapierrolle), farblich eskalierendes Badge + 0-3 Sterne als
+    // Fortschritt + Krone nur beim Maximalrang - ein zusammenhängendes System
+    // statt 10 emoji mit völlig unterschiedlichem visuellem Gewicht.
+    function buildKarmaBadgeSvg(badge) {
+        let starsHtml = '';
+        for (let i = 0; i < 3; i++) {
+            const cx = 13 + i * 7;
+            const filled = i < badge.stars;
+            starsHtml += `<path transform="translate(${cx - 2.5},28.5) scale(0.18)" d="M14 2l3.5 7.3 8 1.2-5.8 5.7 1.4 8-7.1-3.9-7.1 3.9 1.4-8L2.6 10.5l8-1.2z" fill="${filled ? '#ffffff' : 'rgba(255,255,255,0.3)'}"/>`;
+        }
+        const crownHtml = badge.crown
+            ? `<path transform="translate(11,3.5)" d="M0 6l3.5 3 3.5-5 3.5 5L14 6l1 6H-1z" fill="#fde68a" stroke="#f59e0b" stroke-width="0.6" stroke-linejoin="round"/>`
+            : '';
+        return `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="20" cy="20" r="18" fill="${badge.color}" stroke="white" stroke-width="2"/>
+            <g transform="translate(11,7) scale(0.68)">
+                <path d="M7 2h9a1 1 0 0 1 1 1v3H6V3a1 1 0 0 1 1-1z" fill="white"/>
+                <path d="M5 8h15a1 1 0 0 1 1 1v.5a2 2 0 0 1-1.3 1.87V13a6.7 6.7 0 0 1-6.7 6.7h-.5A6.7 6.7 0 0 1 5.3 13v-1.63A2 2 0 0 1 4 9.5V9a1 1 0 0 1 1-1z" fill="white"/>
+            </g>
+            ${starsHtml}
+            ${crownHtml}
+        </svg>`;
+    }
+
     function updateKarmaUI() {
         const rank = karmaRanks[currentRankIndex];
         const titleEl = document.getElementById('karma-title');
         const pointsEl = document.getElementById('karma-points');
-        const emojiEl = document.getElementById('karma-emoji');
+        const badgeEl = document.getElementById('karma-badge');
         const leftEl = document.getElementById('karma-left');
         const nextLabelEl = document.getElementById('karma-next-label');
 
         if(titleEl) titleEl.innerText = t(rank.key);
         if(pointsEl) pointsEl.innerText = t('karmaPoints', { points: currentKarma });
-        if(emojiEl) emojiEl.innerText = rank.emoji;
+        if(badgeEl) badgeEl.innerHTML = buildKarmaBadgeSvg(rank.badge);
 
         if(leftEl && nextLabelEl) {
             if (currentRankIndex < karmaRanks.length - 1) {
@@ -87,8 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
             
             // NEU: Toast mit Erklärung
             const newRankName = t(karmaRanks[currentRankIndex].key);
-            const newRankEmoji = karmaRanks[currentRankIndex].emoji;
-            showToast(t('rankUp', { rank: newRankName + ' ' + newRankEmoji }), 'success');
+            showToast(t('rankUp', { rank: newRankName }), 'success');
         }
         updateKarmaUI();
     }
@@ -313,7 +336,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             return L.divIcon({
                 html: `
-                    <div class="relative flex items-center justify-center w-10 h-10 bg-brand-600/90 text-white font-bold rounded-full shadow-md border-2 border-white">
+                    <div class="relative flex items-center justify-center w-10 h-10 bg-brand-700 text-white font-bold rounded-full shadow-md border-2 border-white">
                         <span>${childCount}</span>
                         <div class="absolute -bottom-1.5 flex gap-0.5 justify-center w-full">
                             ${indicatorsHtml}
@@ -611,8 +634,9 @@ document.addEventListener("DOMContentLoaded", () => {
             map.stopLocate();
         }
         if (searchMarker) map.removeLayer(searchMarker);
+        const searchPinSvg = '<svg width="34" height="44" viewBox="0 0 34 44" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 2px 3px rgba(0,0,0,0.3))"><path d="M17 2C9 2 2 8 2 16c0 10 15 26 15 26s15-16 15-26C32 8 25 2 17 2z" fill="#e5316b" stroke="white" stroke-width="2"/><circle cx="17" cy="16" r="5.5" fill="white"/></svg>';
         searchMarker = L.marker([lat, lon], {
-            icon: L.divIcon({ className: 'bg-transparent text-4xl drop-shadow-lg', html: '📍', iconSize: [40, 40], iconAnchor: [20, 20] })
+            icon: L.divIcon({ className: 'bg-transparent', html: searchPinSvg, iconSize: [34, 44], iconAnchor: [17, 44] })
         }).addTo(map);
     }
 
@@ -830,7 +854,7 @@ document.addEventListener("DOMContentLoaded", () => {
         for (const base of OVERPASS_MIRRORS) {
             try {
                 const controller = new AbortController();
-                const timeout = setTimeout(() => controller.abort(), 12000);
+                const timeout = setTimeout(() => controller.abort(), 8000);
                 const res = await fetch(`${base}?data=${encodeURIComponent(query)}`, { signal: controller.signal });
                 clearTimeout(timeout);
                 if (!res.ok) throw new Error(`Overpass ${res.status}`);
