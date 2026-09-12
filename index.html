@@ -187,7 +187,7 @@
 
         <!-- Action Buttons (Melden & Kontakt) -->
         <div class="flex gap-2 mt-1">
-            <button id="btn-report" class="flex-1 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 px-2 py-2.5 rounded-xl text-sm font-bold text-center active:scale-95 transition-transform border border-red-200 dark:border-red-800 shadow-sm">
+            <button id="btn-report" class="flex-1 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 px-2 py-2.5 rounded-xl text-sm font-bold text-center active:scale-95 transition-transform border border-red-200 dark:border-red-800 shadow-sm">
                 <span data-i18n="btnReport"></span>
             </button>
             <button id="btn-contact" class="flex-1 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-2.5 rounded-xl text-sm font-bold text-center active:scale-95 transition-transform border border-blue-200 dark:border-blue-800 shadow-sm">
@@ -219,6 +219,8 @@
 
     <div id="map"></div>
 
+    <div id="empty-state" class="hidden absolute left-4 right-4 top-44 z-[30] mx-auto max-w-sm rounded-2xl bg-white/95 dark:bg-gray-800/95 px-4 py-3 text-center text-xs font-bold text-gray-700 dark:text-gray-100 shadow-lg border border-gray-200 dark:border-gray-600 backdrop-blur-sm"></div>
+
     <div id="bottom-sheet" class="bottom-sheet fixed bottom-0 left-0 w-full bg-white dark:bg-gray-800 rounded-t-3xl shadow-[0_-5px_25px_rgba(0,0,0,0.3)] p-6 transform translate-y-full max-h-[85vh] flex flex-col transition-transform duration-300 touch-pan-y">
         <div class="w-12 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto mb-4 cursor-pointer" id="btn-close-sheet"></div>
         
@@ -237,7 +239,14 @@
         
         <p id="sheet-info" class="text-sm text-gray-500 dark:text-gray-400 mb-5 leading-relaxed"></p>
 
-        <div id="feedback-section" class="bg-gray-50 dark:bg-gray-700 rounded-2xl p-5 mb-5 border border-gray-100 dark:border-gray-600 shadow-inner transition-opacity duration-300">
+        <div id="feedback-section" class="bg-gray-50 dark:bg-gray-700 rounded-2xl p-5 mb-5 border border-gray-100 dark:border-gray-600 shadow-inner transition-opacity duration-300 relative overflow-hidden">
+            <div id="vote-overlay" class="hidden absolute inset-0 z-10 bg-red-50/90 dark:bg-red-950/40 backdrop-blur-[2px] flex items-center justify-center px-5 text-center">
+                <div class="flex flex-col items-center gap-2 text-white">
+                    <img src="img/deny.svg" alt="Denied" class="w-10 h-10" style="filter: brightness(0) invert(1) saturate(1.2);">
+                    <div class="text-sm font-bold leading-relaxed text-white" data-i18n="voteOverlayText"></div>
+                </div>
+            </div>
+
             <h3 class="font-bold mb-3" data-i18n="howWasIt"></h3>
             
             <div class="mb-5">
@@ -303,8 +312,8 @@
             </button>
 
             <!-- Melden (1/6 - Nur Icon) -->
-            <button id="btn-report-existing" class="flex-[1] bg-red-50 dark:bg-red-900/20 py-3.5 rounded-2xl active:bg-red-100 dark:active:bg-red-900/40 transition-colors shadow-sm flex items-center justify-center border border-red-100 dark:border-red-900/50" title="Fehler melden">
-                <img src="img/report.svg" alt="Melden" class="w-[22px] h-[22px]" style="filter: invert(30%) sepia(80%) saturate(3000%) hue-rotate(345deg) brightness(95%) contrast(100%);">
+            <button id="btn-report-existing" class="flex-[1] bg-red-50 dark:bg-red-900/20 py-3.5 rounded-2xl active:bg-red-100 dark:active:bg-red-900/40 transition-colors shadow-sm flex items-center justify-center border border-red-100 dark:border-red-900/50" data-i18n-title="btnReportExisting">
+                <img src="img/report.svg" alt="" class="w-[22px] h-[22px]" style="filter: invert(30%) sepia(80%) saturate(3000%) hue-rotate(345deg) brightness(95%) contrast(100%);">
             </button>
         </div>
 
@@ -414,6 +423,17 @@
             </div>
 
             <button id="btn-close-tutorial" class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold py-3.5 rounded-xl transition-colors shadow-lg" data-i18n="tutStart"></button>
+        </div>
+    </div>
+
+    <div id="update-modal" class="hidden fixed inset-0 bg-gray-900/80 z-[9000] flex items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-300">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 max-w-sm w-full shadow-2xl">
+            <h2 class="text-xl font-black text-blue-600 dark:text-blue-400 mb-2" data-i18n="updateModalTitle"></h2>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-5" data-i18n="updateModalText"></p>
+            <div class="flex gap-2">
+                <button id="btn-reload-app" class="flex-1 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold py-3 rounded-xl transition-colors shadow-lg" data-i18n="updateReload"></button>
+                <button id="btn-dismiss-update" class="flex-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-100 font-bold py-3 rounded-xl active:bg-gray-200 dark:active:bg-gray-600 transition-colors border border-gray-200 dark:border-gray-600" data-i18n="updateDismiss"></button>
+            </div>
         </div>
     </div>
 

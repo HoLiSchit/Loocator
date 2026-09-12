@@ -13,6 +13,10 @@ html, body {
     z-index: 10;
 }
 
+#empty-state {
+    pointer-events: none;
+}
+
 .bottom-sheet {
     z-index: 50;
     transition: transform 0.3s ease-in-out;
@@ -35,6 +39,16 @@ html, body {
     background-color: rgba(59, 130, 246, 0.9); 
     color: white; 
     font-weight: bold; 
+}
+
+.leaflet-div-icon {
+    background: transparent !important;
+    border: none !important;
+}
+
+.google-style-pin {
+    background: transparent !important;
+    border: none !important;
 }
 
 html.dark .leaflet-tile { 

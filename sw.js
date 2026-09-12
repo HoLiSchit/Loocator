@@ -1,4 +1,4 @@
-const CACHE_NAME = 'loocator-cache-v3';
+const CACHE_NAME = 'loocator-cache-v4';
 const OFFLINE_URLS = [
   './',
   'index.html',
@@ -24,19 +24,55 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+
 self.addEventListener('fetch', event => {
+  if (event.request.method !== 'GET') return;
+
+  const requestUrl = new URL(event.request.url);
+  const isSameOrigin = requestUrl.origin === self.location.origin;
+  const isAppAsset = [
+    '/index.html',
+    '/app.js',
+    '/styles.css',
+    '/translations.js',
+    '/manifest.json',
+    '/sw.js'
+  ].some(path => requestUrl.pathname.endsWith(path) || requestUrl.pathname === path);
+
+  if (isSameOrigin && isAppAsset) {
+    event.respondWith(
+      caches.match(event.request).then(cached => {
+        return fetch(event.request)
+          .then(response => {
+            if (response.status === 200) {
+              const clone = response.clone();
+              caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+            }
+            return response;
+          })
+          .catch(() => cached || new Response('Offline', { status: 503, statusText: 'Service Unavailable' }));
+      })
+    );
+    return;
+  }
+
+  if (isSameOrigin && requestUrl.pathname.includes('.php')) {
+    event.respondWith(
+      fetch(event.request)
+        .then(response => response)
+        .catch(() => new Response('Offline', { status: 503, statusText: 'Service Unavailable' }))
+    );
+    return;
+  }
+
   event.respondWith(
     fetch(event.request)
-      .then(response => {
-        // Erfolgreiche Antworten zusätzlich im Cache aktualisieren (z.B. neue Kartenkacheln)
-        if (event.request.method === 'GET' && response.status === 200) {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-        }
-        return response;
-      })
-      .catch(() => caches.match(event.request).then(cached => {
-        return cached || new Response("Offline", { status: 503, statusText: "Service Unavailable" });
-      }))
+      .then(response => response)
+      .catch(() => caches.match(event.request).then(cached => cached || new Response('Offline', { status: 503, statusText: 'Service Unavailable' })))
   );
 });

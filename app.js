@@ -10,6 +10,9 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('[data-i18n]').forEach(el => {
         el.innerText = t(el.getAttribute('data-i18n'));
     });
+    document.querySelectorAll('[data-i18n-title]').forEach(el => {
+        el.title = t(el.getAttribute('data-i18n-title'));
+    });
     document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
         el.placeholder = t(el.getAttribute('data-i18n-placeholder'));
     });
@@ -163,7 +166,50 @@ document.addEventListener("DOMContentLoaded", () => {
         updateThemeUI(true);
     });
 
-    if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+    const updateModal = document.getElementById('update-modal');
+    const btnReloadApp = document.getElementById('btn-reload-app');
+    const btnDismissUpdate = document.getElementById('btn-dismiss-update');
+    const updateModalSessionKey = 'loocator_update_modal_shown';
+    let updateModalWasShown = sessionStorage.getItem(updateModalSessionKey) === 'true';
+
+    function openUpdateModal() {
+        if (updateModalWasShown) return;
+        if (updateModal) {
+            updateModal.classList.remove('hidden');
+            updateModalWasShown = true;
+            sessionStorage.setItem(updateModalSessionKey, 'true');
+        }
+    }
+
+    function closeUpdateModal() {
+        if (updateModal) {
+            updateModal.classList.add('hidden');
+        }
+    }
+
+    btnReloadApp?.addEventListener('click', () => {
+        if (navigator.serviceWorker?.controller) {
+            navigator.serviceWorker.controller.postMessage({ type: 'SKIP_WAITING' });
+        }
+        window.location.reload();
+    });
+
+    btnDismissUpdate?.addEventListener('click', closeUpdateModal);
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').then((registration) => {
+            registration.addEventListener('updatefound', () => {
+                const installingWorker = registration.installing;
+                if (!installingWorker) return;
+
+                installingWorker.addEventListener('statechange', () => {
+                    if (installingWorker.state === 'installed' && registration.waiting && navigator.serviceWorker.controller) {
+                        openUpdateModal();
+                    }
+                });
+            });
+        }).catch(() => {});
+    }
 
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -185,12 +231,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // GOOGLE-MAPS-STYLE: SVG-Icon-Set + Pin Builder
     // ============================================
     const ICONS = {
-        public:   '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiPjxyZWN0IHg9IjYiIHk9IjQiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxNCIgcng9IjIiLz48bGluZSB4MT0iNiIgeTE9IjkiIHgyPSIxOCIgeTI9IjkiLz48L3N2Zz4=" style="width:18px !important; height:18px !important; display:block !important; max-width:none !important; max-height:none !important; object-fit:contain;">',
-        eurokey:  '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiPjxjaXJjbGUgY3g9IjkiIGN5PSI5IiByPSI0Ii8+PGxpbmUgeDE9IjEyIiB5MT0iMTIiIHgyPSIxOSIgeTI9IjE5Ii8+PGxpbmUgeDE9IjE1IiB5MT0iMTYiIHgyPSIxNy41IiB5Mj0iMTMuNSIvPjxsaW5lIHgxPSIxNyIgeTE9IjE4IiB4Mj0iMTkuNSIgeTI9IjE1LjUiLz48L3N2Zz4=" style="width:18px !important; height:18px !important; display:block !important; max-width:none !important; max-height:none !important; object-fit:contain;">',
-        changing: '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiPjxjaXJjbGUgY3g9IjEyIiBjeT0iNyIgcj0iMi41IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJub25lIi8+PHBhdGggZD0iTTUgMTVxNy03IDE0IDAiLz48L3N2Zz4=" style="width:18px !important; height:18px !important; display:block !important; max-width:none !important; max-height:none !important; object-fit:contain;">',
-        favorite: '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiIHN0cm9rZT0ibm9uZSI+PHBhdGggZD0iTTEyIDIwcy04LTUuNS04LTExYTQuNSA0LjUgMCAwMTgtMi41QTQuNSA0LjUgMCAwMTIwIDljMCA1LjUtOCAxMS04IDExeiIvPjwvc3ZnPg==" style="width:18px !important; height:18px !important; display:block !important; max-width:none !important; max-height:none !important; object-fit:contain;">',
-        free:     '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjkiLz48bGluZSB4MT0iOCIgeTE9IjgiIHgyPSIxNiIgeTI9IjE2Ii8+PC9zdmc+" style="width:18px !important; height:18px !important; display:block !important; max-width:none !important; max-height:none !important; object-fit:contain;">',
-        defect:   '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyLjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PGxpbmUgeDE9IjYiIHkxPSI2IiB4Mj0iMTgiIHkyPSIxOCIvPjxsaW5lIHgxPSIxOCIgeTE9IjYiIHgyPSI2IiB5Mj0iMTgiLz48L3N2Zz4=" style="width:18px !important; height:18px !important; display:block !important; max-width:none !important; max-height:none !important; object-fit:contain;">'
+        public:   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="6" y="4" width="12" height="14" rx="2" stroke="white" stroke-width="2"/><path d="M6 9H18" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>',
+        eurokey:  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="9" cy="9" r="4" stroke="white" stroke-width="2"/><path d="M12 12L19 19" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M14.5 15.5L17 13" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M16.5 17.5L19 15" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>',
+        changing: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="7" r="2.5" fill="white"/><path d="M5 15C8 12 16 12 19 15" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>',
+        favorite: '<svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 20.5S4 15.5 4 9.5C4 7.3 5.8 5.5 8 5.5C9.5 5.5 10.8 6.4 12 8C13.2 6.4 14.5 5.5 16 5.5C18.2 5.5 20 7.3 20 9.5C20 15.5 12 20.5 12 20.5Z"/></svg>',
+        free:     '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="white" stroke-width="2"/><path d="M8 8L16 16" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>',
+        defect:   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M6 6L18 18" stroke="white" stroke-width="2.4" stroke-linecap="round"/><path d="M18 6L6 18" stroke="white" stroke-width="2.4" stroke-linecap="round"/></svg>'
     };
 
     const PRIO_COLORS = {
@@ -207,6 +253,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const color = isDefectMode ? PRIO_COLORS.defect : PRIO_COLORS[priorityKey];
         const iconSvg = isDefectMode ? ICONS.defect : ICONS[priorityKey];
         const dashArray = isDefectMode ? 'stroke-dasharray="4 2"' : '';
+        const iconDataUrl = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(iconSvg);
 
         // Punkte sitzen als Reihe OBERHALB des Pins (überfließend über den oberen Rand)
         const dotsHtml = statusDots.slice(0, 4).map((dotColor) => {
@@ -223,7 +270,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         '<path d="M22 2 C10 2 2 10 2 21 C2 34 22 54 22 54 C22 54 42 34 42 21 C42 10 34 2 22 2 Z" fill="white" stroke="' + color + '" stroke-width="2" ' + dashArray + '/>' +
                         '<circle cx="22" cy="21" r="14" fill="' + color + '"/>' +
                     '</svg>' +
-                    '<div style="position:absolute; top:3px; left:0; width:44px; height:44px; z-index:11; display:flex; justify-content:center; align-items:center; overflow:hidden;">' + iconSvg + '</div>' +
+                    '<div style="position:absolute; top:3px; left:0; width:44px; height:44px; z-index:11; display:flex; justify-content:center; align-items:center; overflow:hidden;">' +
+                        '<img src="' + iconDataUrl + '" alt="" style="width:18px; height:18px; display:block; pointer-events:none;">' +
+                    '</div>' +
                 '</div>' +
             '</div>';
     }
@@ -307,6 +356,18 @@ document.addEventListener("DOMContentLoaded", () => {
     let addressCache = {};
     let autoFollow = false;
     let allToilets = [];
+    const ADDRESS_CACHE_TTL = 1000 * 60 * 60 * 24 * 7;
+    const TOILET_CACHE_TTL = 1000 * 60 * 60 * 12;
+    const TOILET_CACHE_KEY = 'loocator_cached_toilets';
+
+    try {
+        const cachedAddresses = JSON.parse(localStorage.getItem('loocator_address_cache') || '{}');
+        if (cachedAddresses && typeof cachedAddresses === 'object') {
+            addressCache = cachedAddresses;
+        }
+    } catch (e) {
+        addressCache = {};
+    }
 
     const btnLocation = document.getElementById('btn-location');
     const mainMenu = document.getElementById('main-menu');
@@ -315,6 +376,56 @@ document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.getElementById('search-input');
     const searchSuggestions = document.getElementById('search-suggestions');
     const btnCloseSheet = document.getElementById('btn-close-sheet');
+    const emptyStateEl = document.getElementById('empty-state');
+
+    function showEmptyState(message) {
+        if (emptyStateEl) {
+            emptyStateEl.innerText = message;
+            emptyStateEl.classList.remove('hidden');
+        }
+    }
+
+    function hideEmptyState() {
+        if (emptyStateEl) {
+            emptyStateEl.classList.add('hidden');
+            emptyStateEl.innerText = '';
+        }
+    }
+
+    function getBoundsCacheKey(bounds) {
+        return `bbox:${bounds.getSouth().toFixed(5)}:${bounds.getWest().toFixed(5)}:${bounds.getNorth().toFixed(5)}:${bounds.getEast().toFixed(5)}`;
+    }
+
+    function loadCachedToiletsForBounds(cacheKey) {
+        try {
+            const raw = localStorage.getItem(TOILET_CACHE_KEY);
+            if (!raw) return null;
+            const data = JSON.parse(raw);
+            if (!data || typeof data !== 'object' || !data[cacheKey]) return null;
+
+            const entry = data[cacheKey];
+            if (!entry || !Array.isArray(entry.elements)) return null;
+            if ((Date.now() - entry.savedAt) > TOILET_CACHE_TTL) return null;
+
+            return entry.elements;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function saveCachedToiletsForBounds(cacheKey, elements) {
+        try {
+            const raw = localStorage.getItem(TOILET_CACHE_KEY);
+            const data = raw ? JSON.parse(raw) : {};
+            data[cacheKey] = {
+                savedAt: Date.now(),
+                elements
+            };
+            localStorage.setItem(TOILET_CACHE_KEY, JSON.stringify(data));
+        } catch (e) {
+            // Ignore cache write failures gracefully.
+        }
+    }
 
     function updateLocationButtonUI() {
         if (autoFollow) {
@@ -450,7 +561,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const oldText = btnSubmitContact.innerText;
 
         btnSubmitContact.disabled = true;
-        btnSubmitContact.innerText = '...';
+        btnSubmitContact.innerText = t('loading');
 
         try {
             const response = await fetch('https://api.web3forms.com/submit', {
@@ -640,7 +751,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         const submitBtn = document.getElementById('btn-submit-report');
         const oldText = submitBtn.innerText;
-        submitBtn.innerText = '...';
+        submitBtn.innerText = t('loading');
         submitBtn.disabled = true;
 
         try {
@@ -706,7 +817,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     async function fetchToilets() {
-        if (isFetching || map.getZoom() < 12) return;
+        if (map.getZoom() < 12) {
+            showEmptyState(t('zoomHint'));
+            return;
+        }
+
+        if (isFetching) return;
         isFetching = true;
         document.getElementById('loading-spinner').classList.remove('hidden');
 
@@ -729,6 +845,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (e) { }
 
         const bounds = map.getBounds();
+        const cacheKey = getBoundsCacheKey(bounds);
         const query = `
             [out:json][timeout:25];
             (
@@ -744,9 +861,18 @@ document.addEventListener("DOMContentLoaded", () => {
             const res = await fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`);
             const data = await res.json();
             allToilets = data.elements;
+            saveCachedToiletsForBounds(cacheKey, allToilets);
             renderMarkers();
         } catch (error) {
-            console.error(error);
+            const cachedElements = loadCachedToiletsForBounds(cacheKey);
+            if (cachedElements && cachedElements.length > 0) {
+                allToilets = cachedElements;
+                renderMarkers();
+                showToast(t('offline'), 'info');
+            } else {
+                console.error(error);
+                showEmptyState(t('loadErrorHint'));
+            }
         } finally {
             isFetching = false;
             document.getElementById('loading-spinner').classList.add('hidden');
@@ -757,6 +883,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderMarkers() {
         markerClusterGroup.clearLayers();
         activeMarkers = [];
+        hideEmptyState();
         
         // 1. Welche Filter sind aktiv?
         const reqPub = document.getElementById('filter-public').checked;
@@ -1063,13 +1190,14 @@ document.addEventListener("DOMContentLoaded", () => {
             addressEl.classList.remove('hidden');
         } else {
             const cacheKey = `${lat.toFixed(5)},${lon.toFixed(5)}`;
-            if (addressCache[cacheKey] !== undefined) {
-                if (addressCache[cacheKey] !== null) {
-                    addressEl.innerText = addressCache[cacheKey];
-                    addressEl.classList.remove('hidden');
-                } else {
-                    addressEl.classList.add('hidden');
-                }
+            const cacheEntry = addressCache[cacheKey];
+            const now = Date.now();
+
+            if (cacheEntry && cacheEntry.expires > now && cacheEntry.value) {
+                addressEl.innerText = cacheEntry.value;
+                addressEl.classList.remove('hidden');
+            } else if (cacheEntry && cacheEntry.expires > now && cacheEntry.value === null) {
+                addressEl.classList.add('hidden');
             } else {
                 addressEl.innerText = t('addrLoading');
                 addressEl.classList.remove('hidden');
@@ -1091,14 +1219,23 @@ document.addEventListener("DOMContentLoaded", () => {
                             
                             if (str.length > 0) {
                                 const fullAddress = str.join(', ');
-                                addressCache[cacheKey] = fullAddress;
+                                addressCache[cacheKey] = { value: fullAddress, expires: now + ADDRESS_CACHE_TTL };
+                                try {
+                                    localStorage.setItem('loocator_address_cache', JSON.stringify(addressCache));
+                                } catch (e) {}
                                 addressEl.innerText = fullAddress;
                             } else {
-                                addressCache[cacheKey] = null;
+                                addressCache[cacheKey] = { value: null, expires: now + ADDRESS_CACHE_TTL };
+                                try {
+                                    localStorage.setItem('loocator_address_cache', JSON.stringify(addressCache));
+                                } catch (e) {}
                                 addressEl.classList.add('hidden');
                             }
                         } else {
-                            addressCache[cacheKey] = null;
+                            addressCache[cacheKey] = { value: null, expires: now + ADDRESS_CACHE_TTL };
+                            try {
+                                localStorage.setItem('loocator_address_cache', JSON.stringify(addressCache));
+                            } catch (e) {}
                             addressEl.classList.add('hidden');
                         }
                     }).catch(() => {
@@ -1186,16 +1323,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         isTooFarToVote = !isNearToilet();
         const tooFar = isTooFarToVote;
-        const voteButtons = [document.getElementById('btn-usable-yes'), document.getElementById('btn-usable-no')];
-        const starButtons = document.querySelectorAll('.btn-star');
-        if (tooFar) {
-            voteButtons.forEach(b => { b.disabled = true; b.classList.add('opacity-30'); });
-            starButtons.forEach(b => { b.disabled = true; b.classList.add('opacity-30', 'pointer-events-none'); });
-            document.getElementById('stat-usable').innerText = t('voteDisabledTooFar');
-        } else {
-            voteButtons.forEach(b => { b.classList.remove('opacity-30'); });
-            starButtons.forEach(b => { b.classList.remove('opacity-30', 'pointer-events-none'); });
-        }
+        updateVoteUIState(tooFar);
 
         await loadRatings(toilet.id);
         checkVotedStatus(toilet.id);
@@ -1258,10 +1386,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function isNearToilet(maxMeters = 150) {
         if (!userLocation || !currentToiletData) return false;
-        const targetLat = currentToiletData.lat || currentToiletData.center.lat;
-        const targetLon = currentToiletData.lon || currentToiletData.center.lon;
+        const targetLat = currentToiletData.lat || (currentToiletData.center && currentToiletData.center.lat);
+        const targetLon = currentToiletData.lon || (currentToiletData.center && currentToiletData.center.lon);
+        if (!targetLat || !targetLon) return false;
         const targetLatLng = L.latLng(targetLat, targetLon);
         return map.distance(userLocation, targetLatLng) <= maxMeters;
+    }
+
+    function updateVoteUIState(tooFar) {
+        const voteButtons = [document.getElementById('btn-usable-yes'), document.getElementById('btn-usable-no')];
+        const starButtons = document.querySelectorAll('.btn-star');
+        const voteOverlay = document.getElementById('vote-overlay');
+        const statUsable = document.getElementById('stat-usable');
+
+        voteButtons.forEach(b => {
+            if (!b) return;
+            b.disabled = tooFar;
+            b.classList.toggle('opacity-30', tooFar);
+            b.classList.toggle('pointer-events-none', tooFar);
+        });
+
+        starButtons.forEach(b => {
+            if (!b) return;
+            b.disabled = tooFar;
+            b.classList.toggle('opacity-30', tooFar);
+            b.classList.toggle('pointer-events-none', tooFar);
+        });
+
+        if (voteOverlay) {
+            voteOverlay.classList.toggle('hidden', !tooFar);
+        }
+
+        if (statUsable) {
+            statUsable.innerText = tooFar ? t('voteDisabledTooFar') : t('statLoading');
+        }
     }
 
     async function sendVote(payload) {
@@ -1312,36 +1470,24 @@ document.addEventListener("DOMContentLoaded", () => {
         const btnYes = document.getElementById('btn-usable-yes');
         const btnNo = document.getElementById('btn-usable-no');
         const starDiv = document.getElementById('star-rating');
+        const tooFar = !isNearToilet();
 
-        // 1. Entfernung dynamisch für diese Toilette prüfen
-        let isTooFarToVote = true;
-        if (userLocation && currentToilets) {
-            const toilet = currentToilets.find(t => t.id === osmId);
-            if (toilet) {
-                const distance = calculateDistance(
-                    userLocation.lat, userLocation.lng, 
-                    toilet.lat, toilet.lon
-                );
-                isTooFarToVote = distance > 150; // true, wenn weiter als 150m weg
-            }
+        if (tooFar) {
+            updateVoteUIState(true);
+            return;
         }
 
-        // 2. Buttons sperren, wenn zu weit weg
-        if (isTooFarToVote) {
-            if (btnYes) { btnYes.disabled = true; btnYes.classList.add('opacity-50'); }
-            if (btnNo) { btnNo.disabled = true; btnNo.classList.add('opacity-50'); }
-            if (starDiv) starDiv.classList.add('opacity-50', 'pointer-events-none');
-            return; // Hier abbrechen, da keine Votes erlaubt sind
-        }
-
-        // 3. Normaler Status, wenn nah genug (bereits gevotet?)
         if (btnYes && btnNo) {
             if (thisVote.usable !== undefined) {
-                btnYes.disabled = true; btnYes.classList.add('opacity-50');
-                btnNo.disabled = true; btnNo.classList.add('opacity-50');
+                btnYes.disabled = true;
+                btnYes.classList.add('opacity-50');
+                btnNo.disabled = true;
+                btnNo.classList.add('opacity-50');
             } else {
-                btnYes.disabled = false; btnYes.classList.remove('opacity-50');
-                btnNo.disabled = false; btnNo.classList.remove('opacity-50');
+                btnYes.disabled = false;
+                btnYes.classList.remove('opacity-50');
+                btnNo.disabled = false;
+                btnNo.classList.remove('opacity-50');
             }
         }
 
