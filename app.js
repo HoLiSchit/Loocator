@@ -549,6 +549,49 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // Die Filter-Zeilen sind horizontal scrollbar (overflow-x: auto), aber das
+    // unterstützt nativ nur Touch-Wischen - mit der Maus lässt sich per Klick+Ziehen
+    // nicht scrollen, sondern es wird nur der Button-Text markiert. Click-Drag-to-
+    // Scroll nachrüsten, für die Dauer des Ziehens Textmarkierung unterdrücken.
+    document.querySelectorAll('.hide-scrollbar').forEach((el) => {
+        let isDragging = false;
+        let dragMoved = false;
+        let startX = 0;
+        let startScrollLeft = 0;
+
+        el.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            dragMoved = false;
+            startX = e.pageX;
+            startScrollLeft = el.scrollLeft;
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const delta = e.pageX - startX;
+            if (Math.abs(delta) > 3) {
+                dragMoved = true;
+                el.classList.add('select-none');
+                el.scrollLeft = startScrollLeft - delta;
+            }
+        });
+
+        window.addEventListener('mouseup', () => {
+            isDragging = false;
+            el.classList.remove('select-none');
+        });
+
+        // Nach einem echten Drag den nachfolgenden Klick auf die getroffene Pille
+        // unterdrücken, sonst würde ein Ziehen versehentlich einen Filter umschalten.
+        el.addEventListener('click', (e) => {
+            if (dragMoved) {
+                e.preventDefault();
+                e.stopPropagation();
+                dragMoved = false;
+            }
+        }, true);
+    });
+
     // Sekundäre Filter-Zeile eingeklappt lassen, bis der Nutzer sie explizit öffnet
     // (weniger gleichzeitig sichtbare Entscheidungen beim ersten Laden)
     const btnToggleMoreFilters = document.getElementById('btn-toggle-more-filters');
