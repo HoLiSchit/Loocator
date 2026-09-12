@@ -1,4 +1,4 @@
-const CACHE_NAME = 'loocator-cache-v5';
+const CACHE_NAME = 'loocator-cache-v6';
 const OFFLINE_URLS = [
   './',
   'index.html',
@@ -10,9 +10,10 @@ const OFFLINE_URLS = [
   'src/lib/openingHours.js',
   'src/lib/karma.js',
   'src/lib/toiletRules.js',
+  'fonts/baloo2-latin.woff2',
+  'fonts/baloo2-latin-ext.woff2',
   'img/loocator.svg',
   'img/apple-touch-icon.png',
-  'img/deny.svg',
   'img/map.svg',
   'img/map-tag.svg',
   'img/report.svg',

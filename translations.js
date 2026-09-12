@@ -136,6 +136,7 @@ const dict = {
         alertTooFarToVote: "Du musst näher am WC sein, um es zu bewerten (max. 150m).",
         voteDisabledTooFar: "Zu weit entfernt zum Bewerten",
         voteOverlayText: "Du musst dich innerhalb von 150 m befinden, um das WC bewerten zu können.",
+        voteDistanceHint: "Noch {dist} m näher ran, dann kannst du bewerten.",
     },
     'en': {
         appDesc: "Find WCs, Eurokeys & Changing Tables worldwide",
@@ -273,6 +274,7 @@ const dict = {
         alertTooFarToVote: "You need to be closer to the WC to rate it (max. 150m).",
         voteDisabledTooFar: "Too far away to rate",
         voteOverlayText: "You need to be within 150 m to rate this toilet.",
+        voteDistanceHint: "Get {dist} m closer to rate this toilet.",
     },
     'fr': {
         appDesc: "Trouvez des toilettes, clés européennes et tables à langer dans le monde entier",
@@ -411,6 +413,7 @@ const dict = {
         alertTooFarToVote: "Vous devez être plus proche du WC pour l'évaluer (max. 150 m).",
         voteDisabledTooFar: "Trop loin pour évaluer",
         voteOverlayText: "Vous devez être à moins de 150 m pour évaluer ces toilettes.",
+        voteDistanceHint: "Rapprochez-vous de {dist} m pour évaluer ces toilettes.",
     },
     'es': {
         appDesc: "Encuentra aseos, llaves europeas y cambiadores en todo el mundo",
@@ -549,13 +552,24 @@ const dict = {
         alertTooFarToVote: "Debes estar más cerca del WC para valorarlo (máx. 150 m).",
         voteDisabledTooFar: "Demasiado lejos para valorar",
         voteOverlayText: "Debes estar a menos de 150 m para valorar este aseo.",
+        voteDistanceHint: "Acércate {dist} m más para poder valorar este aseo.",
     }
 };
 
 const userLang = navigator.language || navigator.userLanguage;
 const SUPPORTED_LANGS = ['de', 'en', 'fr', 'es'];
+
+// Manuelle Auswahl im Menü überschreibt dauerhaft die Browser-Spracherkennung
+// (vorher gab es keine Möglichkeit, eine falsch erkannte Sprache zu korrigieren).
+let savedLang = null;
+try {
+    savedLang = localStorage.getItem('loocator_lang');
+} catch (e) {}
+
 const langPrefix = userLang.slice(0, 2).toLowerCase();
-const lang = SUPPORTED_LANGS.includes(langPrefix) ? langPrefix : 'en';
+const lang = SUPPORTED_LANGS.includes(savedLang)
+    ? savedLang
+    : (SUPPORTED_LANGS.includes(langPrefix) ? langPrefix : 'en');
 
 function t(key, placeholders = {}) {
     let str = dict[lang][key] || key;

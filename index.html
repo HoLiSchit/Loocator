@@ -45,10 +45,14 @@
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 overflow-hidden font-sans text-gray-800 dark:text-gray-100">
 
-    <div id="splash-screen" class="fixed inset-0 bg-blue-600 z-[9999] flex flex-col items-center justify-center transition-opacity duration-500">
-        <div class="text-7xl mb-4 animate-bounce">🚽</div>
-        <h1 class="text-white text-3xl font-black mb-2">Loocator</h1>
-        <p class="text-blue-200 text-sm font-medium flex items-center gap-2">
+    <div id="splash-screen" class="fixed inset-0 bg-brand-600 z-[9999] flex flex-col items-center justify-center transition-opacity duration-500">
+        <img src="img/loocator.svg" alt="" width="48" height="48" class="mb-3 rounded-xl drop-shadow-lg">
+        <svg class="w-16 h-16 mb-2 text-white drop-shadow-lg animate-bounce" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M7 2h9a1 1 0 0 1 1 1v3H6V3a1 1 0 0 1 1-1z"/>
+            <path d="M5 8h15a1 1 0 0 1 1 1v.5a2 2 0 0 1-1.3 1.87V13a6.7 6.7 0 0 1-6.7 6.7h-.5A6.7 6.7 0 0 1 5.3 13v-1.63A2 2 0 0 1 4 9.5V9a1 1 0 0 1 1-1z"/>
+        </svg>
+        <h1 class="text-white text-3xl font-display font-bold tracking-tight mb-2">Loocator</h1>
+        <p class="text-brand-100 text-sm font-medium flex items-center gap-2">
             <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
             <span data-i18n="splashLoading"></span>
         </p>
@@ -74,7 +78,7 @@
                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                         <img src="img/search.svg" alt="Search" class="w-4 h-4 opacity-40 dark:invert">
                     </div>
-                    <input type="text" id="search-input" data-i18n-placeholder="searchPlaceholder" class="w-full bg-white dark:bg-gray-800 dark:text-white border border-gray-200 dark:border-gray-600 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900 rounded-full py-3.5 pl-11 pr-4 text-sm font-medium transition-all outline-none shadow-md" autocomplete="off">
+                    <input type="text" id="search-input" data-i18n-placeholder="searchPlaceholder" class="w-full bg-white dark:bg-gray-800 dark:text-white border border-gray-200 dark:border-gray-600 focus:border-brand-400 focus:ring-2 focus:ring-brand-100 dark:focus:ring-brand-700/40 rounded-full py-3.5 pl-11 pr-4 text-sm font-medium transition-all outline-none shadow-md" autocomplete="off">
                 </form>
             </div>
             <ul id="search-suggestions" class="hidden absolute top-full left-[3.25rem] w-[calc(100%-3.25rem)] bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 shadow-xl rounded-2xl mt-2 max-h-48 overflow-y-auto z-50 text-sm"></ul>
@@ -84,7 +88,7 @@
         <div class="flex gap-2 pt-1 pb-1 w-full overflow-x-auto snap-x snap-mandatory hide-scrollbar -mx-5 px-9">
             <label class="cursor-pointer snap-start shrink-0">
                 <input type="checkbox" id="filter-favorites" class="peer sr-only">
-                <div class="px-4 py-2.5 rounded-full border border-red-200 dark:border-red-900/50 bg-white dark:bg-gray-800 text-red-600 dark:text-red-400 text-xs font-bold transition-all peer-checked:bg-[#e5316b] peer-checked:text-white peer-checked:border-[#e5316b] shadow-md flex items-center gap-1.5 whitespace-nowrap ml-3">
+                <div class="px-4 py-2.5 rounded-full border border-accent-100 dark:border-accent-600/40 bg-white dark:bg-gray-800 text-accent-500 dark:text-accent-400 text-xs font-bold transition-all peer-checked:bg-accent-500 peer-checked:text-white peer-checked:border-accent-500 shadow-md flex items-center gap-1.5 whitespace-nowrap ml-3">
                     <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 20s-8-5.5-8-11a4.5 4.5 0 018-2.5A4.5 4.5 0 0120 9c0 5.5-8 11-8 11z"/></svg>
                     <span data-i18n="filterFav"></span>
                 </div>
@@ -92,38 +96,45 @@
 
             <label class="cursor-pointer snap-start shrink-0">
                 <input type="checkbox" id="filter-public" class="peer sr-only" checked>
-                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-[#4285F4] peer-checked:text-white peer-checked:border-[#4285F4] shadow-md whitespace-nowrap flex items-center gap-1.5">
-                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="12" height="14" rx="2"/><line x1="6" y1="9" x2="18" y2="9"/></svg>
+                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-brand-500 peer-checked:text-white peer-checked:border-brand-500 shadow-md whitespace-nowrap flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M7 2h9a1 1 0 0 1 1 1v3H6V3a1 1 0 0 1 1-1z"/><path d="M5 8h15a1 1 0 0 1 1 1v.5a2 2 0 0 1-1.3 1.87V13a6.7 6.7 0 0 1-6.7 6.7h-.5A6.7 6.7 0 0 1 5.3 13v-1.63A2 2 0 0 1 4 9.5V9a1 1 0 0 1 1-1z"/></svg>
                     <span data-i18n="filterPublic"></span>
                 </div>
             </label>
 
             <label class="cursor-pointer snap-start shrink-0">
                 <input type="checkbox" id="filter-eurokey" class="peer sr-only" checked>
-                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-yellow-500 peer-checked:text-white peer-checked:border-yellow-500 shadow-md whitespace-nowrap flex items-center gap-1.5">
-                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="4"/><line x1="12" y1="12" x2="19" y2="19"/><line x1="15" y1="16" x2="17.5" y2="13.5"/><line x1="17" y1="18" x2="19.5" y2="15.5"/></svg>
+                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-eurokey peer-checked:text-white peer-checked:border-eurokey shadow-md whitespace-nowrap flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"/></svg>
                     <span data-i18n="filterEurokey"></span>
                 </div>
             </label>
 
             <label class="cursor-pointer snap-start shrink-0">
                 <input type="checkbox" id="filter-changing" class="peer sr-only">
-                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-purple-500 peer-checked:text-white peer-checked:border-purple-500 shadow-md whitespace-nowrap flex items-center gap-1.5">
-                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="2.5" fill="currentColor" stroke="none"/><path d="M5 15q7-7 14 0"/></svg>
+                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-changing peer-checked:text-white peer-checked:border-changing shadow-md whitespace-nowrap flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"/><path d="M6.5 20v-2.5a5.5 5.5 0 0111 0V20"/></svg>
                     <span data-i18n="filterChanging"></span>
                 </div>
             </label>
 
             <label class="cursor-pointer snap-start shrink-0">
                 <input type="checkbox" id="filter-free" class="peer sr-only">
-                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-green-600 peer-checked:text-white peer-checked:border-green-600 shadow-md whitespace-nowrap flex items-center gap-1.5">
+                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-free peer-checked:text-white peer-checked:border-free shadow-md whitespace-nowrap flex items-center gap-1.5">
                     <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="8" y1="8" x2="16" y2="16"/></svg>
                     <span data-i18n="filterFree"></span>
                 </div>
             </label>
+
+            <!-- Reduziert die Zahl der auf einen Blick sichtbaren Entscheidungen (siehe Design-Kritik: kognitive
+                 Überladung durch bis zu 8 gleichzeitig sichtbare Filter-Pillen) -->
+            <button id="btn-toggle-more-filters" type="button" aria-expanded="false" class="shrink-0 snap-start px-3 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 shadow-md flex items-center justify-center transition-transform">
+                <svg class="w-4 h-4 transition-transform" id="icon-more-filters" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+            </button>
         </div>
 
-        <!-- Unterfilter: Jetzt offen, Hohe Erfolgsrate, Unzuverlässige ausblenden -->
+        <!-- Unterfilter: Jetzt offen, Hohe Erfolgsrate, Unzuverlässige ausblenden - eingeklappt per Default -->
+        <div id="secondary-filters" class="hidden flex-col gap-2">
         <div class="flex gap-2 pt-1 pb-1 w-full overflow-x-auto snap-x snap-mandatory hide-scrollbar -mx-5 px-9">
             <label class="cursor-pointer snap-start shrink-0">
                 <input type="checkbox" id="filter-open" class="peer sr-only">
@@ -134,7 +145,7 @@
 
             <label class="cursor-pointer snap-start shrink-0">
                 <input type="checkbox" id="filter-success" class="peer sr-only">
-                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-yellow-500 peer-checked:text-white peer-checked:border-yellow-500 shadow-md whitespace-nowrap flex items-center gap-1.5">
+                <div class="px-4 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs font-bold transition-all peer-checked:bg-success peer-checked:text-white peer-checked:border-success shadow-md whitespace-nowrap flex items-center gap-1.5">
                     <span data-i18n="filterSuccess"></span>
                 </div>
             </label>
@@ -146,72 +157,105 @@
                 </div>
             </label>
         </div>
+        </div>
     </div>
 
-<div id="main-menu" class="hidden absolute top-[12rem] left-4 right-4 md:left-1/2 md:right-auto md:w-full md:max-w-md md:-translate-x-1/2 max-h-[70vh] overflow-y-auto overflow-x-hidden bg-white dark:bg-gray-800 p-5 rounded-3xl shadow-2xl ui-layer z-[950] flex flex-col gap-4 transition-all duration-300">
-        
-        <!-- Header: Titel & Buttons -->
-        <div class="flex justify-between items-start">
-            <div>
-                <h1 class="text-2xl font-black text-blue-600 dark:text-blue-400 tracking-tight">Loocator</h1>
-                <p class="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5 font-bold uppercase tracking-widest" data-i18n="appDesc"></p>
-            </div>
-            
-            <div class="flex items-center gap-3">
-                <!-- NEU: Eleganter Theme-Switcher -->
-                <div class="flex items-center bg-gray-100 dark:bg-gray-700 p-1 rounded-full shadow-inner border border-gray-200 dark:border-gray-600">
-                    <button id="btn-theme-light" class="p-1.5 rounded-full transition-all duration-300 flex items-center justify-center w-8 h-8" title="Hell">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" /></svg>
-                    </button>
-                    <button id="btn-theme-dark" class="p-1.5 rounded-full transition-all duration-300 flex items-center justify-center w-8 h-8" title="Dunkel">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z" clip-rule="evenodd" /></svg>
-                    </button>
-                </div>
+<!-- Abdunkelung hinter der Sidebar, schließt beim Antippen -->
+<div id="sidebar-backdrop" class="hidden opacity-0 fixed inset-0 bg-gray-900/50 z-[940] transition-opacity duration-300"></div>
 
-                <button id="btn-close-menu" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 font-bold text-xl p-2 active:scale-95 transition-transform">✕</button>
+<div id="main-menu" class="fixed inset-y-0 left-0 w-[85vw] max-w-xs bg-white dark:bg-gray-800 shadow-2xl z-[950] flex flex-col -translate-x-full transition-transform duration-300 ease-out overflow-y-auto">
+
+    <div class="p-5 flex flex-col gap-5 flex-1">
+        <!-- Header: Marke & Schließen-Button -->
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <img src="img/loocator.svg" alt="" width="34" height="34" class="rounded-lg shrink-0">
+                <div>
+                    <h1 class="text-xl font-display font-bold text-brand-600 dark:text-brand-400 tracking-tight leading-none">Loocator</h1>
+                    <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5 font-bold uppercase tracking-widest" data-i18n="appDesc"></p>
+                </div>
+            </div>
+
+            <button id="btn-close-menu" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-2 active:scale-95 transition-transform">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+        </div>
+
+        <!-- Sprachwechsler -->
+        <div>
+            <span class="text-[10px] uppercase tracking-widest font-bold text-gray-400 dark:text-gray-500 mb-1.5 block">Sprache / Language</span>
+            <div id="lang-switcher" class="grid grid-cols-4 gap-1.5">
+                <button type="button" data-lang="de" class="lang-btn py-2 rounded-lg text-xs font-bold border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 transition-all">DE</button>
+                <button type="button" data-lang="en" class="lang-btn py-2 rounded-lg text-xs font-bold border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 transition-all">EN</button>
+                <button type="button" data-lang="fr" class="lang-btn py-2 rounded-lg text-xs font-bold border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 transition-all">FR</button>
+                <button type="button" data-lang="es" class="lang-btn py-2 rounded-lg text-xs font-bold border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 transition-all">ES</button>
+            </div>
+        </div>
+
+        <!-- Theme-Switcher -->
+        <div class="flex items-center justify-between">
+            <span class="text-[10px] uppercase tracking-widest font-bold text-gray-400 dark:text-gray-500">Theme</span>
+            <div class="flex items-center bg-gray-100 dark:bg-gray-700 p-1 rounded-full shadow-inner border border-gray-200 dark:border-gray-600">
+                <button id="btn-theme-light" class="p-1.5 rounded-full transition-all duration-300 flex items-center justify-center w-8 h-8" title="Hell">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" /></svg>
+                </button>
+                <button id="btn-theme-dark" class="p-1.5 rounded-full transition-all duration-300 flex items-center justify-center w-8 h-8" title="Dunkel">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z" clip-rule="evenodd" /></svg>
+                </button>
             </div>
         </div>
 
         <!-- PWA Install Area -->
-        <button id="btn-install" data-i18n="btnInstall" class="hidden mt-1 bg-green-500 text-white px-4 py-3 rounded-xl text-sm font-bold active:bg-green-700 transition-colors shadow-md flex items-center justify-center gap-2">
+        <button id="btn-install" data-i18n="btnInstall" class="hidden bg-brand-500 text-white px-4 py-3 rounded-xl text-sm font-bold active:bg-brand-700 transition-colors shadow-md flex items-center justify-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
             <span data-i18n="btnInstall"></span>
         </button>
-        
-        <div id="ios-install-hint" class="hidden mt-1 bg-blue-50 dark:bg-gray-700 p-3 rounded-xl text-xs border border-blue-200 dark:border-gray-600 text-blue-800 dark:text-blue-200">
+
+        <div id="ios-install-hint" class="hidden bg-brand-50 dark:bg-gray-700 p-3 rounded-xl text-xs border border-brand-100 dark:border-gray-600 text-brand-700 dark:text-brand-200">
             <span class="font-bold" data-i18n="iosHintTitle"></span><br>
             <span data-i18n="iosHintBody"></span>
         </div>
 
-        <!-- Footer / Support -->
-        <div class="mt-1 flex flex-col gap-1.5">
+        <div class="flex-1"></div>
+
+        <!-- Action Buttons (Melden & Kontakt) -->
+        <div class="flex gap-2">
+            <button id="btn-report" class="flex-1 bg-red-50 dark:bg-red-900/40 text-red-600 dark:text-red-300 px-2 py-2.5 rounded-xl text-sm font-bold text-center active:scale-95 transition-transform border border-red-100 dark:border-red-800 shadow-sm">
+                <span data-i18n="btnReport"></span>
+            </button>
+            <button id="btn-contact" class="flex-1 bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 px-2 py-2.5 rounded-xl text-sm font-bold text-center active:scale-95 transition-transform border border-brand-100 dark:border-brand-800 shadow-sm">
+                <span data-i18n="btnContact"></span>
+            </button>
+        </div>
+
+        <!-- Support -->
+        <div class="flex flex-col gap-1.5">
             <p data-i18n="SupportMe" class="text-[11px] text-center text-gray-500 dark:text-gray-400 px-1 leading-snug"></p>
             <a href="https://ko-fi.com/minecode" target="_blank" rel="noopener noreferrer" class="bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300 px-4 py-2.5 rounded-xl text-sm font-bold text-center active:scale-95 transition-transform flex items-center justify-center gap-2 border border-orange-200 dark:border-orange-800 shadow-sm">
                 <span data-i18n="btnSupport"></span>
             </a>
         </div>
 
-        <!-- Action Buttons (Melden & Kontakt) -->
-        <div class="flex gap-2 mt-1">
-            <button id="btn-report" class="flex-1 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 px-2 py-2.5 rounded-xl text-sm font-bold text-center active:scale-95 transition-transform border border-red-200 dark:border-red-800 shadow-sm">
-                <span data-i18n="btnReport"></span>
-            </button>
-            <button id="btn-contact" class="flex-1 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-2.5 rounded-xl text-sm font-bold text-center active:scale-95 transition-transform border border-blue-200 dark:border-blue-800 shadow-sm">
-                <span data-i18n="btnContact"></span>
-            </button>
-        </div>
-
-        <div class="mt-1 text-center flex flex-col gap-1.5">
+        <div class="text-center flex flex-col gap-1.5">
             <div id="app-stats" class="text-[11px] text-gray-500 dark:text-gray-400 font-medium bg-gray-50 dark:bg-gray-700 py-1.5 rounded-lg border border-gray-100 dark:border-gray-600 hidden"></div>
             <a class="text-[10px] text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors leading-tight">
                 <span class="mt-0.5 inline-block">Made with ❤️ in Rheinstetten</span>
             </a>
         </div>
     </div>
+    </div>
 
     <div id="loading-spinner" class="hidden absolute bottom-44 right-4 bg-white dark:bg-gray-800 p-2 rounded-full shadow-lg ui-layer z-[900]">
-        <div class="animate-spin text-2xl inline-block">🚽</div>
+        <svg class="animate-bounce h-5 w-5 text-brand-500" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M7 2h9a1 1 0 0 1 1 1v3H6V3a1 1 0 0 1 1-1z"/>
+            <path d="M5 8h15a1 1 0 0 1 1 1v.5a2 2 0 0 1-1.3 1.87V13a6.7 6.7 0 0 1-6.7 6.7h-.5A6.7 6.7 0 0 1 5.3 13v-1.63A2 2 0 0 1 4 9.5V9a1 1 0 0 1 1-1z"/>
+        </svg>
     </div>
+
+    <!-- Legende erneut öffnen (dauerhaft verfügbar, statt nur einmalig im Tutorial) -->
+    <button id="btn-legend" class="absolute bottom-44 left-4 bg-white text-gray-600 dark:bg-gray-800 dark:text-gray-300 w-9 h-9 rounded-full shadow-xl ui-layer transition-all active:scale-95 border border-gray-200 dark:border-gray-600 flex items-center justify-center font-bold text-sm">
+        ?
+    </button>
 
     <!-- Layer Toggle (angehoben auf bottom-28) -->
     <button id="btn-layer-toggle" class="absolute bottom-28 right-4 bg-white text-gray-600 dark:bg-gray-800 dark:text-gray-300 p-3 rounded-full shadow-xl ui-layer transition-all active:scale-95 border border-gray-200 dark:border-gray-600 flex items-center justify-center">
@@ -219,7 +263,7 @@
     </button>
 
     <!-- Location Button (angehoben auf bottom-10) -->
-    <button id="btn-location" class="absolute bottom-10 right-4 bg-white text-gray-600 dark:bg-gray-800 dark:text-blue-400 p-3 rounded-full shadow-xl ui-layer transition-all active:scale-95 border border-gray-200 dark:border-gray-600 flex items-center justify-center">
+    <button id="btn-location" class="absolute bottom-10 right-4 bg-white text-gray-600 dark:bg-gray-800 dark:text-brand-400 p-3 rounded-full shadow-xl ui-layer transition-all active:scale-95 border border-gray-200 dark:border-gray-600 flex items-center justify-center">
         <img src="img/map-tag.svg" alt="Location" class="w-7 h-7">
     </button>
 
@@ -232,29 +276,32 @@
         
         <div class="flex justify-between items-start mb-1">
             <h2 id="sheet-title" class="text-2xl font-bold"></h2>
-            <button id="btn-fav" class="text-3xl active:scale-90 transition-transform pl-4">🤍</button>
+            <button id="btn-fav" class="active:scale-90 transition-transform pl-4 shrink-0">
+                <svg id="btn-fav-icon" class="w-7 h-7 text-gray-300 dark:text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 20s-8-5.5-8-11a4.5 4.5 0 018-2.5A4.5 4.5 0 0120 9c0 5.5-8 11-8 11z"/></svg>
+            </button>
         </div>
         
         <div id="routing-warning" class="hidden bg-red-100 dark:bg-red-900 border border-red-300 dark:border-red-700 text-red-700 dark:text-red-300 text-xs font-bold p-2 rounded-xl mb-2 mt-1" data-i18n="routeWarning"></div>
 
-        <p id="sheet-distance" class="text-sm font-bold text-blue-600 dark:text-blue-400 mb-2"></p>
+        <p id="sheet-distance" class="text-sm font-bold text-brand-600 dark:text-brand-400 mb-2"></p>
         <h3 id="sheet-subtitle" class="text-md font-semibold text-gray-700 dark:text-gray-300 mb-1 hidden"></h3>
         <p id="sheet-address" class="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2 hidden"></p>
         
-        <p id="sheet-note" class="text-sm italic text-gray-600 dark:text-gray-300 mb-3 bg-blue-50 dark:bg-gray-700 p-2 rounded-lg border-l-4 border-blue-400 hidden"></p>
+        <p id="sheet-note" class="text-sm italic text-brand-800 dark:text-brand-200 mb-3 bg-brand-50 dark:bg-brand-900/30 p-3 rounded-xl hidden"></p>
         
         <p id="sheet-info" class="text-sm text-gray-500 dark:text-gray-400 mb-5 leading-relaxed"></p>
 
         <div id="feedback-section" class="bg-gray-50 dark:bg-gray-700 rounded-2xl p-5 mb-5 border border-gray-100 dark:border-gray-600 shadow-inner transition-opacity duration-300 relative overflow-hidden">
-            <div id="vote-overlay" class="hidden absolute inset-0 z-10 bg-red-50/90 dark:bg-red-950/40 backdrop-blur-[2px] flex items-center justify-center px-5 text-center">
-                <div class="flex flex-col items-center gap-2 text-white">
-                    <img src="img/deny.svg" alt="Denied" class="w-10 h-10" style="filter: brightness(0) invert(1) saturate(1.2);">
-                    <div class="text-sm font-bold leading-relaxed text-white" data-i18n="voteOverlayText"></div>
-                </div>
+            <!-- Proaktiver Hinweis statt reaktivem "Verboten"-Overlay: zeigt die tatsächliche
+                 Distanz, bevor der Nutzer überhaupt versucht zu bewerten (Design-Kritik P0) -->
+            <div id="vote-distance-hint" class="hidden bg-brand-50 dark:bg-brand-900/30 rounded-xl p-4 mb-2 flex items-center gap-3">
+                <img src="img/map-tag.svg" alt="" class="w-6 h-6 shrink-0 opacity-70">
+                <span class="text-sm font-medium text-brand-800 dark:text-brand-200 leading-snug"></span>
             </div>
 
+            <div id="vote-controls">
             <h3 class="font-bold mb-3" data-i18n="howWasIt"></h3>
-            
+
             <div class="mb-5">
                 <span class="text-sm block mb-2 font-medium" data-i18n="couldYouUse"></span>
                 <div class="flex gap-3">
@@ -286,7 +333,9 @@
                 
                 <div id="stat-clean" class="text-xs mt-2 text-gray-500 dark:text-gray-400 font-medium"></div>
             </div>
-                        <!-- Der kleine Rang-Indikator direkt unter den Sternen -->
+            </div>
+            <!-- Der kleine Rang-Indikator direkt unter den Sternen - bleibt sichtbar, auch wenn
+                 der Nutzer gerade zu weit weg zum Bewerten ist -->
             <div class="mt-5 pt-4 border-t border-gray-200 dark:border-gray-600 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span id="karma-emoji" class="text-2xl drop-shadow-sm">🧻</span>
@@ -297,8 +346,8 @@
                 </div>
                 <div class="text-right leading-tight">
                     <span id="karma-points" class="text-[10px] text-gray-500 block"></span>
-                    <span id="karma-next-label" class="text-[10px] text-indigo-500 font-bold" data-i18n="karmaNext"></span>
-                    <span id="karma-left" class="text-[10px] font-bold text-indigo-600"></span>
+                    <span id="karma-next-label" class="text-[10px] text-accent-500 font-bold" data-i18n="karmaNext"></span>
+                    <span id="karma-left" class="text-[10px] font-bold text-accent-600"></span>
                 </div>
             </div>
         </div>
@@ -306,7 +355,7 @@
         <!-- NEUES KOMPAKTES BUTTON LAYOUT -->
         <div class="flex gap-2 pb-4 pt-2">
             <!-- Navigieren (3/6) -->
-            <button id="btn-navigate" class="flex-[3] bg-blue-600 text-white font-bold py-3.5 rounded-2xl text-base active:bg-blue-800 transition-colors shadow-lg flex items-center justify-center gap-2">
+            <button id="btn-navigate" class="flex-[3] bg-brand-600 text-white font-bold py-3.5 rounded-2xl text-base active:bg-brand-800 transition-colors shadow-lg flex items-center justify-center gap-2">
                 <img src="img/route.svg" alt="" class="w-5 h-5 filter brightness-0 invert">
                 <span data-i18n="btnNav"></span>
             </button>
@@ -335,7 +384,7 @@
         <p class="text-sm font-bold text-gray-700 dark:text-gray-200 mb-4 text-center" data-i18n="reportModeInfo"></p>
         <div class="flex gap-3 w-full max-w-sm">
             <button id="btn-cancel-target" class="flex-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-bold py-3.5 rounded-xl active:scale-95 transition-transform" data-i18n="reportCancel"></button>
-            <button id="btn-confirm-target" class="flex-[2] bg-blue-600 text-white font-bold py-3.5 rounded-xl active:scale-95 transition-transform shadow-lg" data-i18n="reportConfirmLoc"></button>
+            <button id="btn-confirm-target" class="flex-[2] bg-brand-600 text-white font-bold py-3.5 rounded-xl active:scale-95 transition-transform shadow-lg" data-i18n="reportConfirmLoc"></button>
         </div>
     </div>
 
@@ -344,7 +393,7 @@
         <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 max-w-sm w-full shadow-2xl">
             <div class="flex justify-between items-start mb-4">
                 <div class="flex flex-col">
-                    <h2 class="text-xl font-black text-blue-600 dark:text-blue-400" data-i18n="reportModalTitle"></h2>
+                    <h2 class="text-xl font-black text-brand-600 dark:text-brand-400" data-i18n="reportModalTitle"></h2>
                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-tight pr-2" data-i18n="reportExistingHint" id="modal-report-hint" style="display: none;"></p>
                 </div>
                 <button id="btn-close-report" class="text-gray-400 hover:text-gray-600 text-xl font-bold p-1">✕</button>
@@ -352,45 +401,45 @@
             
             <div class="flex flex-col gap-3 mb-4">
                 <label id="label-rep-1" class="flex items-center gap-3 bg-gray-50 dark:bg-gray-700 p-3 rounded-xl border border-gray-200 dark:border-gray-600 cursor-pointer">
-                    <input type="radio" name="report-type" id="radio-rep-1" value="Missing public toilet" class="w-5 h-5 accent-blue-600" checked>
+                    <input type="radio" name="report-type" id="radio-rep-1" value="Missing public toilet" class="w-5 h-5 accent-brand-600" checked>
                     <span class="text-sm font-medium" data-i18n="reportType1"></span>
                 </label>
                 <label id="label-rep-2" class="flex items-center gap-3 bg-gray-50 dark:bg-gray-700 p-3 rounded-xl border border-gray-200 dark:border-gray-600 cursor-pointer">
-                    <input type="radio" name="report-type" id="radio-rep-2" value="Missing Eurokey-WC" class="w-5 h-5 accent-blue-600">
+                    <input type="radio" name="report-type" id="radio-rep-2" value="Missing Eurokey-WC" class="w-5 h-5 accent-brand-600">
                     <span class="text-sm font-medium" data-i18n="reportType2"></span>
                 </label>
                 <label id="label-rep-3" class="flex items-center gap-3 bg-gray-50 dark:bg-gray-700 p-3 rounded-xl border border-gray-200 dark:border-gray-600 cursor-pointer">
-                    <input type="radio" name="report-type" id="radio-rep-3" value="Incorrect / Doesn't exist" class="w-5 h-5 accent-blue-600">
+                    <input type="radio" name="report-type" id="radio-rep-3" value="Incorrect / Doesn't exist" class="w-5 h-5 accent-brand-600">
                     <span class="text-sm font-medium" data-i18n="reportType3"></span>
                 </label>
             </div>
 
-            <textarea id="report-note" class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-3 text-sm mb-5 focus:outline-none focus:border-blue-500" rows="3" data-i18n-placeholder="reportNotePlaceholder"></textarea>
+            <textarea id="report-note" class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-3 text-sm mb-5 focus:outline-none focus:border-brand-500" rows="3" data-i18n-placeholder="reportNotePlaceholder"></textarea>
 
-            <button id="btn-submit-report" class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold py-3.5 rounded-xl transition-colors shadow-lg" data-i18n="reportSubmit"></button>
+            <button id="btn-submit-report" class="w-full bg-brand-600 hover:bg-brand-700 active:bg-brand-800 text-white font-bold py-3.5 rounded-xl transition-colors shadow-lg" data-i18n="reportSubmit"></button>
         </div>
     </div>
 
     <div id="tutorial-modal" class="hidden fixed inset-0 bg-gray-900/80 z-[9000] flex items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-300">
         <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 max-w-sm w-full shadow-2xl">
-            <h2 class="text-2xl font-black text-blue-600 dark:text-blue-400 mb-2" data-i18n="tutWelcome"></h2>
+            <h2 class="text-2xl font-black text-brand-600 dark:text-brand-400 mb-2" data-i18n="tutWelcome"></h2>
             <p class="text-sm text-gray-600 dark:text-gray-300 mb-5" data-i18n="tutIntro"></p>
             
-            <div class="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 p-3 rounded-xl mb-6 flex gap-3 items-start">
+            <div class="bg-brand-50 dark:bg-brand-900/30 border border-brand-200 dark:border-brand-800 p-3 rounded-xl mb-6 flex gap-3 items-start">
                 <div class="shrink-0 mt-0.5"> <img src="img/map-tag.svg" alt="Location" class="w-5 h-5 [filter:brightness(0)]"> </div>
-                    <p class="text-sm text-blue-800 dark:text-blue-200 font-medium mt-0.5" data-i18n="tutLocation"></p>
+                    <p class="text-sm text-brand-800 dark:text-brand-200 font-medium mt-0.5" data-i18n="tutLocation"></p>
             </div>
 
             <div class="flex flex-col gap-3 mb-6">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full flex items-center justify-center shadow-sm" style="background:#eab308;">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="9" r="4"/><line x1="12" y1="12" x2="19" y2="19"/><line x1="15" y1="16" x2="17.5" y2="13.5"/><line x1="17" y1="18" x2="19.5" y2="15.5"/></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"/></svg>
                     </div>
                     <span class="text-sm font-medium text-gray-700 dark:text-gray-200" data-i18n="tutEuro"></span>
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full flex items-center justify-center shadow-sm" style="background:#a855f7;">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="7" r="2.5" fill="white" stroke="none"/><path d="M5 15q7-7 14 0"/></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2" fill="white" stroke="none"/><path d="M9.3 8.7c.5.9 1.4 1.3 2.7 1.3s2.2-.4 2.7-1.3" stroke="#a855f7"/><path d="M6.5 20v-2.5a5.5 5.5 0 0111 0V20"/></svg>
                     </div>
                     <span class="text-sm font-medium text-gray-700 dark:text-gray-200" data-i18n="tutChanging"></span>
                 </div>
@@ -401,14 +450,14 @@
                     <span class="text-sm font-medium text-gray-700 dark:text-gray-200" data-i18n="tutFree"></span>
                 </div>
                 <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-full flex items-center justify-center shadow-sm relative" style="background:#4285F4;">
+                    <div class="w-8 h-8 rounded-full flex items-center justify-center shadow-sm relative" style="background:#0d9488;">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><rect x="6" y="4" width="12" height="14" rx="2"/><line x1="6" y1="9" x2="18" y2="9"/></svg>
-                        <div class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-yellow-400 rounded-full border-2 border-white dark:border-gray-800"></div>
+                        <div class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-success rounded-full border-2 border-white dark:border-gray-800"></div>
                     </div>
                     <span class="text-sm font-medium text-gray-700 dark:text-gray-200" data-i18n="tutTop"></span>
                 </div>
                 <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-full flex items-center justify-center shadow-sm relative" style="background:#4285F4;">
+                    <div class="w-8 h-8 rounded-full flex items-center justify-center shadow-sm relative" style="background:#0d9488;">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><rect x="6" y="4" width="12" height="14" rx="2"/><line x1="6" y1="9" x2="18" y2="9"/></svg>
                         <div class="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-gray-800"></div>
                     </div>
@@ -428,16 +477,16 @@
                 </div>
             </div>
 
-            <button id="btn-close-tutorial" class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold py-3.5 rounded-xl transition-colors shadow-lg" data-i18n="tutStart"></button>
+            <button id="btn-close-tutorial" class="w-full bg-brand-600 hover:bg-brand-700 active:bg-brand-800 text-white font-bold py-3.5 rounded-xl transition-colors shadow-lg" data-i18n="tutStart"></button>
         </div>
     </div>
 
     <div id="update-modal" class="hidden fixed inset-0 bg-gray-900/80 z-[9000] flex items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-300">
         <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 max-w-sm w-full shadow-2xl">
-            <h2 class="text-xl font-black text-blue-600 dark:text-blue-400 mb-2" data-i18n="updateModalTitle"></h2>
+            <h2 class="text-xl font-black text-brand-600 dark:text-brand-400 mb-2" data-i18n="updateModalTitle"></h2>
             <p class="text-sm text-gray-600 dark:text-gray-300 mb-5" data-i18n="updateModalText"></p>
             <div class="flex gap-2">
-                <button id="btn-reload-app" class="flex-1 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold py-3 rounded-xl transition-colors shadow-lg" data-i18n="updateReload"></button>
+                <button id="btn-reload-app" class="flex-1 bg-brand-600 hover:bg-brand-700 active:bg-brand-800 text-white font-bold py-3 rounded-xl transition-colors shadow-lg" data-i18n="updateReload"></button>
                 <button id="btn-dismiss-update" class="flex-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-100 font-bold py-3 rounded-xl active:bg-gray-200 dark:active:bg-gray-600 transition-colors border border-gray-200 dark:border-gray-600" data-i18n="updateDismiss"></button>
             </div>
         </div>
@@ -447,7 +496,7 @@
         <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 max-w-sm w-full shadow-2xl">
             <div class="flex justify-between items-start mb-4">
                 <div class="flex flex-col">
-                   <h2 class="text-xl font-black text-blue-600 dark:text-blue-400" data-i18n="contactModalTitle"></h2>
+                   <h2 class="text-xl font-black text-brand-600 dark:text-brand-400" data-i18n="contactModalTitle"></h2>
                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 leading-tight pr-2" data-i18n="contactModalText"></p>
                 </div>
              <button id="btn-close-contact" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-xl font-bold p-1">✕</button>
@@ -464,7 +513,7 @@
                     type="text"
                     name="name"
                     data-i18n-placeholder="contactNamePlaceholder"
-                    class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500"
+                    class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-3 text-sm focus:outline-none focus:border-brand-500"
                     required
                 >
 
@@ -473,7 +522,7 @@
                     type="email"
                     name="email"
                     data-i18n-placeholder="contactEmailPlaceholder"
-                    class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500"
+                    class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-3 text-sm focus:outline-none focus:border-brand-500"
                     required
                 >
 
@@ -482,14 +531,14 @@
                     name="message"
                     rows="4"
                     data-i18n-placeholder="contactMessagePlaceholder"
-                    class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500"
+                    class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-3 text-sm focus:outline-none focus:border-brand-500"
                     required
                 ></textarea>
 
                 <button
                     id="btn-submit-contact"
                     type="submit"
-                    class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold py-3.5 rounded-xl transition-colors shadow-lg"
+                    class="w-full bg-brand-600 hover:bg-brand-700 active:bg-brand-800 text-white font-bold py-3.5 rounded-xl transition-colors shadow-lg"
                     data-i18n="contactSubmit"
                 ></button>
 

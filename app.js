@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function showToast(message, type = 'info') {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
-        let bgColor = 'bg-blue-600';
+        let bgColor = 'bg-brand-600';
         if (type === 'error') bgColor = 'bg-red-600';
         if (type === 'success') bgColor = 'bg-green-600';
 
@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if(typeof confetti === 'function') {
                 confetti({
                     particleCount: 150, spread: 80, origin: { y: 0.6 },
-                    colors: ['#3b82f6', '#22c55e', '#eab308', '#a855f7'],
+                    colors: ['#0d9488', '#e5316b', '#eab308', '#a855f7'],
                     zIndex: 9999
                 });
             }
@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function updateThemeUI(isDark) {
         if (isDark) {
-            btnDark.classList.add('bg-white', 'dark:bg-gray-600', 'text-blue-500', 'dark:text-blue-400', 'shadow-sm');
+            btnDark.classList.add('bg-white', 'dark:bg-gray-600', 'text-brand-500', 'dark:text-brand-400', 'shadow-sm');
             btnDark.classList.remove('text-gray-400', 'dark:text-gray-500');
             btnLight.classList.add('text-gray-400', 'dark:text-gray-500');
             btnLight.classList.remove('bg-white', 'text-orange-500', 'shadow-sm');
@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
             btnLight.classList.add('bg-white', 'text-orange-500', 'shadow-sm');
             btnLight.classList.remove('text-gray-400', 'dark:text-gray-500');
             btnDark.classList.add('text-gray-400', 'dark:text-gray-500');
-            btnDark.classList.remove('bg-white', 'dark:bg-gray-600', 'text-blue-500', 'dark:text-blue-400', 'shadow-sm');
+            btnDark.classList.remove('bg-white', 'dark:bg-gray-600', 'text-brand-500', 'dark:text-brand-400', 'shadow-sm');
         }
     }
 
@@ -212,20 +212,23 @@ document.addEventListener("DOMContentLoaded", () => {
     // GOOGLE-MAPS-STYLE: SVG-Icon-Set + Pin Builder
     // ============================================
     const ICONS = {
-        public:   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="6" y="4" width="12" height="14" rx="2" stroke="white" stroke-width="2"/><path d="M6 9H18" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>',
-        eurokey:  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="9" cy="9" r="4" stroke="white" stroke-width="2"/><path d="M12 12L19 19" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M14.5 15.5L17 13" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M16.5 17.5L19 15" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>',
-        changing: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="7" r="2.5" fill="white"/><path d="M5 15C8 12 16 12 19 15" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>',
+        public:   '<svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7 2h9a1 1 0 0 1 1 1v3H6V3a1 1 0 0 1 1-1z"/><path d="M5 8h15a1 1 0 0 1 1 1v.5a2 2 0 0 1-1.3 1.87V13a6.7 6.7 0 0 1-6.7 6.7h-.5A6.7 6.7 0 0 1 5.3 13v-1.63A2 2 0 0 1 4 9.5V9a1 1 0 0 1 1-1z"/></svg>',
+        eurokey:  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"/></svg>',
+        changing: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2" fill="white" stroke="none"/><path d="M9.3 8.7c.5.9 1.4 1.3 2.7 1.3s2.2-.4 2.7-1.3" stroke="#0d9488"/><path d="M6.5 20v-2.5a5.5 5.5 0 0111 0V20"/></svg>',
         favorite: '<svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 20.5S4 15.5 4 9.5C4 7.3 5.8 5.5 8 5.5C9.5 5.5 10.8 6.4 12 8C13.2 6.4 14.5 5.5 16 5.5C18.2 5.5 20 7.3 20 9.5C20 15.5 12 20.5 12 20.5Z"/></svg>',
         free:     '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="white" stroke-width="2"/><path d="M8 8L16 16" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>',
         defect:   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M6 6L18 18" stroke="white" stroke-width="2.4" stroke-linecap="round"/><path d="M18 6L6 18" stroke="white" stroke-width="2.4" stroke-linecap="round"/></svg>'
     };
 
+    // Muss mit den Farb-Tokens in tailwind.config.js (brand/accent/eurokey/changing/
+    // free/defect) übereinstimmen - Marker werden als reines SVG gebaut, kann daher
+    // keine Tailwind-Klassen nutzen, deshalb hier als Hex-Werte dupliziert.
     const PRIO_COLORS = {
-        favorite:   '#e5316b',
+        favorite:   '#e5316b', // accent-500
         eurokey:    '#eab308',
         changing:   '#a855f7',
         free:       '#16a34a',
-        public:     '#4285F4',
+        public:     '#0d9488', // brand-600 (teal)
         defect:     '#9ca3af'
     };
 
@@ -303,14 +306,14 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             let indicatorsHtml = '';
-            if (hasTopRated) indicatorsHtml += `<div class="w-2.5 h-2.5 bg-yellow-400 rounded-full border border-white"></div>`;
+            if (hasTopRated) indicatorsHtml += `<div class="w-2.5 h-2.5 bg-success rounded-full border border-white"></div>`;
             if (hasOpen247) indicatorsHtml += `<div class="w-2.5 h-2.5 bg-green-500 rounded-full border border-white"></div>`;
             if (hasChanging) indicatorsHtml += `<div class="w-2.5 h-2.5 bg-purple-500 rounded-full border border-white"></div>`;
             if (hasDefect) indicatorsHtml += `<div class="w-2.5 h-2.5 bg-red-600 rounded-full border border-white"></div>`;
 
             return L.divIcon({
                 html: `
-                    <div class="relative flex items-center justify-center w-10 h-10 bg-blue-600/90 text-white font-bold rounded-full shadow-md border-2 border-white">
+                    <div class="relative flex items-center justify-center w-10 h-10 bg-brand-600/90 text-white font-bold rounded-full shadow-md border-2 border-white">
                         <span>${childCount}</span>
                         <div class="absolute -bottom-1.5 flex gap-0.5 justify-center w-full">
                             ${indicatorsHtml}
@@ -410,11 +413,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function updateLocationButtonUI() {
         if (autoFollow) {
-            btnLocation.classList.remove('bg-white', 'text-blue-600', 'dark:bg-gray-800', 'dark:text-blue-400');
-            btnLocation.classList.add('bg-blue-600', 'text-white');
+            btnLocation.classList.remove('bg-white', 'text-brand-600', 'dark:bg-gray-800', 'dark:text-brand-400');
+            btnLocation.classList.add('bg-brand-600', 'text-white');
         } else {
-            btnLocation.classList.remove('bg-blue-600', 'text-white');
-            btnLocation.classList.add('bg-white', 'text-blue-600', 'dark:bg-gray-800', 'dark:text-blue-400');
+            btnLocation.classList.remove('bg-brand-600', 'text-white');
+            btnLocation.classList.add('bg-white', 'text-brand-600', 'dark:bg-gray-800', 'dark:text-brand-400');
         }
     }
 
@@ -477,38 +480,61 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+
+    // Echte linke Sidebar (Drawer), statt der vorherigen schwebenden Menü-Karte -
+    // schiebt von links rein/raus statt zu faden, mit abdunkelndem Hintergrund.
     function toggleMenu(show) {
-        if(show) {
-            mainMenu.classList.remove('hidden');
-            // Menü leicht nach oben schieben und unsichtbar machen, dann animiert einfliegen lassen
-            mainMenu.classList.add('opacity-0', '-translate-y-4');
-            // Ein winziger Moment Verzögerung, damit der Browser das Zeichnen mitbekommt
-            setTimeout(() => {
-                mainMenu.classList.remove('opacity-0', '-translate-y-4');
-            }, 10);
-            
-            // Den runden Öffnen-Button weich ausblenden
-            btnOpenMenu.classList.add('opacity-0', 'scale-90');
-            setTimeout(() => btnOpenMenu.classList.add('hidden'), 200);
+        if (show) {
+            sidebarBackdrop.classList.remove('hidden');
+            requestAnimationFrame(() => {
+                mainMenu.classList.remove('-translate-x-full');
+                sidebarBackdrop.classList.remove('opacity-0');
+            });
         } else {
-            // Menü weich ausblenden und leicht nach oben schieben
-            mainMenu.classList.add('opacity-0', '-translate-y-4');
+            mainMenu.classList.add('-translate-x-full');
+            sidebarBackdrop.classList.add('opacity-0');
             searchSuggestions.classList.add('hidden');
             searchInput.blur();
-            
-            setTimeout(() => {
-                mainMenu.classList.add('hidden');
-                mainMenu.classList.remove('opacity-0', '-translate-y-4');
-                
-                // Den runden Öffnen-Button wieder einblenden
-                btnOpenMenu.classList.remove('hidden');
-                setTimeout(() => btnOpenMenu.classList.remove('opacity-0', 'scale-90'), 10);
-            }, 200);
+            setTimeout(() => sidebarBackdrop.classList.add('hidden'), 300);
         }
     }
 
     btnOpenMenu.addEventListener('click', () => toggleMenu(true));
     btnCloseMenu.addEventListener('click', () => toggleMenu(false));
+    sidebarBackdrop.addEventListener('click', () => toggleMenu(false));
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !mainMenu.classList.contains('-translate-x-full')) toggleMenu(false);
+    });
+
+    // Sprachwechsler: überschreibt die Browser-Spracherkennung dauerhaft und lädt neu,
+    // damit wirklich jeder bereits gerenderte Text (inkl. dynamischer Inhalte) konsistent ist.
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        if (btn.dataset.lang === lang) btn.classList.add('bg-brand-500', 'text-white', 'border-brand-500');
+        btn.addEventListener('click', () => {
+            localStorage.setItem('loocator_lang', btn.dataset.lang);
+            window.location.reload();
+        });
+    });
+
+    // Sekundäre Filter-Zeile eingeklappt lassen, bis der Nutzer sie explizit öffnet
+    // (weniger gleichzeitig sichtbare Entscheidungen beim ersten Laden)
+    const btnToggleMoreFilters = document.getElementById('btn-toggle-more-filters');
+    const secondaryFilters = document.getElementById('secondary-filters');
+    const iconMoreFilters = document.getElementById('icon-more-filters');
+    btnToggleMoreFilters?.addEventListener('click', () => {
+        const isOpen = !secondaryFilters.classList.contains('hidden');
+        secondaryFilters.classList.toggle('hidden', isOpen);
+        secondaryFilters.classList.toggle('flex', !isOpen);
+        iconMoreFilters.classList.toggle('rotate-180', !isOpen);
+        btnToggleMoreFilters.setAttribute('aria-expanded', String(!isOpen));
+    });
+
+    // Legende (Marker-Farben) dauerhaft über einen eigenen Button erreichbar,
+    // nicht nur einmalig im Tutorial beim allerersten Start.
+    document.getElementById('btn-legend')?.addEventListener('click', () => {
+        document.getElementById('tutorial-modal').classList.remove('hidden');
+    });
         const btnContact = document.getElementById('btn-contact');
     const contactModal = document.getElementById('contact-modal');
     const btnCloseContact = document.getElementById('btn-close-contact');
@@ -605,7 +631,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (data.length > 0) {
                     data.forEach(place => {
                         const li = document.createElement('li');
-                        li.className = 'p-3 border-b border-gray-100 dark:border-gray-600 hover:bg-blue-50 dark:hover:bg-gray-600 cursor-pointer truncate font-medium';
+                        li.className = 'p-3 border-b border-gray-100 dark:border-gray-600 hover:bg-brand-50 dark:hover:bg-gray-600 cursor-pointer truncate font-medium';
                         const shortName = place.display_name.split(',').slice(0, 3).join(',');
                         li.innerText = shortName;
                         li.onclick = () => jumpToSearchResult(place.lat, place.lon, shortName);
@@ -1283,10 +1309,15 @@ document.addEventListener("DOMContentLoaded", () => {
     function updateFavButtonUI() {
         if (!currentToiletData) return;
         let favs = JSON.parse(localStorage.getItem('loocator_favs') || '[]');
+        const icon = document.getElementById('btn-fav-icon');
         if (favs.includes(currentToiletData.id)) {
-            document.getElementById('btn-fav').innerText = '❤️';
+            icon.setAttribute('fill', 'currentColor');
+            icon.classList.remove('text-gray-300', 'dark:text-gray-500');
+            icon.classList.add('text-accent-500');
         } else {
-            document.getElementById('btn-fav').innerText = '🤍';
+            icon.setAttribute('fill', 'none');
+            icon.classList.remove('text-accent-500');
+            icon.classList.add('text-gray-300', 'dark:text-gray-500');
         }
     }
 
@@ -1322,37 +1353,49 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function isNearToilet(maxMeters = 150) {
-        if (!userLocation || !currentToiletData) return false;
+    // Gibt die Distanz in Metern zurück, oder null wenn sie nicht berechnet werden kann.
+    function distanceToToilet() {
+        if (!userLocation || !currentToiletData) return null;
         const targetLat = currentToiletData.lat || (currentToiletData.center && currentToiletData.center.lat);
         const targetLon = currentToiletData.lon || (currentToiletData.center && currentToiletData.center.lon);
-        if (!targetLat || !targetLon) return false;
-        const targetLatLng = L.latLng(targetLat, targetLon);
-        return map.distance(userLocation, targetLatLng) <= maxMeters;
+        if (!targetLat || !targetLon) return null;
+        return map.distance(userLocation, L.latLng(targetLat, targetLon));
     }
 
-    function updateVoteUIState(tooFar) {
+    function isNearToilet(maxMeters = 150) {
+        const dist = distanceToToilet();
+        return dist !== null && dist <= maxMeters;
+    }
+
+    // Statt die Bewertungs-Karte interaktiv aussehen zu lassen und den Nutzer erst NACH
+    // dem Tippen mit einem harten "Verboten"-Overlay abzuweisen, zeigen wir proaktiv einen
+    // warmen Hinweis mit der tatsächlichen Distanz - Fehlervermeidung statt Fehlerreaktion.
+    function updateVoteUIState(tooFar, maxMeters = 150) {
         const voteButtons = [document.getElementById('btn-usable-yes'), document.getElementById('btn-usable-no')];
         const starButtons = document.querySelectorAll('.btn-star');
-        const voteOverlay = document.getElementById('vote-overlay');
+        const voteControls = document.getElementById('vote-controls');
+        const voteHint = document.getElementById('vote-distance-hint');
         const statUsable = document.getElementById('stat-usable');
 
         voteButtons.forEach(b => {
             if (!b) return;
             b.disabled = tooFar;
-            b.classList.toggle('opacity-30', tooFar);
-            b.classList.toggle('pointer-events-none', tooFar);
         });
-
         starButtons.forEach(b => {
             if (!b) return;
             b.disabled = tooFar;
-            b.classList.toggle('opacity-30', tooFar);
-            b.classList.toggle('pointer-events-none', tooFar);
         });
 
-        if (voteOverlay) {
-            voteOverlay.classList.toggle('hidden', !tooFar);
+        if (voteControls) voteControls.classList.toggle('hidden', tooFar);
+        if (voteHint) {
+            voteHint.classList.toggle('hidden', !tooFar);
+            if (tooFar) {
+                const dist = distanceToToilet();
+                const remaining = dist !== null ? Math.max(0, Math.round(dist - maxMeters)) : null;
+                voteHint.querySelector('span').innerText = remaining !== null
+                    ? t('voteDistanceHint', { dist: remaining })
+                    : t('voteOverlayText');
+            }
         }
 
         if (statUsable) {

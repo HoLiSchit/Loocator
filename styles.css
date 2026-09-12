@@ -1,3 +1,22 @@
+/* Baloo 2 (variable, self-gehostet aus Datenschutzgründen statt Google Fonts CDN) -
+   trägt die Markenstimme (Splash, Sidebar-Wordmark, Karma-Ränge), siehe tailwind.config.js */
+@font-face {
+    font-family: 'Baloo 2';
+    font-style: normal;
+    font-weight: 400 800;
+    font-display: swap;
+    src: url('fonts/baloo2-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122;
+}
+@font-face {
+    font-family: 'Baloo 2';
+    font-style: normal;
+    font-weight: 400 800;
+    font-display: swap;
+    src: url('fonts/baloo2-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1EFF, U+2020, U+20A0-20AB, U+2113;
+}
+
 html, body {
     margin: 0;
     padding: 0;
@@ -27,18 +46,18 @@ html, body {
     z-index: 40; 
 }
 
-.marker-cluster-small, 
-.marker-cluster-medium, 
-.marker-cluster-large { 
-    background-color: rgba(59, 130, 246, 0.6); 
+.marker-cluster-small,
+.marker-cluster-medium,
+.marker-cluster-large {
+    background-color: rgba(13, 148, 136, 0.55);
 }
 
-.marker-cluster-small div, 
-.marker-cluster-medium div, 
-.marker-cluster-large div { 
-    background-color: rgba(59, 130, 246, 0.9); 
-    color: white; 
-    font-weight: bold; 
+.marker-cluster-small div,
+.marker-cluster-medium div,
+.marker-cluster-large div {
+    background-color: rgba(13, 148, 136, 0.9);
+    color: white;
+    font-weight: bold;
 }
 
 .leaflet-div-icon {
