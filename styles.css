@@ -46,20 +46,6 @@ html, body {
     z-index: 40; 
 }
 
-.marker-cluster-small,
-.marker-cluster-medium,
-.marker-cluster-large {
-    background-color: rgba(13, 148, 136, 0.55);
-}
-
-.marker-cluster-small div,
-.marker-cluster-medium div,
-.marker-cluster-large div {
-    background-color: rgba(13, 148, 136, 0.9);
-    color: white;
-    font-weight: bold;
-}
-
 .leaflet-div-icon {
     background: transparent !important;
     border: none !important;
@@ -105,4 +91,11 @@ html.dark #map.is-sat-mode .leaflet-tile {
 }
 .hide-scrollbar::-webkit-scrollbar {
     display: none; /* Für Chrome, Safari und Opera */
+}
+
+/* Weicher Rand statt hartem Abschneiden am Ende scrollbarer Filter-Reihen -
+   signalisiert "hier geht noch was" statt wie ein UI-Bug auszusehen. */
+.fade-scroll-x {
+    -webkit-mask-image: linear-gradient(to right, transparent 0, black 24px, black calc(100% - 28px), transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, black 24px, black calc(100% - 28px), transparent 100%);
 }

@@ -264,7 +264,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const map = L.map('map', { zoomControl: false }).setView([49.0069, 8.4037], 14);
     const layerOSM = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
         maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">HOT</a> | Loocator by <a href="https://mineco.de" target="_blank" rel="noopener">Adam Weiß</a> | Icons by <a href="https://www.svgrepo.com/collection/gentlecons-interface-icons/" target="_blank" rel="noopener">Konstantin Filatov</a>',
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">HOT</a> | Loocator by <a href="https://mineco.de" target="_blank" rel="noopener">Adam Weiß</a>',
         className: 'osm-tiles'
     });
     const layerSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
@@ -817,9 +817,35 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Öffentliche Overpass-Instanzen sind einzeln nicht sehr zuverlässig (häufig 429/503
+    // unter Last) - mehrere Mirrors nacheinander probieren, bevor wir aufgeben.
+    const OVERPASS_MIRRORS = [
+        'https://overpass-api.de/api/interpreter',
+        'https://overpass.kumi.systems/api/interpreter',
+        'https://overpass.openstreetmap.ru/api/interpreter'
+    ];
+
+    async function fetchOverpassWithFallback(query) {
+        let lastError;
+        for (const base of OVERPASS_MIRRORS) {
+            try {
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), 12000);
+                const res = await fetch(`${base}?data=${encodeURIComponent(query)}`, { signal: controller.signal });
+                clearTimeout(timeout);
+                if (!res.ok) throw new Error(`Overpass ${res.status}`);
+                return await res.json();
+            } catch (e) {
+                lastError = e;
+            }
+        }
+        throw lastError;
+    }
+
     async function fetchToilets() {
         if (map.getZoom() < 12) {
             showEmptyState(t('zoomHint'));
+            removeSplashScreen(); // Sicherstellen, dass der Splash nie hängen bleibt
             return;
         }
 
@@ -859,8 +885,7 @@ document.addEventListener("DOMContentLoaded", () => {
             out center;
         `;
         try {
-            const res = await fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`);
-            const data = await res.json();
+            const data = await fetchOverpassWithFallback(query);
             allToilets = data.elements;
             saveCachedToiletsForBounds(cacheKey, allToilets);
             renderMarkers();
