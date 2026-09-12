@@ -1,4 +1,4 @@
-const CACHE_NAME = 'loocator-cache-v7';
+const CACHE_NAME = 'loocator-cache-v8';
 const TILE_CACHE_NAME = 'loocator-tiles-v1';
 const TILE_CACHE_MAX_ENTRIES = 300;
 const OFFLINE_URLS = [
@@ -64,18 +64,6 @@ self.addEventListener('fetch', event => {
 
   const requestUrl = new URL(event.request.url);
   const isSameOrigin = requestUrl.origin === self.location.origin;
-  const isAppAsset = [
-    '/index.html',
-    '/app.js',
-    '/output.css',
-    '/styles.css',
-    '/translations.js',
-    '/manifest.json',
-    '/sw.js',
-    '/src/lib/openingHours.js',
-    '/src/lib/karma.js',
-    '/src/lib/toiletRules.js'
-  ].some(path => requestUrl.pathname.endsWith(path) || requestUrl.pathname === path);
 
   if (TILE_HOSTS.includes(requestUrl.hostname)) {
     event.respondWith(
@@ -95,7 +83,29 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  if (isSameOrigin && isAppAsset) {
+  // Alle anderen Cross-Origin-Requests (Overpass, Nominatim, OSRM, CDN-Skripte) NICHT
+  // abfangen: app.js gibt diesen Fetches eigene AbortController-Timeouts mit, aber ein
+  // service-worker-vermittelter Fetch (via respondWith) reicht ein clientseitiges
+  // abort() auf manchen Browsern (u.a. beobachtet: iOS Safari) nicht zuverlässig durch -
+  // der Request hängt dann bis zum OS-Timeout (~60s) statt nach 8s abzubrechen. Ohne
+  // Interception läuft der Fetch unverändert direkt im Seiten-Kontext mit voller
+  // Kontrolle über den eigenen AbortController.
+  if (!isSameOrigin) return;
+
+  const isAppAsset = [
+    '/index.html',
+    '/app.js',
+    '/output.css',
+    '/styles.css',
+    '/translations.js',
+    '/manifest.json',
+    '/sw.js',
+    '/src/lib/openingHours.js',
+    '/src/lib/karma.js',
+    '/src/lib/toiletRules.js'
+  ].some(path => requestUrl.pathname.endsWith(path) || requestUrl.pathname === path);
+
+  if (isAppAsset) {
     event.respondWith(
       caches.match(event.request).then(cached => {
         return fetch(event.request)
@@ -112,7 +122,7 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  if (isSameOrigin && requestUrl.pathname.includes('.php')) {
+  if (requestUrl.pathname.includes('.php')) {
     event.respondWith(
       fetch(event.request)
         .then(response => response)
@@ -121,6 +131,7 @@ self.addEventListener('fetch', event => {
     return;
   }
 
+  // Sonstige same-origin Assets (z.B. img/*.svg): Cache-Fallback bei Netzwerkfehler.
   event.respondWith(
     fetch(event.request)
       .then(response => response)
