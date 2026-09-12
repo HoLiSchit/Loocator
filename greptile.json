@@ -1,0 +1,60 @@
+{
+  "comment": "Automated review by Greptile",
+  "strictness": 2,
+  "triggerOnUpdates": true,
+  "statusCheck": true,
+  "commentTypes": ["logic", "syntax"],
+  "ignorePatterns": [
+    "node_modules/**",
+    "output.css",
+    "package-lock.json",
+    "img/**",
+    "loocator.sqlite",
+    "*.log"
+  ],
+  "directoryRules": {
+    "app.js": {
+      "strictness": 2,
+      "commentTypes": ["logic", "syntax"],
+      "instructions": "Core frontend logic (map, filters, voting, markers). Flag correctness bugs, XSS via innerHTML, and Leaflet/marker regressions. This is a single large file without a module system or bundler - don't suggest splitting it into modules unless asked."
+    },
+    "*.php": {
+      "strictness": 1,
+      "commentTypes": ["logic", "syntax"],
+      "instructions": "PHP backend endpoints (SQLite via PDO). Flag SQL injection, missing input validation, missing rate limiting, and unescaped output. All DB access should go through db.php's loocator_db()/loocator_rate_limit() helpers instead of opening a new connection."
+    },
+    "index.html": {
+      "strictness": 2,
+      "commentTypes": ["logic", "syntax"],
+      "instructions": "Tailwind classes are compiled locally via `npm run build:css` into output.css (see tailwind.config.js) - never suggest re-adding the Tailwind CDN script. Flag missing dark: variants, missing md: responsive breakpoints on new UI, and render-blocking script/link tags that should be deferred."
+    }
+  },
+  "customContext": {
+    "rules": [
+      {
+        "rule": "Never reintroduce the Tailwind Play CDN (cdn.tailwindcss.com) - CSS is built locally and committed as output.css",
+        "scope": ["index.html"]
+      },
+      {
+        "rule": "All SQLite access must go through db.php's loocator_db() helper rather than opening a new PDO connection",
+        "scope": ["*.php"]
+      },
+      {
+        "rule": "State-changing endpoints (votes, counter hits) must call loocator_rate_limit() before writing",
+        "scope": ["backend.php", "counter.php"]
+      }
+    ],
+    "files": [
+      {
+        "path": "readme.md",
+        "scope": ["**"]
+      }
+    ],
+    "other": [
+      {
+        "context": "Loocator is a static Vanilla JS/HTML/CSS PWA (no bundler, no framework) that helps people find public/accessible toilets using OpenStreetMap data (Overpass, Nominatim, OSRM). The backend is plain PHP with a SQLite database (PDO), deployed as-is on a shared Apache host - there is no CI/build pipeline on deploy, so compiled assets like output.css are committed to the repo.",
+        "scope": ["**"]
+      }
+    ]
+  }
+}
